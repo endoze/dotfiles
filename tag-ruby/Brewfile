@@ -9,6 +9,3 @@ brew 'chromedriver'
 
 brew 'docker'
 brew 'docker-compose'
-brew 'docker-machine'
-brew 'docker-machine-nfs'
-brew 'virtualbox'

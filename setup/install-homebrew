@@ -1,9 +1,12 @@
-#!/usr/bin/env sh
+#!/usr/bin/env zsh
 
 set -e
 
 . "$(dirname $0)/colors"
 . ./rcrc
+. ./tag-zsh/config/zsh/functions/host_os_is_linux
+. ./tag-zsh/config/zsh/functions/host_os_is_macos
+. ./tag-zsh/config/zsh/functions/host_os_is_arm
 
 printf "[1/4]🔎  Checking for Homebrew"
 
@@ -16,13 +19,19 @@ fi
 
 printf "${CLEAR_LINE}[2/4]⚙️  chown-ing /usr/local"
 
-USR_LOCAL=$(stat /usr/local)
-USER_OWNER=$(echo $USR_LOCAL | awk '{ print $5 }')
-GROUP_OWNER=$(echo $USR_LOCAL | awk '{ print $6 }')
-LOCAL_USER=$(whoami)
+if host_os_is_macos; then
+	USR_LOCAL=$(stat /usr/local)
+	USER_OWNER=$(echo $USR_LOCAL | awk '{ print $5 }')
+	GROUP_OWNER=$(echo $USR_LOCAL | awk '{ print $6 }')
+	LOCAL_USER=$(whoami)
 
-if [[ $USER_OWNER -ne $LOCAL_USER ]] || [[ $GROUP_OWNER -ne "admin" ]]; then
-	sudo chown $(whoami):admin /usr/local && sudo chown -R $(whoami):admin /usr/local
+	if [[ $USER_OWNER -ne $LOCAL_USER ]] || [[ $GROUP_OWNER -ne "admin" ]]; then
+		sudo chown $(whoami):admin /usr/local && sudo chown -R $(whoami):admin /usr/local
+	fi
+fi
+
+if host_os_is_linux; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
 printf "${CLEAR_LINE}[3/4]🍻  Installing brew bundle"
@@ -30,8 +39,10 @@ brew tap Homebrew/bundle
 
 printf "${CLEAR_LINE}[4/4]⛓  Installing homebrew dependencies\n"
 
+set +e
 brew bundle --file="./setup/Brewfile" ||
 	printf "⚠️  ${YELLOW}Some dependencies from $line failed, attempting to continue${NO_COLOR}\n"
+set -e
 
 find . -type f -iname "Brewfile" -print0 | while IFS= read -r -d $'\0' line; do
 	printf "${CLEAR_LINE}⌛️  ${GREEN}Installing dependencies from $line${NO_COLOR}\n"

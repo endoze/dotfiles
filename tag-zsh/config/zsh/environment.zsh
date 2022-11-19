@@ -1,8 +1,6 @@
 export DOTFILES=$HOME/.dotfiles
 export EDITOR="nvim"
 export RCRC=$DOTFILES/rcrc
-export VMCTLDIR=$HOME/.test-docker-vm
-export DOCKER_HOST="tcp://192.168.64.2:2375"
 
 # --files: List files that would be searched but do not search
 # --no-ignore: Do not respect .gitignore, etc...
@@ -11,3 +9,10 @@ export DOCKER_HOST="tcp://192.168.64.2:2375"
 # --glob: Additional conditions for search (in this case ignore everything in the .git/ folder, target/ folder, and hidden files that start with _)
 
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*" --glob "!target/*" --glob "!._*"'b
+
+
+. ./tag-zsh/config/zsh/functions/host_os_is_linux
+
+if host_os_is_linux; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
