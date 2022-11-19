@@ -1,0 +1,7 @@
+function host_os_is_arm () {
+  if [ "$(uname -m)" = "arm64" ]; then
+    return 0
+  else
+    return 1
+  fi
+}

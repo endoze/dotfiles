@@ -1,0 +1,8 @@
+function rspec_command () {
+  if [ -e "bin/rspec" ]
+  then
+    bin/rspec $@
+  else
+    bundled_rspec $@
+  fi
+}

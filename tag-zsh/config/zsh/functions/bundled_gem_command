@@ -1,0 +1,12 @@
+function bundled_gem_command () {
+  gem_command=$1
+  shift
+  if [ -e "Gemfile" ]
+  then
+    echo "Executing bundle exec $gem_command $@"
+    bundle exec $gem_command $@
+  else
+    echo "Executing $gem_command $@"
+    $gem_command $@
+  fi
+}

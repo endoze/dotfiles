@@ -1,0 +1,3 @@
+EXCLUDES="README.md Brewfile Gemfile setup rcrc Brewfile.lock.json antigen-library.zsh Dockerfile .env .dockerignore"
+DOTFILES_DIRS="$DOTFILES"
+TAGS="bat alacritty tmux ruby python git nvim zsh"

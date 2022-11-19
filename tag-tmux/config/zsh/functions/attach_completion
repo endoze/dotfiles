@@ -1,0 +1,5 @@
+function attach_completion () {
+  declare -a tmux_sessions
+  tmux_sessions=(`tmux list-sessions 2> /dev/null | awk -F: '{print $1}'`)
+  _arguments '1:sessions:($tmux_sessions)'
+}

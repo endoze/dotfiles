@@ -1,0 +1,44 @@
+#!/usr/bin/env zsh
+
+set -e
+
+. "$(dirname $0)/colors"
+. ./tag-zsh/config/zsh/functions/host_os_is_linux
+. ./tag-zsh/config/zsh/functions/host_os_is_macos
+. ./tag-zsh/config/zsh/functions/host_os_is_arm
+
+. ./rcrc
+
+if host_os_is_macos; then
+  ./setup/install-homebrew
+
+  if host_os_is_arm; then
+    /usr/sbin/softwareupdate –install-rosetta –agree-to-license
+  fi
+elif host_os_is_linux; then
+  echo "Skipping Homebrew setup as we are on Linux."
+fi
+
+./setup/install-rustup
+./setup/link-dotfiles
+
+set -x
+setopt extendedglob
+
+# Check for presence of additional setup files
+# keeping tags in mind
+if [[ -n *tag-*/setup/*(#qN) ]]; then
+  # Source additional setup files
+  for file in tag-*/setup/*; do
+    TAG_NAME=`echo $file | awk -F'/' '{print $1}' | awk -F'-' '{print $2}'`
+
+    set +e
+    echo $TAGS | grep -q $TAG_NAME
+    TAG_INCLUDED=$?
+    set -e
+
+    if [ $TAG_INCLUDED -eq 0 ]; then
+      source "$file"
+    fi
+  done
+fi

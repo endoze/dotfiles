@@ -1,0 +1,5 @@
+function mux_completion () {
+  declare -a mux_sessions
+  mux_sessions=(${$(echo ~/.tmuxinator/*.yml):r:t})
+  _arguments '1:sessions:($mux_session)'
+}

@@ -1,0 +1,19 @@
+# vim: ft=zsh
+# Close the pair because security
+tmate-unpair() {
+  TMATE_PAIR_NAME="$(whoami)-pair"
+  TMATE_SOCKET_LOCATION="/tmp/tmate-pair.sock"
+  TMATE_TMUX_SESSION="/tmp/tmate-tmux-session"
+
+  if [ -e "$TMATE_SOCKET_LOCATION" ]; then
+    if [ -e "$TMATE_SOCKET_LOCATION" ]; then
+      tmux detach -s $(cat $TMATE_TMUX_SESSION)
+      rm -f $TMATE_TMUX_SESSION
+    fi
+
+    tmate -S "$TMATE_SOCKET_LOCATION" kill-session -t "$TMATE_PAIR_NAME"
+    echo "Killed session $TMATE_PAIR_NAME"
+  else
+    echo "Session already killed"
+  fi
+}

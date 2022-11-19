@@ -1,0 +1,20 @@
+# Prompt with ruby version
+# Borrowed from http://lucapette.com/pry/pry-everywhere/
+Pry.prompt = [proc { |obj, nest_level| "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL} (#{obj}):#{nest_level} > " },
+              proc { |obj, nest_level| "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL} (#{obj}):#{nest_level} * " }]
+
+Pry.config.editor = ENV['EDITOR'] || 'vim'
+
+if defined?(PryByebug)
+  Pry.commands.alias_command 'c', 'continue'
+  Pry.commands.alias_command 's', 'step'
+  Pry.commands.alias_command 'n', 'next'
+end
+
+if /darwin/ =~ RUBY_PLATFORM
+  def pbcopy(input)
+    str = input.to_s
+    IO.popen('pbcopy', 'w') { |f| f << str }
+    str
+  end
+end

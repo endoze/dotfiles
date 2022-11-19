@@ -1,0 +1,12 @@
+# vim: ft=zsh
+# Get current tmate connection url
+tmate-url() {
+  TMATE_PAIR_NAME="$(whoami)-pair"
+  TMATE_SOCKET_LOCATION="/tmp/tmate-pair.sock"
+  TMATE_TMUX_SESSION="/tmp/tmate-tmux-session"
+
+  url="$(tmate -S $TMATE_SOCKET_LOCATION display -p '#{tmate_ssh}')"
+  echo "$url" | tr -d '\n' | pbcopy
+  echo "Copied tmate url for $TMATE_PAIR_NAME:"
+  echo "$url"
+}

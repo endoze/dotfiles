@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+set -e
+
+. "$(dirname $0)/colors"
+
+printf "⛓  ${GREEN}Linking Dotfiles${NO_COLOR}\n"
+
+RCRC=~/.dotfiles/rcrc rcup
+
+printf "🎉${GREEN}   Finished!${NO_COLOR}\n"

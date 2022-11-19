@@ -1,0 +1,5 @@
+function drmgrep () {
+  container_pattern=$1
+  shift
+  docker ps -a | grep $container_pattern | awk '{ print $1 }' | xargs docker rm
+}

@@ -1,0 +1,12 @@
+.DS_Store
+.DS_Store?
+.Spotlight-V100
+.Trashes
+._*
+.envrc
+Thumbs.db
+ehthumbs.db
+~*
+dump.rdb
+.idea/
+

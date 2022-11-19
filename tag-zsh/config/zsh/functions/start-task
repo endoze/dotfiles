@@ -1,0 +1,22 @@
+function start-task() {
+  if [[ -n "$1" ]]; then
+    taskname=$(curl -s https://app.asana.com/api/1.0/tasks/$1 -H "Authorization: Bearer $ASANA_API_TOKEN" -H "Accept: application/json" | jq -r '.[].name?')
+
+    taskname=${taskname:gs/ /-/}
+
+    invalid_chars=('*' ':' '\/' '.' '~' '^' '?' '[' ']')
+    for i in $invalid_chars; do
+      taskname=$(echo $taskname | tr -d $i)
+    done
+
+    taskname=${taskname:l}
+
+    git checkout $1-${taskname} &> /dev/null
+
+    if [[ $? -eq 1 ]]; then
+      git checkout -b $1-${taskname}
+    fi
+  else
+    echo "Must pass a task id"
+  fi
+}
