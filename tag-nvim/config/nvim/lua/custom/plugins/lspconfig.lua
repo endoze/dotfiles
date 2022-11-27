@@ -9,7 +9,6 @@ for _, lsp in ipairs(servers) do
     local rust_opts = {
       tools = {
         autoSetHints = true,
-        hover_with_actions = true,
         executor = require("rust-tools/executors").termopen,
         runnables = {
           use_telescope = true,

@@ -1,8 +1,6 @@
 export DOTFILES=$HOME/.dotfiles
 export EDITOR="nvim"
 export RCRC=$DOTFILES/rcrc
-export VMCTLDIR=$HOME/.test-docker-vm
-export DOCKER_HOST="tcp://192.168.64.2:2375"
 
 # --files: List files that would be searched but do not search
 # --no-ignore: Do not respect .gitignore, etc...

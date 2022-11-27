@@ -1,0 +1,8 @@
+#!/usr/bin/env zsh
+
+apt_install rbenv
+apt_install ruby-build
+apt_install redis
+apt_install openssl
+apt_install docker.io
+apt_install docker-compose

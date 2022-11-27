@@ -1,3 +1,5 @@
+# vim: ft=zsh
+
 function host_os_is_linux () {
   if [ "$(uname -s)" = "Linux" ]; then
     return 0

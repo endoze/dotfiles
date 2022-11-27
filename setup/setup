@@ -3,6 +3,7 @@
 set -e
 
 . "$(dirname $0)/colors"
+. "$(dirname $0)/apt-install"
 . ./tag-zsh/config/zsh/functions/host_os_is_linux
 . ./tag-zsh/config/zsh/functions/host_os_is_macos
 . ./tag-zsh/config/zsh/functions/host_os_is_arm
@@ -15,8 +16,6 @@ if host_os_is_macos; then
   if host_os_is_arm; then
     /usr/sbin/softwareupdate –install-rosetta –agree-to-license
   fi
-elif host_os_is_linux; then
-  echo "Skipping Homebrew setup as we are on Linux."
 fi
 
 ./setup/install-rustup
@@ -41,4 +40,8 @@ if [[ -n *tag-*/setup/*(#qN) ]]; then
       source "$file"
     fi
   done
+fi
+
+if host_os_is_linux; then
+  do_apt_install
 fi

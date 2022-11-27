@@ -1,0 +1,6 @@
+#!/usr/bin/env zsh
+
+apt_install antigen
+apt_install zsh
+apt_install zsh-syntax-highlighting
+apt_install git-delta

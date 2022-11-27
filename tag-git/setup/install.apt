@@ -1,0 +1,4 @@
+#!/usr/bin/env zsh
+
+apt_install git
+apt_install fzf

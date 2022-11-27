@@ -1,0 +1,18 @@
+#!/usr/bin/env zsh
+
+declare -a PACKAGES_TO_INSTALL=()
+
+function apt_install {
+  PACKAGES_TO_INSTALL+=($1)
+}
+
+function do_apt_install {
+  declare -a PACKAGES_GREP_STRING=()
+
+  for package in $PACKAGES_TO_INSTALL; do
+    PACKAGES_GREP_STRING+=(-e $package)
+  done
+
+  apt-get update -y
+  apt-cache --generate pkgnames | grep --line-regexp --fixed-strings $PACKAGES_GREP_STRING | xargs apt install -y
+}
