@@ -1,3 +1,5 @@
+# vim: ft=zsh
+
 function dshell () {
   docker exec -it $@ /bin/sh -c 'BASH_COMMAND=`which bash`; if [ $? -eq 0 ]; then eval $BASH_COMMAND; else /bin/sh; fi'
 }

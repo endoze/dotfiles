@@ -11,27 +11,21 @@ set -e
 printf "[1/4]🔎  Checking for Homebrew"
 
 if ! command -v brew >/dev/null; then
-	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 else
-	printf "${CLEAR_LINE}ℹ️  ${GREEN}Homebrew already installed${NO_COLOR}\n"
-	printf "[1/4]🔎 Checking for Homebrew"
+  printf "${CLEAR_LINE}ℹ️  ${GREEN}Homebrew already installed${NO_COLOR}\n"
+  printf "[1/4]🔎 Checking for Homebrew"
 fi
 
 printf "${CLEAR_LINE}[2/4]⚙️  chown-ing /usr/local"
 
-if host_os_is_macos; then
-	USR_LOCAL=$(stat /usr/local)
-	USER_OWNER=$(echo $USR_LOCAL | awk '{ print $5 }')
-	GROUP_OWNER=$(echo $USR_LOCAL | awk '{ print $6 }')
-	LOCAL_USER=$(whoami)
+USR_LOCAL=$(stat /usr/local)
+USER_OWNER=$(echo $USR_LOCAL | awk '{ print $5 }')
+GROUP_OWNER=$(echo $USR_LOCAL | awk '{ print $6 }')
+LOCAL_USER=$(whoami)
 
-	if [[ $USER_OWNER -ne $LOCAL_USER ]] || [[ $GROUP_OWNER -ne "admin" ]]; then
-		sudo chown $(whoami):admin /usr/local && sudo chown -R $(whoami):admin /usr/local
-	fi
-fi
-
-if host_os_is_linux; then
-  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+if [[ $USER_OWNER -ne $LOCAL_USER ]] || [[ $GROUP_OWNER -ne "admin" ]]; then
+  sudo chown $(whoami):admin /usr/local && sudo chown -R $(whoami):admin /usr/local
 fi
 
 printf "${CLEAR_LINE}[3/4]🍻  Installing brew bundle"
@@ -41,26 +35,26 @@ printf "${CLEAR_LINE}[4/4]⛓  Installing homebrew dependencies\n"
 
 set +e
 brew bundle --file="./setup/Brewfile" ||
-	printf "⚠️  ${YELLOW}Some dependencies from $line failed, attempting to continue${NO_COLOR}\n"
+  printf "⚠️  ${YELLOW}Some dependencies from $line failed, attempting to continue${NO_COLOR}\n"
 set -e
 
 find . -type f -iname "Brewfile" -print0 | while IFS= read -r -d $'\0' line; do
-	printf "${CLEAR_LINE}⌛️  ${GREEN}Installing dependencies from $line${NO_COLOR}\n"
+  printf "${CLEAR_LINE}⌛️  ${GREEN}Installing dependencies from $line${NO_COLOR}\n"
 
-	TAG_NAME=$(echo $line | sed -E 's/.*\/tag-(.*)\/.*/\1/')
+  TAG_NAME=$(echo $line | sed -E 's/.*\/tag-(.*)\/.*/\1/')
 
-	set +e
-	echo $TAGS | grep -q $TAG_NAME
-	TAG_INCLUDED=$?
+  set +e
+  echo $TAGS | grep -q $TAG_NAME
+  TAG_INCLUDED=$?
 
-	if [ $TAG_INCLUDED -eq 0 ]; then
-		brew bundle --file="$line" ||
-			printf "⚠️  ${YELLOW}Some dependencies from $line failed, attempting to continue${NO_COLOR}\n"
-	fi
+  if [ $TAG_INCLUDED -eq 0 ]; then
+    brew bundle --file="$line" ||
+      printf "⚠️  ${YELLOW}Some dependencies from $line failed, attempting to continue${NO_COLOR}\n"
+  fi
 
-	set -e
+  set -e
 
-	printf "[4/4]⛓  Installing homebrew dependencies"
+  printf "[4/4]⛓  Installing homebrew dependencies"
 done
 
 printf "${CLEAR_LINE}[4/4]🎉${GREEN}   Finished Homebrew Installation!${NO_COLOR}\n"

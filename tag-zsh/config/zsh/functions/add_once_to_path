@@ -1,3 +1,5 @@
+# vim: ft=zsh
+
 function add_once_to_path() {
   needle=$1
   path_section=$2

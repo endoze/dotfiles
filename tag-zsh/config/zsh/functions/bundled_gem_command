@@ -1,3 +1,5 @@
+# vim: ft=zsh
+
 function bundled_gem_command () {
   gem_command=$1
   shift

@@ -1,3 +1,5 @@
+# vim: ft=zsh
+
 function drmid () {
   docker images --quiet --filter "dangling=true" | xargs docker rmi
 }

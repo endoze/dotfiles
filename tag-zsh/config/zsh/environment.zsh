@@ -9,10 +9,3 @@ export RCRC=$DOTFILES/rcrc
 # --glob: Additional conditions for search (in this case ignore everything in the .git/ folder, target/ folder, and hidden files that start with _)
 
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*" --glob "!target/*" --glob "!._*"'b
-
-
-. ./tag-zsh/config/zsh/functions/host_os_is_linux
-
-if host_os_is_linux; then
-  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-fi

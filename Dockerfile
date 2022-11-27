@@ -1,25 +1,20 @@
-FROM ubuntu:20.04
+FROM buildpack-deps:22.04
 
 ARG APP_ROOT=/workspace
-ARG BUILD_PACKAGES="build-essential curl git zsh"
-ARG DEV_PACKAGES="tzdata"
+ARG BUILD_PACKAGES="zsh rcm nodejs npm ruby ruby-dev ripgrep luarocks"
 
 ENV BUNDLE_APP_CONFIG="$APP_ROOT/.bundle"
+ENV DEBIAN_FRONTEND=noninteractive
 
 WORKDIR $APP_ROOT
 
-ENV DEBIAN_FRONTEND=noninteractive
-
-RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
-
 RUN apt-get update -y \
     && apt-get install -y $BUILD_PACKAGES \
-    && apt update -y \
-    && apt install -y --no-install-recommends $DEV_PACKAGES \
-    && dpkg-reconfigure --frontend noninteractive tzdata \
     && apt-get -yqq autoclean \
     && apt-get -yqq autoremove --purge \
     && apt-get -yqq purge $(dpkg --get-selections | grep deinstall | sed s/deinstall//g) \
+    && wget https://github.com/neovim/neovim/releases/download/v0.8.1/nvim-linux64.deb \
+    && dpkg -i nvim-linux64.deb \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/cache/* /var/tmp/*
 
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y

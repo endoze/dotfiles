@@ -6,12 +6,6 @@ set -e
 
 printf "⛓  ${GREEN}Linking Dotfiles${NO_COLOR}\n"
 
-. ./tag-zsh/config/zsh/functions/host_os_is_linux
-
-if host_os_is_linux; then
-  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-fi
-
 RCRC=~/.dotfiles/rcrc rcup
 
 printf "🎉${GREEN}   Finished!${NO_COLOR}\n"

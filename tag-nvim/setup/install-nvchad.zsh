@@ -11,7 +11,7 @@ if [[ -f "$NVCHAD_DIR_PATH/init.lua" ]]; then
   echo "nvchad already cloned"
 else
   pushd $NVCHAD_DIR_PATH
-  git init -b main
+  git init
   git remote add origin https://github.com/nvchad/nvchad
   git fetch
   git reset --mixed origin/main
