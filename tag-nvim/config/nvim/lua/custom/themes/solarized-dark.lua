@@ -75,9 +75,42 @@ M.base_30 = {
   folder_bg = "#268bd2",
 }
 
-vim.opt.bg = "dark"
 M.type = "dark"
 
 M = require("base46").override_theme(M, "solarized-dark")
+
+M.polish_hl = {
+  St_NormalMode = {
+    bg = M.base_30.nord_blue,
+    fg = M.base_30.black,
+  },
+  St_InsertMode = {
+    bg = M.base_30.yellow,
+    fg = M.base_30.black,
+  },
+  St_VisualMode = {
+    bg = M.base_30.cyan,
+    fg = M.base_30.black,
+  },
+  St_LspProgress = {
+    fg = M.base_30.yellow,
+  },
+  StText = {
+    fg = M.base_30.one_bg3,
+    bg = M.base_30.statusline_bg,
+  },
+  St_cwd = {
+    fg = M.base_30.black,
+    bg = M.base_30.nord_blue,
+  },
+  TbLineBufOff = {
+    fg = M.base_30.grey_fg2,
+    bg = M.base_30.darker_black,
+  },
+  TbLineBufOffClose = {
+    fg = M.base_30.grey_fg2,
+    bg = M.base_30.darker_black,
+  },
+}
 
 return M

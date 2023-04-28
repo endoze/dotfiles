@@ -14,7 +14,7 @@ if host_os_is_macos; then
   ./setup/install-homebrew
 
   if host_os_is_arm; then
-    /usr/sbin/softwareupdate –install-rosetta –agree-to-license
+    softwareupdate --install-rosetta --agree-to-license
   fi
 fi
 
@@ -42,6 +42,8 @@ if [[ -n *tag-*/setup/*(#qN) ]]; then
   done
 fi
 
-if host_os_is_linux; then
+if host_os_is_linux && [[ -z ${DOCKER+1} ]]; then
   do_apt_install
+else
+  echo "We are in a dockerized context, not doing any package installation via apt"
 fi

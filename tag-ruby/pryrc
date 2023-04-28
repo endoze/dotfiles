@@ -1,9 +1,18 @@
+# vim: ft=ruby
 # Prompt with ruby version
-# Borrowed from http://lucapette.com/pry/pry-everywhere/
-Pry.prompt = [proc { |obj, nest_level| "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL} (#{obj}):#{nest_level} > " },
-              proc { |obj, nest_level| "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL} (#{obj}):#{nest_level} * " }]
 
-Pry.config.editor = ENV['EDITOR'] || 'vim'
+env = Pry::Helpers::Text.red("#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}")
+
+Pry.config.prompt = Pry::Prompt.new(
+  'custom',
+  'my custom prompt',
+  [
+    proc { |obj, nest_level| "#{env} (#{obj}):#{nest_level} > " },
+    proc { |obj, nest_level| "#{env} (#{obj}):#{nest_level} * " }
+  ]
+)
+
+Pry.config.editor = ENV['EDITOR'] || 'nvim'
 
 if defined?(PryByebug)
   Pry.commands.alias_command 'c', 'continue'

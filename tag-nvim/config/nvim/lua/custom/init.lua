@@ -6,7 +6,14 @@ vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.softtabstop = 2
 vim.opt.backspace = "indent,eol,start"
+vim.opt.cmdheight = 0
 vim.api.nvim_set_keymap("n", "<leader><space>", ":noh<cr>", { noremap = true })
+vim.api.nvim_set_keymap(
+  "n",
+  "<leader>es",
+  ":e $HOME/.config/nvim/lua/custom/chadrc.lua<CR>",
+  { noremap = true }
+)
 
 local config = require("core.utils").load_config()
 

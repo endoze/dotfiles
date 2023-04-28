@@ -9,6 +9,4 @@ else
   echo "Rustup already installed"
 fi
 
-cargo install devicon-lookup
-
 set -e
