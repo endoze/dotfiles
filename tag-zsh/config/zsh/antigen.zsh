@@ -1,7 +1,11 @@
 # ANTIGEN SETUP
 
 if host_os_is_macos; then
-  source $(brew --prefix)/share/antigen/antigen.zsh
+  if host_os_is_arm; then
+    source $(/opt/homebrew/bin/brew --prefix)/share/antigen/antigen.zsh
+  else
+    source $(brew --prefix)/share/antigen/antigen.zsh
+  fi
 elif host_os_is_linux; then
   ANTIGEN_LIBRARY_PATH=~/.dotfiles/antigen-library.zsh
 

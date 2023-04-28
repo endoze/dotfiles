@@ -30,8 +30,8 @@ return {
         " current buffer search",
       },
       ["<leader>fo"] = {
-        "<cmd> Telescope oldfiles only_cwd=true <CR>",
-        " find oldfilesz",
+        ":lua require('telescope.builtin').oldfiles({prompt_title='Recent Files', only_cwd=true})<CR>",
+        " find recent files",
       },
     },
   },

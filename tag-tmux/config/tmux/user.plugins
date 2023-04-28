@@ -1,0 +1,7 @@
+# vim: ft=tmux
+
+# plugins
+set -g @plugin 'seebi/tmux-colors-solarized'
+
+# plugin settings
+set -g @colors-solarized 'dark'
