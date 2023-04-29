@@ -36,13 +36,19 @@ return {
     config = function()
       require("crates").setup({
         popup = {
-          autofocus = false,
+          autofocus = true,
         },
         null_ls = {
           enabled = true,
           name = "crates.nvim",
         },
       })
+      local function show_documentation()
+        require("crates").show_popup()
+      end
+
+      vim.keymap.set("n", "K", show_documentation, { silent = true })
+      require("crates").show()
     end,
   },
 }

@@ -13,6 +13,6 @@ function do_apt_install {
     PACKAGES_GREP_STRING+=(-e $package)
   done
 
-  apt-get update -y
-  apt-cache --generate pkgnames | grep --line-regexp --fixed-strings $PACKAGES_GREP_STRING | xargs apt install -y
+  sudo apt-get update -y
+  sudo apt-cache --generate pkgnames | grep --line-regexp --fixed-strings $PACKAGES_GREP_STRING | sudo xargs apt install -y
 }
