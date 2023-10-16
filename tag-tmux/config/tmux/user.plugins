@@ -1,4 +1,4 @@
-# vim: ft=tmux
+# vim: filetype=tmux
 
 # plugins
 set -g @plugin 'seebi/tmux-colors-solarized'

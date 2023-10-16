@@ -1,13 +1,5 @@
-function nvim-chad
-  env NVIM_APPNAME='' nvim $argv
-end
-
-function nvim-bare
-  env NVIM_APPNAME=bare nvim $argv
-end
-
 function nvims
-  set items bare chad
+  set items bare chad lvim
   set config (printf "%s\n" $items | fzf --prompt=" Neovim Config  " --height=50% --layout=reverse --border --exit-0)
 
   if [ -z $config ]
@@ -17,5 +9,19 @@ function nvims
       set config ""
   end
 
-  env NVIM_APPNAME=$config nvim $argv
+  echo $config
+
+  eval "nvim-$config" $argv
+end
+
+function nvim-chad
+  env NVIM_APPNAME='' nvim $argv
+end
+
+function nvim-bare
+  env NVIM_APPNAME=bare nvim $argv
+end
+
+function nvim-lvim
+  ~/.local/bin/lvim $argv
 end

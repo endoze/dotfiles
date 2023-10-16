@@ -12,7 +12,7 @@ return {
     overriden_modules = nil,
   },
   cmp = {
-    style = "atom_colored",
+    style = "default",
   },
   nvdash = {
     load_on_startup = true,

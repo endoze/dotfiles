@@ -7,6 +7,11 @@ if ! command -v cargo > /dev/null; then
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 else
   echo "Rustup already installed"
+
+  rustup component add rustfmt
+  rustup component add rust-analyzer
+  rustup component add clippy
 fi
+
 
 set -e

@@ -24,6 +24,9 @@ M.options = {
       { noremap = true }
     )
 
+    -- remove pesky vim command history command
+    vim.api.nvim_set_keymap("n", "q:", "<Nop>", { noremap = true })
+
     -- convert hashrocket to ruby 1.9 hash syntax
     vim.api.nvim_set_keymap(
       "n",
@@ -36,6 +39,8 @@ M.options = {
     vim.api.nvim_set_keymap("n", "<shift>k", "", { noremap = true })
     vim.api.nvim_set_keymap("v", "<shift>k", "", { noremap = true })
 
+    vim.api.nvim_set_keymap("i", "jj", "<Esc>", { noremap = true })
+
     -- overwrite swift file format defaults from vim
     vim.api.nvim_create_autocmd("FileType", {
       pattern = "swift",
@@ -44,6 +49,13 @@ M.options = {
         vim.opt.expandtab = true
         vim.opt.softtabstop = 2
         vim.opt.shiftwidth = 2
+      end,
+    })
+
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "gitcommit",
+      callback = function()
+        require("cmp").setup.buffer({ enabled = false })
       end,
     })
   end,

@@ -7,11 +7,12 @@ M.languages = {
   "html",
   "jsonls",
   "marksman",
+  "omnisharp",
   "rust_analyzer",
   "solargraph",
   "sourcekit",
   "sqlls",
-  "taplo",
+  "terraformls",
   "tsserver",
 }
 
