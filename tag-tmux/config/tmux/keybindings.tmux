@@ -1,3 +1,5 @@
+# vim: filetype=tmux
+#
 # Set the prefix to Ctrl+a
 set-option -g   prefix C-a
 unbind C-b

@@ -107,6 +107,9 @@ M.polish_hl = {
     fg = M.base_30.grey_fg2,
     bg = M.base_30.darker_black,
   },
+  SignColumn = {
+    bg = M.base_30.black,
+  },
 }
 
 return M

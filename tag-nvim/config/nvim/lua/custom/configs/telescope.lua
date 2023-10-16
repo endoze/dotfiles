@@ -1,10 +1,25 @@
 return {
+  extensions_list = {
+    "fzf",
+  },
+  extensions = {
+    fzf = {
+      fuzzy = true,
+      override_generic_sorter = true,
+      override_file_sorter = true,
+      case_mode = "smart_case",
+    },
+  },
   defaults = {
     prompt_prefix = "   ",
     file_ignore_patterns = {
       "node_modules",
       "target",
       "vendor/cache",
+      "tmp",
+      "public",
+      "bin/Debug",
+      "obj/Debug",
       "dump.rdb",
       "**/*.png",
       "**/*.gif",
@@ -23,12 +38,6 @@ return {
       "**/*.eps",
       "**/*.pdf",
     },
-    file_sorter = function()
-      return require("telescope.sorters").get_fzy_sorter()
-    end,
-    generic_sorter = function()
-      return require("telescope.sorters").get_fzy_sorter()
-    end,
     mappings = {
       i = {
         ["<C-j>"] = function(...)

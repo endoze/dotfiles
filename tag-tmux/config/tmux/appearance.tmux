@@ -1,3 +1,5 @@
+# vim: filetype=tmux
+#
 # statusbar
 set-option -g   status-interval 0
 set-option -g   status-justify left

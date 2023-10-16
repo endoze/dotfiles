@@ -2,7 +2,7 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
 palette = 'solarized'
-command_timeout = 750
+command_timeout = 500
 
 [palettes.solarized]
 base03 = '#002b36'

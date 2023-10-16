@@ -16,6 +16,7 @@ M.ensure_installed = {
   "sqlls",
   "stylua",
   "taplo",
+  "terraform-ls",
   "typescript-language-server",
 }
 

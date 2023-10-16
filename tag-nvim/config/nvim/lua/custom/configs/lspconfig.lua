@@ -6,11 +6,40 @@ local servers = require("custom.configs.lsplanguages").languages
 
 for _, lsp in ipairs(servers) do
   if lsp == "rust_analyzer" then
+    local rt = require("rust-tools")
+    local rtd = require("rust-tools.dap")
+    local mason_registry = require("mason-registry")
+    local codelldb = mason_registry.get_package("codelldb")
+    local extension_path = codelldb:get_install_path() .. "/extension/"
+    local codelldb_path = extension_path .. "adapter/codelldb"
+    local liblldb_path = extension_path .. "lldb/lib/liblldb.dylib"
+
     local rust_opts = {
+      tools = {
+        autoSetHints = true,
+        runnables = { use_telescope = true },
+        inlay_hints = { show_parameter_hints = true },
+        hover_actions = { auto_focus = true },
+      },
+      dap = {
+        adapter = rtd.get_codelldb_adapter(codelldb_path, liblldb_path),
+      },
       server = {
-        on_attach = on_attach,
+        on_attach = function(client, bufnr)
+          on_attach(client, bufnr)
+
+          vim.schedule(function()
+            vim.keymap.set(
+              "n",
+              "K",
+              rt.hover_actions.hover_actions,
+              { buffer = bufnr, noremap = true, silent = true }
+            )
+          end)
+        end,
         capabilities = capabilities,
         cmd = { "rustup", "run", "stable", "rust-analyzer" },
+        flags = { debounce_text_changes = 150 },
 
         settings = {
           ["rust-analyzer"] = {
@@ -22,7 +51,7 @@ for _, lsp in ipairs(servers) do
       },
     }
 
-    require("rust-tools").setup(rust_opts)
+    rt.setup(rust_opts)
   elseif lsp == "solargraph" then
     local custom_on_attach = function(client, bufnr)
       client.server_capabilities.documentFormattingProvider = true
@@ -52,7 +81,7 @@ for _, lsp in ipairs(servers) do
     end
 
     lspconfig[lsp].setup({
-      cmd = { "bundle", "exec", "solargraph", "stdio" },
+      cmd = { "solargraph", "stdio" },
       on_attach = custom_on_attach,
       capabilities = capabilities,
     })

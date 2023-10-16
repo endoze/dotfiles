@@ -1,3 +1,5 @@
+# vim: filetype=tmux
+#
 # Window splitting
 unbind-key \        ; bind-key \\       split-window -h
 unbind-key |        ; bind-key |        split-window -h

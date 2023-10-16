@@ -3,11 +3,16 @@ export CLICOLOR="YES"
 export DOTFILES=$HOME/.dotfiles
 export EDITOR="nvim"
 export RCRC=$DOTFILES/rcrc
-export VMCTLDIR=$HOME/.docker-vm
-export DOCKER_HOST="tcp://192.168.64.2:2375"
+export STARSHIP_LOG=error
 
 for f in $HOME/.config/fish/aliases/*fish
   source $f
 end
 
-starship init fish | source
+if test -e ~/.localrc.fish
+  source ~/.localrc.fish
+end
+
+if status is-interactive
+  starship init fish | source
+end
