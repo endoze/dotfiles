@@ -38,7 +38,7 @@ for _, lsp in ipairs(servers) do
           end)
         end,
         capabilities = capabilities,
-        cmd = { "rustup", "run", "stable", "rust-analyzer" },
+        cmd = { "rust-analyzer" },
         flags = { debounce_text_changes = 150 },
 
         settings = {

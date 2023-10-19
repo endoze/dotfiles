@@ -11,7 +11,7 @@ FROM golang:${GOLANG_VERSION}-bullseye as go-builder
 FROM buildpack-deps:22.04
 
 ARG APP_ROOT=/workspace
-ARG BUILD_PACKAGES="zsh fish rcm ripgrep luarocks libssl1.1 tmux bat fzf lsd"
+ARG BUILD_PACKAGES="zsh fish rcm ripgrep luarocks libssl1.1 tmux bat fzf"
 
 ENV BUNDLE_APP_CONFIG="$APP_ROOT/.bundle" DEBIAN_FRONTEND=noninteractive
 ENV RUSTUP_HOME=/usr/local/rustup CARGO_HOME=/usr/local/cargo GOPATH=/go
@@ -23,6 +23,9 @@ WORKDIR $APP_ROOT
 RUN echo "deb http://security.ubuntu.com/ubuntu focal-security main" | tee /etc/apt/sources.list.d/focal-security.list \
     && apt-get update -y \
     && apt-get install -y $BUILD_PACKAGES \
+    && wget https://github.com/lsd-rs/lsd/releases/download/v1.0.0/lsd_1.0.0_amd64.deb \
+    && dpkg -i lsd_1.0.0_amd64.deb \
+    && rm -rf lsd_1.0.0_amd64.deb \
     && apt-get -yqq autoclean \
     && apt-get -yqq autoremove --purge \
     && apt-get -yqq purge $(dpkg --get-selections | grep deinstall | sed s/deinstall//g) \
