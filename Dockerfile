@@ -1,5 +1,5 @@
-ARG GOLANG_VERSION=1.20.3
-ARG RUST_VERSION=1.69.0
+ARG GOLANG_VERSION=1.21.1
+ARG RUST_VERSION=1.72.0
 ARG RUBY_VERSION=3.2.2
 ARG NODE_VERSION=20.0.0
 
@@ -11,7 +11,7 @@ FROM golang:${GOLANG_VERSION}-bullseye as go-builder
 FROM buildpack-deps:22.04
 
 ARG APP_ROOT=/workspace
-ARG BUILD_PACKAGES="zsh fish rcm ripgrep luarocks libssl1.1 tmux bat fzf"
+ARG BUILD_PACKAGES="zsh fish rcm ripgrep luarocks libssl1.1 tmux bat fzf lsd"
 
 ENV BUNDLE_APP_CONFIG="$APP_ROOT/.bundle" DEBIAN_FRONTEND=noninteractive
 ENV RUSTUP_HOME=/usr/local/rustup CARGO_HOME=/usr/local/cargo GOPATH=/go
