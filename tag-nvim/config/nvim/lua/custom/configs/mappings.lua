@@ -14,6 +14,14 @@ return {
       ["<leader>/"] = "",
     },
   },
+  neoai = {
+    n = {
+      ["<leader>u"] = {
+        ":NeoAIToggle<CR>",
+        "Toggle NeoAI Floating Window",
+      },
+    },
+  },
   telescope = {
     n = {
       ["<C-t>"] = {

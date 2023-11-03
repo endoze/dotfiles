@@ -5,7 +5,8 @@ brew 'mysql@5.7'
 brew 'imagemagick@6'
 brew 'openssl'
 brew 'dnsmasq'
-brew 'chromedriver'
+
+brew 'chromedriver', args: { "no-quarantine" => true }
 
 brew 'docker'
 brew 'docker-compose'

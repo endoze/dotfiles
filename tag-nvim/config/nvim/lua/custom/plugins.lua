@@ -24,8 +24,8 @@ return {
       require("custom.configs.lspconfig")
     end,
   },
-  { "tpope/vim-fugitive", lazy = true },
-  { "kchmck/vim-coffee-script", lazy = true },
+  { "tpope/vim-fugitive", cmd = "Git" },
+  { "kchmck/vim-coffee-script", event = "BufReadPre *.coffee" },
   { "simrat39/rust-tools.nvim", lazy = true },
   {
     "nvim-treesitter/nvim-treesitter",
@@ -68,6 +68,37 @@ return {
       require("neodev").setup()
       require("plugins.configs.lspconfig")
       require("custom.configs.lspconfig")
+    end,
+  },
+  {
+    "Bryley/neoai.nvim",
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+    },
+    cmd = {
+      "NeoAI",
+      "NeoAIOpen",
+      "NeoAIClose",
+      "NeoAIToggle",
+      "NeoAIContext",
+      "NeoAIContextOpen",
+      "NeoAIContextClose",
+      "NeoAIInject",
+      "NeoAIInjectCode",
+      "NeoAIInjectContext",
+      "NeoAIInjectContextCode",
+    },
+    keys = {
+      { "<leader>as", desc = "summarize text" },
+      { "<leader>ag", desc = "generate git message" },
+      { "<leader>ai", desc = "toggle ai window" },
+    },
+    config = function()
+      require("neoai").setup({
+        ui = {
+          width = 40,
+        },
+      })
     end,
   },
 }

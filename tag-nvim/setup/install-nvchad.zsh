@@ -57,5 +57,6 @@ fi
 
 luarocks install luacheck
 npm install -g @fsouza/prettierd
+gem install standard
 
 set -e

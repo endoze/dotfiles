@@ -38,7 +38,11 @@ M.setup = function()
     -- Go
     b.formatting.gofmt,
 
+    -- C/C++/Objective-C
     b.formatting.clang_format,
+
+    -- Kotlin
+    b.formatting.ktlint,
   }
 
   null_ls.setup({

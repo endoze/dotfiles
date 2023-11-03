@@ -53,9 +53,11 @@ cat <<- EOF > ~/.gitconfig
   ci = commit
   co = checkout
   br = branch
-  cleanlocal = "!zsh -c 'BRANCH=\`git current\`; if [[ ! \$BRANCH =~  ^master$ ]];then read \"?Are you sure you want to run while not in master (you run the risk of deleting master)? (y/n) \" choice; if [[ ! \$choice =~ ^[Yy]$ ]]; then echo Nothing done; exit 0; fi ; fi; for stale_branch (\`git branch --merged \$BRANCH | grep -v \$BRANCH\`) git branch -d \$stale_branch'"
-  current = !git rev-parse --abbrev-ref HEAD
-  some = !git checkout master && git pull --rebase && git remote prune origin && git cleanlocal
+  cleanlocal = "!zsh -c 'BRANCH=\`git current\`; if [[ ! \$BRANCH =~ ^\$(git head-branch)$ ]];then read \"?Are you sure you want to run while not in \$(git head-branch) (you run the risk of deleting \$(git head-branch))? (y/n) \" choice; if [[ ! \$choice =~ ^[Yy]$ ]]; then echo Nothing done; exit 0; fi ; fi; for stale_branch (\`git branch --merged \$BRANCH | grep -v \$BRANCH\`) git branch -d \$stale_branch'"
+  current = !git rev-parse --abbrev-ref HEAD | sed 's|heads/||'
+  upstream-name = !git remote | egrep -o '(upstream|origin)' | tail -1
+  head-branch = !git remote show \$(git upstream-name) | awk '/HEAD branch/ {print \$NF}'
+  some = !git checkout -B "\$(git head-branch)" && git pull --rebase && git remote prune origin && git cleanlocal
 [user]
   name = $GIT_NAME
   email = $GIT_EMAIL

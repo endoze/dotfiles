@@ -8,6 +8,17 @@ M.options = {
     -- so treesitter is in charge instead
     vim.highlight.priorities.semantic_tokens = 1
 
+    vim.filetype.add({
+      extension = {
+        ["env"] = "dotenv",
+        ["podspec"] = "ruby",
+      },
+      filename = {
+        ["Brewfile"] = "ruby",
+        ["Podfile"] = "ruby",
+      },
+    })
+
     -- lsp rename
     vim.api.nvim_set_keymap(
       "n",

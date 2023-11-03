@@ -1,7 +1,5 @@
 #!/usr/bin/env zsh
 
-set -e
-
 . "$(dirname $0)/colors"
 
 printf "⛓  ${GREEN}Linking Dotfiles${NO_COLOR}\n"

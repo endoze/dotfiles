@@ -1,14 +1,17 @@
 #!/usr/bin/env zsh
 
-set -e
-
 . "$(dirname $0)/colors"
 . ./rcrc
-. ./tag-zsh/config/zsh/functions/host_os_is_linux
-. ./tag-zsh/config/zsh/functions/host_os_is_macos
 . ./tag-zsh/config/zsh/functions/host_os_is_arm
+. ./tag-zsh/config/zsh/functions/add_once_to_path
 
 printf "[1/4]🔎  Checking for Homebrew"
+
+if host_os_is_arm; then
+  add_once_to_path "/opt/homebrew/bin" "before"
+else
+  add_once_to_path "/usr/local/bin" "before"
+fi
 
 if ! command -v brew >/dev/null; then
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -51,8 +54,6 @@ find . -type f -iname "Brewfile" -print0 | while IFS= read -r -d $'\0' line; do
     brew bundle --file="$line" ||
       printf "⚠️  ${YELLOW}Some dependencies from $line failed, attempting to continue${NO_COLOR}\n"
   fi
-
-  set -e
 
   printf "[4/4]⛓  Installing homebrew dependencies"
 done
