@@ -1,7 +1,5 @@
 #!/usr/bin/env zsh
 
-set +e
-
 if ! command -v cargo > /dev/null; then
   echo "Installing Rustup"
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -12,6 +10,3 @@ else
   rustup component add rust-analyzer
   rustup component add clippy
 fi
-
-
-set -e
