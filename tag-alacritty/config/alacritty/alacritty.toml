@@ -1,0 +1,51 @@
+import = ["/Users/endoze/.config/alacritty/themes/onedark.toml"]
+
+[env]
+TERM = "alacritty"
+
+[font]
+size = 20
+
+[font.normal]
+family = "InconsolataGo Nerd Font"
+style = "Regular"
+
+[[keyboard.bindings]]
+action = "Paste"
+key = "V"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "Copy"
+key = "C"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "Quit"
+key = "Q"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "SpawnNewInstance"
+key = "N"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "ToggleFullscreen"
+key = "Return"
+mods = "Command"
+
+[window]
+decorations = "buttonless"
+dynamic_padding = true
+
+[[hints.enabled]]
+command = "open"
+mouse.enabled = true
+regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|file:|git://|ssh:|ftp://)[^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`]+"
+
+[[hints.enabled]]
+command = "open"
+mouse.enabled = true
+# regex for valid unix paths to html/images
+regex = '/[-\w._]+(/[-\w._]+)*(\.html|\.png|\.jpg|\.jpeg|\.gif|\.svg)'

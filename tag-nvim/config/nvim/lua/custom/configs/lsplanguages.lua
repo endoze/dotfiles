@@ -1,22 +1,22 @@
 local M = {}
 
 M.languages = {
-  "css-lsp",
+  "clangd",
+  "cssls",
   "deno",
-  "dockerfile-language-server",
+  "dockerls",
   "gopls",
-  "html-lsp",
-  "json-lsp",
-  "lua-language-server",
+  "html",
+  "jsonls",
+  "kotlin_language_server",
   "marksman",
-  "rust-analyzer",
-  "shellcheck",
-  "shfmt",
+  "omnisharp",
+  "rust_analyzer",
+  "solargraph",
+  "sourcekit",
   "sqlls",
-  "stylua",
-  "taplo",
-  "terraform-ls",
-  "typescript-language-server",
+  "terraformls",
+  "tsserver",
 }
 
 return M

@@ -1,7 +1,63 @@
-# vim: filetype=tmux
+# vim: ft=tmux
 
 # plugins
-set -g @plugin 'seebi/tmux-colors-solarized'
+set -g @plugin 'endoze/tmux#add-overrides-for-all-colors'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+set-option -g renumber-windows on
 
 # plugin settings
-set -g @colors-solarized 'dark'
+set -g @dracula-show-powerline true
+set -g @dracula-show-flags false
+set -g @dracula-show-left-icon session
+
+set -g @dracula-color-black "#073642"
+set -g @dracula-color-white "#eee8d5"
+
+set -g @dracula-dark-mode false
+
+
+# set solarized colors
+# set -g @dracula-color-black "#073642"
+# set -g @dracula-color-white "#eee8d5"
+# set -g @dracula-color-gray "#93a1a1"
+# set -g @dracula-color-dark-gray "#657b83"
+# set -g @dracula-color-dark-purple "#6c71c4"
+# set -g @dracula-color-cyan "#2aa198"
+# set -g @dracula-color-green "#859900"
+# set -g @dracula-color-orange "#cb4b16"
+# set -g @dracula-color-red "#dc322f"
+# set -g @dracula-color-pink "#d33682"
+# set -g @dracula-color-yellow "#b58900"
+# set -g @dracula-color-blue "#268bd2"
+
+
+set -g @dracula-color-black "#ffffff"
+set -g @dracula-color-white "#2d3139"
+set -g @dracula-color-gray "#abb2bf"
+set -g @dracula-color-dark-gray "#5c6370"
+set -g @dracula-color-dark-purple "#c678dd"
+set -g @dracula-color-cyan "#56b6c2"
+set -g @dracula-color-green "#98c379"
+set -g @dracula-color-orange "#cb4b16"
+set -g @dracula-color-red "#e06c75"
+set -g @dracula-color-pink "#c678dd"
+set -g @dracula-color-yellow "#e5c07b"
+set -g @dracula-color-blue "#61afef"
+
+
+set -g @dracula-battery-colors "blue white"
+set -g @dracula-network-colors "cyan white"
+set -g @dracula-weather-colors "orange white"
+
+set -g @dracula-battery-label "󰁹"
+
+set -g @dracula-show-location false
+
+set -g @dracula-military-time false
+set -g @dracula-day-month true
+set -g @dracula-show-timezone true
+set -g @dracula-time-format "%a %b %e %I:%M %p"
+
+set -g @dracula-plugins "battery network time"
