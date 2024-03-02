@@ -1,3 +1,4 @@
+---@Class ChadrcConfig
 local M = {}
 
 M.ui = require("custom.configs.ui")
@@ -7,6 +8,13 @@ M.options = {
     -- set lowest priority for lsp syntax highlighting
     -- so treesitter is in charge instead
     vim.highlight.priorities.semantic_tokens = 1
+
+    vim.cmd([[
+      :hi NvimTreeExecFile    gui=bold           guifg=#ffa0a0
+      :hi NvimTreeSymlink     gui=bold           guifg=#ffff60
+      :hi NvimTreeSpecialFile gui=bold,underline guifg=#ff80ff
+      :hi NvimTreeImageFile   gui=bold           guifg=#ff80ff
+    ]])
 
     vim.filetype.add({
       extension = {
@@ -38,28 +46,16 @@ M.options = {
     -- remove pesky vim command history command
     vim.api.nvim_set_keymap("n", "q:", "<Nop>", { noremap = true })
 
-    -- convert hashrocket to ruby 1.9 hash syntax
-    vim.api.nvim_set_keymap(
-      "n",
-      "<leader>d",
-      ":%s/:\\([^ ]*\\)\\(\\s*\\)=>/\\1:/g<cr>",
-      { noremap = true }
-    )
-
     -- remove shift+k keybind as I hit it a lot without meaning to
     vim.api.nvim_set_keymap("n", "<shift>k", "", { noremap = true })
     vim.api.nvim_set_keymap("v", "<shift>k", "", { noremap = true })
 
     vim.api.nvim_set_keymap("i", "jj", "<Esc>", { noremap = true })
 
-    -- overwrite swift file format defaults from vim
     vim.api.nvim_create_autocmd("FileType", {
-      pattern = "swift",
+      pattern = "pkl",
       callback = function()
-        vim.opt.tabstop = 2
-        vim.opt.expandtab = true
-        vim.opt.softtabstop = 2
-        vim.opt.shiftwidth = 2
+        vim.opt.foldmethod = "manual"
       end,
     })
 

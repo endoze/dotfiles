@@ -1,9 +1,32 @@
+---@type UIConfig
 return {
   theme = "onedark",
   theme_toggle = { "onedark", "solarized-light" },
   lsp_semantic_tokens = false,
   statusline = {
     theme = "vscode_colored",
+    overriden_modules = function(modules)
+      modules[12] = (function()
+        if rawget(vim, "lsp") then
+          for _, client in ipairs(vim.lsp.get_active_clients()) do
+            if
+              client.attached_buffers[vim.api.nvim_win_get_buf(
+                vim.g.statusline_winid
+              )]
+              and client.name ~= "null-ls"
+              and client.name ~= "copilot"
+            then
+              return (
+                vim.o.columns > 100
+                and "%#St_LspStatus# 󰄭  " .. client.name .. "  "
+              ) or "%#St_LspStatus# 󰄭  LSP  "
+            end
+          end
+        end
+
+        return ""
+      end)()
+    end,
   },
   -- lazyload it when there are 1+ buffers
   tabufline = {

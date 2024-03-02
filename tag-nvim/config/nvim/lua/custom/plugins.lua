@@ -71,34 +71,36 @@ return {
     end,
   },
   {
-    "Bryley/neoai.nvim",
+    "https://github.com/apple/pkl-neovim",
+    lazy = true,
+    event = "BufReadPre *.pkl",
     dependencies = {
-      "MunifTanjim/nui.nvim",
+      "nvim-treesitter/nvim-treesitter",
     },
-    cmd = {
-      "NeoAI",
-      "NeoAIOpen",
-      "NeoAIClose",
-      "NeoAIToggle",
-      "NeoAIContext",
-      "NeoAIContextOpen",
-      "NeoAIContextClose",
-      "NeoAIInject",
-      "NeoAIInjectCode",
-      "NeoAIInjectContext",
-      "NeoAIInjectContextCode",
-    },
-    keys = {
-      { "<leader>as", desc = "summarize text" },
-      { "<leader>ag", desc = "generate git message" },
-      { "<leader>ai", desc = "toggle ai window" },
-    },
+    build = function()
+      vim.cmd("TSInstall! pkl")
+    end,
+  },
+  {
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
     config = function()
-      require("neoai").setup({
-        ui = {
-          width = 40,
-        },
+      require("copilot").setup({
+        suggestion = { enabled = false },
+        panel = { enabled = false },
       })
+    end,
+  },
+  {
+    "https://github.com/apple/pkl-neovim",
+    lazy = true,
+    event = "BufReadPre *.pkl",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+    },
+    build = function()
+      vim.cmd("TSInstall! pkl")
     end,
   },
 }
