@@ -10,6 +10,7 @@ M.mason_list = {
   "html-lsp",
   "json-lsp",
   "kotlin-language-server",
+  "ktlint",
   "lua-language-server",
   "marksman",
   "omnisharp",

@@ -11,7 +11,7 @@ FROM golang:${GOLANG_VERSION}-bullseye as go-builder
 FROM buildpack-deps:22.04
 
 ARG APP_ROOT=/workspace
-ARG BUILD_PACKAGES="zsh fish cmake rcm libssl1.1 ripgrep tmux bat fzf"
+ARG BUILD_PACKAGES="zsh fish clang_format cmake rcm libssl1.1 ripgrep tmux bat fzf"
 
 ENV BUNDLE_APP_CONFIG="$APP_ROOT/.bundle" DEBIAN_FRONTEND=noninteractive
 ENV RUSTUP_HOME=/usr/local/rustup CARGO_HOME=/usr/local/cargo GOPATH=/go
@@ -43,7 +43,7 @@ COPY --from=node-builder /usr/local/ /usr/local/
 COPY --from=go-builder /usr/local/ /usr/local/
 
 RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 1777 "$GOPATH" \
-  && npm install -g tree-sitter-cli
+  && npm install -g tree-sitter-cli && npm install -g @fsouza/prettierd
 
 COPY . /root/.dotfiles
 
