@@ -1,12 +1,12 @@
-brew 'ruby-build'
-brew 'rbenv'
-brew 'redis'
-brew 'mysql@5.7'
-brew 'imagemagick@6'
-brew 'openssl'
-brew 'dnsmasq'
+brew "ruby-build"
+brew "rbenv"
+brew "redis"
+brew "mysql@5.7"
+brew "imagemagick"
+brew "openssl"
+brew "dnsmasq"
 
-brew 'chromedriver', args: { "no-quarantine" => true }
+brew "chromedriver", args: {"no-quarantine" => true}
 
-brew 'docker'
-brew 'docker-compose'
+brew "docker"
+brew "docker-compose"

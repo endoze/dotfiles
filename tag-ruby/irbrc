@@ -1,13 +1,13 @@
 #!/usr/bin/ruby
 
-require 'rubygems'
+require "rubygems"
 
 if defined? IRB
-  require 'irb/completion'
-  require 'irb/ext/save-history'
+  require "irb/completion"
+  require "irb/ext/save-history"
 
   IRB.conf[:SAVE_HISTORY] = 1000
-  IRB.conf[:HISTORY_FILE] = "#{ENV['HOME']}/.irb_history"
+  IRB.conf[:HISTORY_FILE] = "#{ENV["HOME"]}/.irb_history"
   IRB.conf[:PROMPT_MODE] = :SIMPLE
   IRB.conf[:AUTO_INDENT] = true
 end
@@ -16,7 +16,7 @@ end
 #  Method to clean up hash output
 # -----------------------------------------
 begin
-  require 'pp'
+  require "pp"
 rescue LoadError => err
 end
 
@@ -24,7 +24,7 @@ end
 #  External editor support
 # -----------------------------------------
 begin
-  require 'interactive_editor'
+  require "interactive_editor"
 rescue LoadError => err
 end
 
@@ -32,7 +32,7 @@ end
 #  Wirble - Coloring and other irb niceties
 # -----------------------------------------
 begin
-  require 'wirble'
+  require "wirble"
   Wirble.init
   Wirble.colorize
 rescue LoadError => err
@@ -42,7 +42,7 @@ end
 #  What methods (and result) are available
 # -----------------------------------------
 begin
-  require 'what_methods'
+  require "what_methods"
 rescue LoadError => err
 end
 
@@ -55,7 +55,7 @@ class Object
   def local_methods(obj = self)
     (obj.methods - obj.class.superclass.instance_methods).sort
   end
-  
+
   # print documentation
   #
   #   ri 'Array#pop'
@@ -64,15 +64,15 @@ class Object
   #   arr.ri :pop
   def ri(method = nil)
     unless method && method =~ /^[A-Z]/ # if class isn't specified
-      klass = self.kind_of?(Class) ? name : self.class.name
-      method = [klass, method].compact.join('#')
+      klass = is_a?(Class) ? name : self.class.name
+      method = [klass, method].compact.join("#")
     end
     puts `ri '#{method}'`
   end
 end
 
 def me
-  User.find_by_login('endoze')
+  User.find_by_login("endoze")
 end
 
 def r
@@ -89,7 +89,11 @@ def benchmark
   cur = Time.now
   result = yield
   print "#{cur = Time.now - cur} seconds"
-  puts " (#{(cur / $last_benchmark * 100).to_i - 100}% change)" rescue puts ""
+  begin
+    puts " (#{(cur / $last_benchmark * 100).to_i - 100}% change)"
+  rescue
+    puts ""
+  end
   $last_benchmark = cur
   result
 end
@@ -100,7 +104,7 @@ end
 #         avoid conflicts with other tools
 # -----------------------------------------
 begin
-  require 'hirb'
+  require "hirb"
   Hirb::View.enable
 rescue LoadError => err
 end
@@ -110,48 +114,48 @@ end
 #  that give us nice SQL statements when
 #  using ActiveRecord
 # -----------------------------------------
-if ENV.include?('RAILS_ENV') && !Object.const_defined?('RAILS_DEFAULT_LOGGER')
- require 'logger'
- RAILS_DEFAULT_LOGGER = Logger.new(STDOUT)
+if ENV.include?("RAILS_ENV") && !Object.const_defined?("RAILS_DEFAULT_LOGGER")
+  require "logger"
+  RAILS_DEFAULT_LOGGER = Logger.new(STDOUT)
 end
 
 if defined?(Rails) && Rails.env && defined?(ActiveRecord)
- Bundler.require :console
+  Bundler.require :console
 
- def toggle_sql
-   if ActiveRecord::Base.logger
-     set_logger nil and return false
-   else
-     set_logger Logger.new(STDOUT) and return true
-   end
- end
+  def toggle_sql
+    if ActiveRecord::Base.logger
+      set_logger nil and return false
+    else
+      set_logger Logger.new(STDOUT) and return true
+    end
+  end
 
- def set_logger(logger)
-   ActiveRecord::Base.logger = logger
-   ActiveRecord::Base.clear_active_connections!
- end
+  def set_logger(logger)
+    ActiveRecord::Base.logger = logger
+    ActiveRecord::Base.clear_active_connections!
+  end
 
- set_logger nil # start with the normal logger
+  set_logger nil # start with the normal logger
 end
 
 # -----------------------------------------
 #  Prompt to include project name and env (Rails)
 # -----------------------------------------
-if rails_env = ENV['RAILS_ENV'] || (defined?(Rails) && rails_env = Rails.env)
+if rails_env = ENV["RAILS_ENV"] || (defined?(Rails) && rails_env = Rails.env)
   rails_root = File.basename(Dir.pwd)
   prompt = "#{rails_root}[#{rails_env}]"
   IRB.conf[:PROMPT] ||= {}
   IRB.conf[:PROMPT][:RAILS] = {
-    :PROMPT_I => "#{prompt}> ",
-    :PROMPT_S => "#{prompt}* ",
-    :PROMPT_C => "#{prompt}? ",
-    :RETURN => "=> %s\n"
+    PROMPT_I: "#{prompt}> ",
+    PROMPT_S: "#{prompt}* ",
+    PROMPT_C: "#{prompt}? ",
+    RETURN: "=> %s\n"
   }
   IRB.conf[:PROMPT_MODE] = :RAILS
 
   # Called after the irb session is initialized and Rails has
   # been loaded (props: Mike Clark).
-  IRB.conf[:IRB_RC] = Proc.new do
+  IRB.conf[:IRB_RC] = proc do
     # Shows what's logged in realtime (beats tailing the log in another terminal)
     # ActiveRecord::Base.logger = Logger.new(STDOUT)
   end

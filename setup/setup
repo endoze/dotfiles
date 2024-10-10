@@ -29,8 +29,10 @@ if [[ -n *tag-*/setup/*(#qN) ]]; then
   for file in tag-*/setup/*; do
     TAG_NAME=`echo $file | awk -F'/' '{print $1}' | awk -F'-' '{print $2}'`
 
+    set +e
     echo $TAGS | grep -q $TAG_NAME
     TAG_INCLUDED=$?
+    set -e
 
     if [ $TAG_INCLUDED -eq 0 ]; then
       source "$file"
