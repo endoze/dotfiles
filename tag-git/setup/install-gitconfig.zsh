@@ -25,7 +25,7 @@ cat <<- EOF > ~/.gitconfig
 [delta]
   navigate = true  # use n and N to move between diff sections
   light = true    # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
-  syntax-theme = braver-solarized-light
+  syntax-theme = TwoDark
   side-by-side = true
   true-color = always
 [diff]
@@ -53,6 +53,7 @@ cat <<- EOF > ~/.gitconfig
   ci = commit
   co = checkout
   br = branch
+  track = !git branch --set-upstream-to=origin/\$(git current)
   cleanlocal = "!zsh -c 'BRANCH=\`git current\`; if [[ ! \$BRANCH =~ ^\$(git head-branch)$ ]];then read \"?Are you sure you want to run while not in \$(git head-branch) (you run the risk of deleting \$(git head-branch))? (y/n) \" choice; if [[ ! \$choice =~ ^[Yy]$ ]]; then echo Nothing done; exit 0; fi ; fi; for stale_branch (\`git branch --merged \$BRANCH | grep -v \$BRANCH\`) git branch -d \$stale_branch'"
   current = !git rev-parse --abbrev-ref HEAD | sed 's|heads/||'
   upstream-name = !git remote | egrep -o '(upstream|origin)' | tail -1
@@ -63,4 +64,5 @@ cat <<- EOF > ~/.gitconfig
   email = $GIT_EMAIL
 EOF
 fi
- set -e
+
+set -e

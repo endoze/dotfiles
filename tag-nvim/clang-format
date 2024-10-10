@@ -1,0 +1,12 @@
+---
+BasedOnStyle: LLVM
+AlignAfterOpenBracket: BlockIndent
+AllowShortFunctionsOnASingleLine: false
+AllowShortBlocksOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+PointerAlignment: Right
+ContinuationIndentWidth: 2
+IndentCaseBlocks: false
+IndentCaseLabels: true
+IndentExternBlock: Indent
+InsertBraces: true
