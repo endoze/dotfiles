@@ -3,15 +3,15 @@ ARG RUST_VERSION=1.81.0
 ARG RUBY_VERSION=3.3.5
 ARG NODE_VERSION=22.9.0
 
-FROM ruby:${RUBY_VERSION}-slim-bullseye as ruby-builder
-FROM rust:${RUST_VERSION}-slim-bullseye as rust-builder
-FROM node:${NODE_VERSION}-bullseye-slim as node-builder
-FROM golang:${GOLANG_VERSION}-bullseye as go-builder
+FROM ruby:${RUBY_VERSION}-slim-bullseye AS ruby-builder
+FROM rust:${RUST_VERSION}-slim-bullseye AS rust-builder
+FROM node:${NODE_VERSION}-bullseye-slim AS node-builder
+FROM golang:${GOLANG_VERSION}-bullseye AS go-builder
 
-FROM buildpack-deps:22.04
+FROM buildpack-deps:24.04
 
 ARG APP_ROOT=/workspace
-ARG BUILD_PACKAGES="zsh fish clang_format cmake rcm libssl1.1 ripgrep tmux bat fzf"
+ARG BUILD_PACKAGES="zsh fish clang-format cmake rcm ripgrep tmux bat fzf"
 
 ENV BUNDLE_APP_CONFIG="$APP_ROOT/.bundle" DEBIAN_FRONTEND=noninteractive
 ENV RUSTUP_HOME=/usr/local/rustup CARGO_HOME=/usr/local/cargo GOPATH=/go
@@ -20,9 +20,11 @@ ENV DOCKER=1
 
 WORKDIR $APP_ROOT
 
-RUN echo "deb http://security.ubuntu.com/ubuntu focal-security main" | tee /etc/apt/sources.list.d/focal-security.list \
-  && apt-get update -y \
+RUN apt-get update -y \
   && apt-get install -y $BUILD_PACKAGES \
+  && wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.23_amd64.deb \
+  && dpkg -i libssl1.1_1.1.1f-1ubuntu2.23_amd64.deb \
+  && rm -rf libssl1.1_1.1.1f-1ubuntu2.23_amd64.deb \
   && wget https://github.com/lsd-rs/lsd/releases/download/v1.1.5/lsd_1.1.5_amd64.deb \
   && dpkg -i lsd_1.1.5_amd64.deb \
   && rm -rf lsd_1.1.5_amd64.deb \
