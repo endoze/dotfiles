@@ -1,5 +1,0 @@
-function tmux_new () {
-  session_name=$1
-  shift
-  tmux new -n $session_name -s $session_name
-}
