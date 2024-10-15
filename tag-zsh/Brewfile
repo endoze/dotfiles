@@ -1,7 +1,0 @@
-brew "antigen"
-brew "zsh"
-brew "zsh-syntax-highlighting"
-brew "fzf"
-brew "git-delta"
-brew "bat"
-brew "lsd"
