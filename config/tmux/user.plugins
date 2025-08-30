@@ -1,0 +1,43 @@
+# vim: ft=tmux
+
+# plugins
+set -g @plugin 'endoze/tmux#add-overrides-for-all-colors'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+set-option -g renumber-windows on
+
+# plugin settings
+set -g @dracula-show-powerline true
+set -g @dracula-show-flags false
+set -g @dracula-show-left-icon session
+
+set -g @dracula-color-black "#073642"
+set -g @dracula-color-white "#eee8d5"
+
+set -g @dracula-dark-mode false
+
+set -g @theme-name "onedark"
+
+run-shell '
+name=$(tmux show -gqv @theme-name)
+
+if [ -n "$name" ] && [ -f ~/.config/tmux/themes/$name.tmux ]; then
+  tmux source-file ~/.config/tmux/themes/$name.tmux
+fi
+'
+
+set -g @dracula-battery-colors "blue white"
+set -g @dracula-network-colors "cyan white"
+set -g @dracula-weather-colors "orange white"
+
+set -g @dracula-battery-label "󰁹"
+
+set -g @dracula-show-location false
+
+set -g @dracula-military-time false
+set -g @dracula-day-month true
+set -g @dracula-show-timezone true
+set -g @dracula-time-format "%a %b %e %I:%M %p"
+
+set -g @dracula-plugins "battery network time"

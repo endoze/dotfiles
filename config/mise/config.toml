@@ -1,0 +1,18 @@
+# Global mise configuration
+# Individual projects can override these with their own .mise.toml or .tool-versions files
+
+[tools]
+python = "3.13"
+ruby = "3.4"
+rust = { version = "stable", profile = "default" }  # includes rustc, cargo, rust-std, rust-docs, rustfmt, clippy
+go = "1.25"
+java = "24"
+node = "22"
+ocaml = "5.2"
+yarn = "3.8.7"
+
+[settings]
+# Use experimental features for better compatibility
+experimental = true
+legacy_version_file = true
+idiomatic_version_file_enable_tools = ["-"]

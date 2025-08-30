@@ -1,0 +1,7 @@
+{ config, pkgs, lib, sourceRoot, ... }:
+
+{
+  xdg.configFile = {
+    "ghostty".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/ghostty";
+  };
+}

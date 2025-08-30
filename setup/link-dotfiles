@@ -1,9 +1,0 @@
-#!/usr/bin/env zsh
-
-. "$(dirname $0)/colors"
-
-printf "⛓  ${GREEN}Linking Dotfiles${NO_COLOR}\n"
-
-RCRC=~/.dotfiles/rcrc rcup -f
-
-printf "🎉${GREEN}   Finished!${NO_COLOR}\n"

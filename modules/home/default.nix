@@ -1,0 +1,103 @@
+{ config, pkgs, lib, username ? "endoze", homeDirectory ? null, sourceRoot, ... }:
+
+{
+  imports = [
+    # Tool modules
+    ../bat.nix
+    ../fish.nix
+    ../ghostty.nix
+    ../git.nix
+    ../lsd.nix
+    ../mise.nix
+    ../neovim.nix
+    ../selene.nix
+    ../shell-ai.nix
+    ../starship.nix
+    ../tmux.nix
+
+    # Language modules
+    ../ruby.nix
+  ];
+
+  home = {
+    username = username;
+    homeDirectory = if homeDirectory != null then homeDirectory else
+    (
+      if pkgs.stdenv.isDarwin then "/Users/${username}"
+      else "/home/${username}"
+    );
+
+    stateVersion = "24.05";
+
+    packages = with pkgs; [
+      # Core utilities
+      fzf
+      jq
+      tldr
+
+      # Development tools
+      chromedriver
+      deno
+      docker
+      docker-buildx
+      docker-compose
+      dotnet-sdk
+      ktlint
+      terraform
+
+      # Languages (keeping PHP in Nix due to plugin issues)
+      php82
+      php82Packages.composer
+
+      # Database/Services
+      mysql84
+      redis
+
+      # Security
+      openssl
+
+      # Networking
+      dnsmasq
+      ngrok
+
+      # Image processing
+      imagemagick
+
+      # Fonts
+      nerd-fonts.inconsolata-go
+    ];
+  };
+
+  home.file = {
+    ".rustfmt.toml".source = "${sourceRoot}/config/rustfmt.toml";
+  };
+
+  home.sessionVariables = {
+    EDITOR = "nvim";
+    VISUAL = "nvim";
+    PAGER = "less";
+  };
+
+  programs = {
+    home-manager.enable = true;
+
+    gpg = {
+      enable = true;
+      settings = {
+        use-agent = true;
+      };
+    };
+
+    direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+    };
+  };
+
+  services.gpg-agent = {
+    enable = true;
+    pinentry.package = pkgs.pinentry_mac;
+  };
+
+  news.display = "silent";
+}
