@@ -38,6 +38,7 @@
             userConfig = localConfig.getUserConfig {
               system = "x86_64-linux";
             };
+            systemConfig = localConfig.getSystemConfig;
           in
           home-manager.lib.homeManagerConfiguration {
             pkgs = nixpkgsFor.x86_64-linux;
@@ -47,7 +48,7 @@
               ./modules/machines/linux-desktop/home.nix
             ];
             extraSpecialArgs = {
-              inherit inputs userConfig;
+              inherit inputs userConfig systemConfig;
               username = userConfig.username;
               homeDirectory = userConfig.homeDirectory;
               userEmail = userConfig.userEmail;
@@ -61,6 +62,7 @@
             userConfig = localConfig.getUserConfig {
               system = "aarch64-darwin";
             };
+            systemConfig = localConfig.getSystemConfig;
           in
           home-manager.lib.homeManagerConfiguration {
             pkgs = nixpkgsFor.aarch64-darwin;
@@ -70,7 +72,7 @@
               ./modules/machines/macbook/home.nix
             ];
             extraSpecialArgs = {
-              inherit inputs userConfig;
+              inherit inputs userConfig systemConfig;
               username = userConfig.username;
               homeDirectory = userConfig.homeDirectory;
               userEmail = userConfig.userEmail;
@@ -84,6 +86,7 @@
             userConfig = localConfig.getUserConfig {
               system = "aarch64-darwin";
             };
+            systemConfig = localConfig.getSystemConfig;
           in
           home-manager.lib.homeManagerConfiguration {
             pkgs = nixpkgsFor.aarch64-darwin;
@@ -93,7 +96,7 @@
               ./modules/machines/macbook/home.nix
             ];
             extraSpecialArgs = {
-              inherit inputs userConfig;
+              inherit inputs userConfig systemConfig;
               username = userConfig.username;
               homeDirectory = userConfig.homeDirectory;
               userEmail = userConfig.userEmail;
@@ -162,7 +165,7 @@
                 home-manager.useUserPackages = true;
                 home-manager.users.${userConfig.username} = import ./modules/home/default.nix;
                 home-manager.extraSpecialArgs = {
-                  inherit inputs userConfig;
+                  inherit inputs userConfig systemConfig;
                   username = userConfig.username;
                   homeDirectory = userConfig.homeDirectory;
                   userEmail = userConfig.userEmail;

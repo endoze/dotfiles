@@ -1,4 +1,4 @@
-{ config, pkgs, lib, username ? "endoze", homeDirectory ? null, sourceRoot, ... }:
+{ config, pkgs, lib, username ? "endoze", homeDirectory ? null, sourceRoot, systemConfig, ... }:
 
 {
   imports = [
@@ -17,6 +17,9 @@
 
     # Language modules
     ../ruby.nix
+
+    # Service modules
+    ../databases.nix
   ];
 
   home = {
