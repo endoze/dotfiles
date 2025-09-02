@@ -9,8 +9,20 @@
     DEVELOPMENT_MACHINE = "macbook";
   };
 
-  programs.mysql.enable = true;
-  programs.redis.enable = true;
-  programs.rabbitmq.enable = true;
-  programs.postgres.enable = true;
+  programs.mysql = {
+    enable = true;
+    runAtLoad = true;
+  };
+  programs.redis = {
+    enable = true;
+    runAtLoad = true;
+  };
+  programs.rabbitmq = {
+    enable = true;
+    runAtLoad = true;
+  };
+  programs.postgres = {
+    enable = true;
+    runAtLoad = true;
+  };
 }

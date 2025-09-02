@@ -1,4 +1,4 @@
-{ pkgs, unstable, config, lib, systemConfig, ... }:
+{ pkgs, config, lib, systemConfig, ... }:
 
 let
   isDarwin = pkgs.stdenv.isDarwin;
@@ -14,7 +14,7 @@ let
   mysqlxSocketPath = if isDarwin then "/tmp/mysqlx.sock" else "/run/user/\${UID}/mysqlx.sock";
   redisBin = "${pkgs.redis}/bin";
   redisDataDir = "${config.home.homeDirectory}/.local/share/redis";
-  rabbitmqBin = "${unstable.rabbitmq-server}/bin";
+  rabbitmqBin = "${pkgs.rabbitmq-server}/bin";
   rabbitmqDataDir = "${config.home.homeDirectory}/.local/share/rabbitmq";
   rabbitmqNodename = "rabbit@${systemConfig.hostName}";
 in
@@ -180,16 +180,17 @@ in
       '';
     })
     (lib.mkIf config.programs.rabbitmq.enable {
-      home.packages = [ unstable.rabbitmq-server ];
+      home.packages = [ pkgs.rabbitmq-server ];
 
       home.file."${rabbitmqDataDir}/rabbitmq-env.conf".text = ''
         CONFIG_FILE=${rabbitmqDataDir}/rabbitmq.conf
         BASE=${rabbitmqDataDir}
         LOG_BASE=${rabbitmqDataDir}/logs
         NODENAME=${rabbitmqNodename}
-        MNESIA_DIR=${rabbitmqDataDir}/mnesia
+        MNESIA_BASE=${rabbitmqDataDir}/mnesia
+        MNESIA_DIR=${rabbitmqDataDir}/mnesia/${rabbitmqNodename}
         ENABLED_PLUGINS_FILE=${rabbitmqDataDir}/enabled_plugins
-        PLUGINS_DIR=${unstable.rabbitmq-server}/plugins
+        PLUGINS_DIR=${pkgs.rabbitmq-server}/plugins
         PLUGINS_EXPAND_DIR=${rabbitmqDataDir}/mnesia/${rabbitmqNodename}-plugins-expand
         PID_FILE=${rabbitmqDataDir}/pids/rabbitmq-server.pid
       '';
@@ -223,8 +224,12 @@ in
             RABBITMQ_CONF_ENV_FILE = "${rabbitmqDataDir}/rabbitmq-env.conf";
             RABBITMQ_HOME = "${rabbitmqDataDir}";
             RABBITMQ_ENABLED_PLUGINS_FILE = "${rabbitmqDataDir}/enabled_plugins";
-            RABBITMQ_PLUGINS_DIR = "${unstable.rabbitmq-server}/plugins";
+            RABBITMQ_PLUGINS_DIR = "${pkgs.rabbitmq-server}/plugins";
             RABBITMQ_PLUGINS_EXPAND_DIR = "${rabbitmqDataDir}/mnesia/${rabbitmqNodename}-plugins-expand";
+            RABBITMQ_MNESIA_BASE = "${rabbitmqDataDir}/mnesia";
+            RABBITMQ_MNESIA_DIR = "${rabbitmqDataDir}/mnesia/${rabbitmqNodename}";
+            RABBITMQ_LOG_BASE = "${rabbitmqDataDir}/logs";
+            RABBITMQ_NODENAME = "${rabbitmqNodename}";
           };
           StandardErrorPath = "${rabbitmqDataDir}/logs/std_error.log";
           StandardOutPath = "${rabbitmqDataDir}/logs/std_out.log";
@@ -242,16 +247,22 @@ in
           After = [ "network.target" ];
         };
         Service = {
-          Type = "notify";
+          Type = "simple";
           ExecStart = "${rabbitmqBin}/rabbitmq-server";
           Restart = "on-failure";
           RestartSec = "5s";
+          StandardError = "append:${rabbitmqDataDir}/logs/std_error.log";
+          StandardOutput = "append:${rabbitmqDataDir}/logs/std_out.log";
           Environment = [
             "RABBITMQ_CONF_ENV_FILE=${rabbitmqDataDir}/rabbitmq-env.conf"
             "RABBITMQ_HOME=${rabbitmqDataDir}"
             "RABBITMQ_ENABLED_PLUGINS_FILE=${rabbitmqDataDir}/enabled_plugins"
-            "RABBITMQ_PLUGINS_DIR=${unstable.rabbitmq-server}/plugins"
+            "RABBITMQ_PLUGINS_DIR=${pkgs.rabbitmq-server}/plugins"
             "RABBITMQ_PLUGINS_EXPAND_DIR=${rabbitmqDataDir}/mnesia/${rabbitmqNodename}-plugins-expand"
+            "RABBITMQ_MNESIA_BASE=${rabbitmqDataDir}/mnesia"
+            "RABBITMQ_MNESIA_DIR=${rabbitmqDataDir}/mnesia/${rabbitmqNodename}"
+            "RABBITMQ_LOG_BASE=${rabbitmqDataDir}/logs"
+            "RABBITMQ_NODENAME=${rabbitmqNodename}"
           ];
         };
         Install = {
@@ -262,10 +273,12 @@ in
       home.activation.initRabbitMQDataDir = lib.hm.dag.entryAfter [ "writeBoundry" ] ''
         if [[ ! -d "${rabbitmqDataDir}" ]]; then
           mkdir -p ${rabbitmqDataDir}
-          mkdir ${rabbitmqDataDir}/logs
-          mkdir ${rabbitmqDataDir}/mnesia
-          mkdir ${rabbitmqDataDir}/pids
+          mkdir -p ${rabbitmqDataDir}/logs
+          mkdir -p ${rabbitmqDataDir}/mnesia
+          mkdir -p ${rabbitmqDataDir}/pids
         fi
+        # Ensure the plugins-expand directory exists
+        mkdir -p ${rabbitmqDataDir}/mnesia/${rabbitmqNodename}-plugins-expand
       '';
     })
     (lib.mkIf config.programs.redis.enable {
