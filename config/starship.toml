@@ -22,6 +22,9 @@ blue = '#268bd2'
 cyan = '#2aa198'
 green = '#859900'
 
+[azure]
+disabled = true
+
 [aws]
 disabled = true
 symbol = "  "
@@ -95,6 +98,7 @@ symbol = " "
 format = '\[[$symbol$branch]($style)\]'
 
 [gcloud]
+disabled = true
 format = '\[[$symbol$account(@$domain)(\($region\))]($style)\]'
 
 [git_branch]

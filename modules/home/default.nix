@@ -45,7 +45,9 @@
       docker-buildx
       docker-compose
       dotnet-sdk
+      google-cloud-sdk
       ktlint
+      kubectl
       terraform
 
       # Languages (keeping PHP in Nix due to plugin issues)
