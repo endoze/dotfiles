@@ -14,9 +14,19 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    mac-app-util = {
+      url = "github:hraban/mac-app-util";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
-  outputs = { self, nixpkgs, home-manager, nix-darwin, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nix-darwin, mac-app-util, nur, ... }@inputs:
     let
       supportedSystems = [ "x86_64-linux" "aarch64-darwin" "x86_64-darwin" ];
 
@@ -25,6 +35,7 @@
       nixpkgsFor = forAllSystems (system: import nixpkgs {
         inherit system;
         config.allowUnfree = true;
+        overlays = [ nur.overlays.default ];
       });
 
       localConfig = import ./modules/users.nix {
@@ -67,6 +78,7 @@
           home-manager.lib.homeManagerConfiguration {
             pkgs = nixpkgsFor.aarch64-darwin;
             modules = [
+              mac-app-util.homeManagerModules.default
               ./modules/home/default.nix
               ./modules/home/darwin.nix
               ./modules/machines/macbook/home.nix
@@ -91,6 +103,7 @@
           home-manager.lib.homeManagerConfiguration {
             pkgs = nixpkgsFor.aarch64-darwin;
             modules = [
+              mac-app-util.homeManagerModules.default
               ./modules/home/default.nix
               ./modules/home/darwin.nix
               ./modules/machines/macbook/home.nix

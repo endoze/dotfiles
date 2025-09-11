@@ -54,10 +54,6 @@
       php82
       php82Packages.composer
 
-      # Database/Services
-      mysql84
-      redis
-
       # Security
       openssl
 

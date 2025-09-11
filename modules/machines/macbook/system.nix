@@ -31,4 +31,9 @@
 
   # Additional system packages for this machine
   environment.systemPackages = with pkgs; [ ];
+
+  # Configure screenshot settings
+  system.defaults = {
+    screencapture.location = "~/Pictures/screenshots";
+  };
 }

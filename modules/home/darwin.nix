@@ -2,10 +2,8 @@
 
 {
   home.packages = with pkgs; [
-    # Development
     colima
-
-    # Utilities
+    tableplus
     trash-cli
   ];
 }
