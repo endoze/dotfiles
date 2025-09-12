@@ -9,10 +9,14 @@ function M.setup(on_attach, capabilities)
   require("lspconfig").intelephense.setup({
     on_attach = custom_on_attach,
     capabilities = capabilities,
+    filetypes = { "php", "blade" },
     settings = {
       intelephense = {
         format = {
           enable = false,
+        },
+        files = {
+          associations = { "*.php", "*.blade.php" },
         },
       },
     },

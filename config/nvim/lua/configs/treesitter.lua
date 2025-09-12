@@ -8,10 +8,13 @@ return {
 
   ensure_installed = {
     "c",
+    "blade",
     "dockerfile",
     "go",
+    "html",
     "javascript",
     "lua",
+    "php",
     "ruby",
     "rust",
     "scss",
