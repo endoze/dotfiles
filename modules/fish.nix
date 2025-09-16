@@ -1,4 +1,4 @@
-{ config, pkgs, lib, sourceRoot, ... }:
+{ config, pkgs, lib, sourceRoot, userConfig, ... }:
 
 {
   home.packages = with pkgs; [
@@ -6,6 +6,6 @@
   ];
 
   xdg.configFile = {
-    "fish".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/fish";
+    "fish".source = config.lib.file.mkOutOfStoreSymlink "${userConfig.dotfilesPath}/config/fish";
   };
 }

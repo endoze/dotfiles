@@ -1,4 +1,4 @@
-{ config, pkgs, lib, sourceRoot, userEmail ? "", gpgKey ? "", ... }:
+{ config, pkgs, lib, sourceRoot, userConfig, ... }:
 
 {
   home.packages = with pkgs; [
@@ -15,12 +15,12 @@
 
   programs.git = {
     enable = true;
-    userEmail = userEmail;
+    userEmail = userConfig.userEmail;
     userName = config.home.username;
 
     signing = {
-      key = gpgKey;
-      signByDefault = gpgKey != "";
+      key = userConfig.gpgKey;
+      signByDefault = userConfig.gpgKey != "";
     };
 
     extraConfig = {

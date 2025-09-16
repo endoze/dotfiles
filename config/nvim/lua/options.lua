@@ -12,6 +12,9 @@ vim.opt.tabstop = 2
 vim.opt.whichwrap = "b,s"
 vim.g.health = { style = "float" }
 
+vim.env.PAGER = "less"
+vim.env.MANPAGER = "less -X"
+
 -- remove autocomplete from git commit messages
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "gitcommit",

@@ -1,4 +1,4 @@
-{ config, pkgs, lib, sourceRoot, ... }:
+{ config, pkgs, lib, sourceRoot, userConfig, ... }:
 
 {
   home.packages = with pkgs; [
@@ -10,6 +10,6 @@
   };
 
   xdg.configFile = {
-    "tmux".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/tmux";
+    "tmux".source = config.lib.file.mkOutOfStoreSymlink "${userConfig.dotfilesPath}/config/tmux";
   };
 }

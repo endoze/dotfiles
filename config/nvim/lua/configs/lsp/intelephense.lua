@@ -3,7 +3,6 @@ local M = {}
 function M.setup(on_attach, capabilities)
   local custom_on_attach = function(client, bufnr)
     on_attach(client, bufnr)
-    -- Autoformat disabled for intelephense
   end
 
   require("lspconfig").intelephense.setup({
@@ -17,6 +16,12 @@ function M.setup(on_attach, capabilities)
         },
         files = {
           associations = { "*.php", "*.blade.php" },
+          exclude = {
+            "**/.git/**",
+            "**/.DS_Store/**",
+            "**/node_modules/**",
+            "**/vendor/**",
+          },
         },
       },
     },

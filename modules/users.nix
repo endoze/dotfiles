@@ -9,8 +9,16 @@ let
     then "/Users/${sudoUser}"
     else builtins.getEnv "HOME";
 
-  localConfigPath =
+  # Try to use configured dotfilesPath if available, otherwise fall back to default
+  dotfilesPath =
     if homeDir != ""
+    then "${homeDir}/.dotfiles"
+    else builtins.toString sourceRoot;
+
+  localConfigPath =
+    if builtins.pathExists (/. + dotfilesPath + "/modules/users.local.nix")
+    then /. + dotfilesPath + "/modules/users.local.nix"
+    else if homeDir != "" && builtins.pathExists (/. + homeDir + "/.dotfiles/modules/users.local.nix")
     then /. + homeDir + "/.dotfiles/modules/users.local.nix"
     else sourceRoot + "/modules/users.local.nix";
 
@@ -24,6 +32,7 @@ let
       gpgKey = "";
       hostName = "nixos";
       computerName = "Nix Computer";
+      dotfilesPath = "${homeDir}/.dotfiles";
     };
 in
 {
@@ -42,6 +51,7 @@ in
       userEmail = config.userEmail;
       gpgKey = config.gpgKey or "";
       homeDirectory = "${homeBase}/${config.username}";
+      dotfilesPath = config.dotfilesPath or "${homeBase}/${config.username}/.dotfiles";
     };
 
   getSystemConfig = {

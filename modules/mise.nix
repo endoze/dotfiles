@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, userConfig, ... }:
 
 {
   home.packages = with pkgs; [
@@ -12,7 +12,7 @@
   };
 
   # Link mise configuration with out-of-store symlink for live updates
-  xdg.configFile."mise".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/config/mise";
+  xdg.configFile."mise".source = config.lib.file.mkOutOfStoreSymlink "${userConfig.dotfilesPath}/config/mise";
 
   # Ensure mise data directory exists with proper permissions
   home.activation.createMiseDataDir = lib.hm.dag.entryAfter ["writeBoundary"] ''

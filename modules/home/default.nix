@@ -1,4 +1,4 @@
-{ config, pkgs, lib, username ? "endoze", homeDirectory ? null, sourceRoot, systemConfig, ... }:
+{ config, pkgs, lib, userConfig, sourceRoot, systemConfig, ... }:
 
 {
   imports = [
@@ -23,12 +23,8 @@
   ];
 
   home = {
-    username = username;
-    homeDirectory = if homeDirectory != null then homeDirectory else
-    (
-      if pkgs.stdenv.isDarwin then "/Users/${username}"
-      else "/home/${username}"
-    );
+    username = userConfig.username;
+    homeDirectory = userConfig.homeDirectory;
 
     stateVersion = "24.05";
 
@@ -49,10 +45,6 @@
       ktlint
       kubectl
       terraform
-
-      # Languages (keeping PHP in Nix due to plugin issues)
-      php82
-      php82Packages.composer
 
       # Security
       openssl

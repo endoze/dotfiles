@@ -60,10 +60,6 @@
             ];
             extraSpecialArgs = {
               inherit inputs userConfig systemConfig;
-              username = userConfig.username;
-              homeDirectory = userConfig.homeDirectory;
-              userEmail = userConfig.userEmail;
-              gpgKey = userConfig.gpgKey;
               sourceRoot = self;
             };
           };
@@ -85,10 +81,6 @@
             ];
             extraSpecialArgs = {
               inherit inputs userConfig systemConfig;
-              username = userConfig.username;
-              homeDirectory = userConfig.homeDirectory;
-              userEmail = userConfig.userEmail;
-              gpgKey = userConfig.gpgKey;
               sourceRoot = self;
             };
           };
@@ -110,10 +102,6 @@
             ];
             extraSpecialArgs = {
               inherit inputs userConfig systemConfig;
-              username = userConfig.username;
-              homeDirectory = userConfig.homeDirectory;
-              userEmail = userConfig.userEmail;
-              gpgKey = userConfig.gpgKey;
               sourceRoot = self;
             };
           };
@@ -179,10 +167,6 @@
                 home-manager.users.${userConfig.username} = import ./modules/home/default.nix;
                 home-manager.extraSpecialArgs = {
                   inherit inputs userConfig systemConfig;
-                  username = userConfig.username;
-                  homeDirectory = userConfig.homeDirectory;
-                  userEmail = userConfig.userEmail;
-                  gpgKey = userConfig.gpgKey;
                   sourceRoot = self;
                 };
               }

@@ -18,7 +18,7 @@ return function()
       end,
     }),
 
-    require("none-ls.diagnostics.eslint"),
+    -- require("none-ls.diagnostics.eslint"),
 
     -- Swift
     b.formatting.swiftformat,
@@ -43,6 +43,8 @@ return function()
     -- Python
     b.formatting.yapf,
     b.diagnostics.mypy,
+
+    b.formatting.phpcsfixer,
   }
 
   null_ls.setup({
