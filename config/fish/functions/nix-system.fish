@@ -3,7 +3,7 @@ function nix-system
   set -l rebuild_cmd ""
 
   if is_macos
-    set flake_config "work-macbook"
+    set flake_config "macbook"
     set rebuild_cmd "darwin-rebuild"
   else if is_linux
     set flake_config "linux-desktop"

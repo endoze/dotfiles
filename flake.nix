@@ -84,49 +84,9 @@
               sourceRoot = self;
             };
           };
-
-        "work-macbook" =
-          let
-            userConfig = localConfig.getUserConfig {
-              system = "aarch64-darwin";
-            };
-            systemConfig = localConfig.getSystemConfig;
-          in
-          home-manager.lib.homeManagerConfiguration {
-            pkgs = nixpkgsFor.aarch64-darwin;
-            modules = [
-              mac-app-util.homeManagerModules.default
-              ./modules/home/default.nix
-              ./modules/home/darwin.nix
-              ./modules/machines/macbook/home.nix
-            ];
-            extraSpecialArgs = {
-              inherit inputs userConfig systemConfig;
-              sourceRoot = self;
-            };
-          };
-
       };
 
       darwinConfigurations = {
-        "work-macbook" =
-          let
-            userConfig = localConfig.getUserConfig {
-              system = "aarch64-darwin";
-            };
-            systemConfig = localConfig.getSystemConfig;
-          in
-          nix-darwin.lib.darwinSystem {
-            system = "aarch64-darwin";
-            modules = [
-              ./modules/os/darwin.nix
-              ./modules/machines/macbook/system.nix
-            ];
-            specialArgs = {
-              inherit inputs userConfig systemConfig;
-              sourceRoot = self;
-            };
-          };
         "macbook" =
           let
             userConfig = localConfig.getUserConfig {

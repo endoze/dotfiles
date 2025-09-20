@@ -9,9 +9,10 @@ in
   nix.enable = false;
 
   environment.systemPackages = with pkgs; [
-    vim
-    curl
     coreutils
+    curl
+    fish
+    vim
   ];
 
   # Enable Touch ID for sudo  

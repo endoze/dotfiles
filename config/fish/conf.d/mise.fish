@@ -7,5 +7,6 @@ if status is-interactive
 
   if test -d $mise_shims_dir
     fish_add_path -m $mise_shims_dir
+    mise activate fish | source
   end
 end

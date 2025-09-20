@@ -245,9 +245,7 @@ return {
       local has_xcworkspace = vim.fn.glob(cwd .. "*.xcworkspace") ~= ""
       return has_xcodeproj or has_xcworkspace
     end,
-    config = function()
-      require("xcodebuild").setup({})
-    end,
+    config = require("configs.xcodebuild"),
   },
   {
     "kylechui/nvim-surround",

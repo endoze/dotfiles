@@ -44,6 +44,7 @@
       google-cloud-sdk
       ktlint
       kubectl
+      nix-diff
       terraform
 
       # Security
