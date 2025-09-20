@@ -40,7 +40,6 @@
       docker
       docker-buildx
       docker-compose
-      dotnet-sdk
       google-cloud-sdk
       ktlint
       kubectl

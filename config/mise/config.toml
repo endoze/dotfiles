@@ -11,6 +11,7 @@ node = "22"
 ocaml = "5.2"
 yarn = "3.8.7"
 bun = "latest"
+dotnet = "latest"
 
 [settings]
 # Use experimental features for better compatibility
