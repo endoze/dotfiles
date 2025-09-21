@@ -12,6 +12,7 @@ ocaml = "5.2"
 yarn = "3.8.7"
 bun = "latest"
 dotnet = "latest"
+lua = "5.1"
 
 [settings]
 # Use experimental features for better compatibility

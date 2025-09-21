@@ -215,7 +215,7 @@ return {
           vim.cmd("TSUpdate")
         end,
       },
-      "L3MON4D3/LuaSnip",
+      { "L3MON4D3/LuaSnip", build = "make install_jsregexp" },
     },
     build = function()
       require("pkl-neovim").init()
