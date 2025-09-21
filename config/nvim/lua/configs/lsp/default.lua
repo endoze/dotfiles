@@ -9,7 +9,7 @@ function M.setup(lsp, on_attach, capabilities, on_init)
     setup_autoformat(lsp, bufnr)
   end
 
-  require("lspconfig")[lsp].setup({
+  vim.lsp.config(lsp, {
     on_attach = custom_on_attach,
     capabilities = capabilities,
     on_init = on_init,

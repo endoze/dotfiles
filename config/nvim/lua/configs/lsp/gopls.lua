@@ -15,7 +15,7 @@ function M.setup(on_attach, capabilities)
     setup_autoformat("Gopls", bufnr)
   end
 
-  require("lspconfig").gopls.setup({
+  vim.lsp.config("gopls", {
     capabilities = capabilities,
     on_attach = custom_on_attach,
     settings = {

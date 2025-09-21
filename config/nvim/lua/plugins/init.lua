@@ -142,17 +142,10 @@ return {
     "cenk1cenk2/schema-companion.nvim",
     dependencies = {
       { "nvim-lua/plenary.nvim" },
-      { "nvim-telescope/telescope.nvim" },
     },
     config = function()
-      ---@diagnostic disable:missing-fields
       require("schema-companion").setup({
-        enable_telescope = true,
-        matchers = {
-          require("schema-companion.matchers.kubernetes").setup({
-            version = "master",
-          }),
-        },
+        log_level = vim.log.levels.INFO,
       })
     end,
   },
@@ -171,13 +164,14 @@ return {
     "leoluz/nvim-dap-go",
   },
   {
-    "simrat39/inlay-hints.nvim",
+    "endoze/inlay-hints.nvim",
+    branch = "fix-deprecation-warnings-for-nvim-0.11",
     event = "LspAttach",
     config = require("configs.inlay-hints"),
   },
   {
     "mrcjkb/rustaceanvim",
-    version = "^5", -- Recommended
+    version = "^6", -- Recommended
     lazy = false, -- This plugin is already lazy
     config = require("configs.rustaceanvim"),
   },
@@ -224,7 +218,7 @@ return {
       "L3MON4D3/LuaSnip",
     },
     build = function()
-      require("pkl-neovim.internal").init()
+      require("pkl-neovim").init()
 
       vim.cmd("TSInstall! pkl")
     end,

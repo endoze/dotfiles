@@ -2,7 +2,7 @@ require("nvchad.options")
 
 vim.g.rust_recommended_style = false
 vim.g.python_recommended_style = false
-vim.highlight.priorities.semantic_tokens = 1
+vim.hl.priorities.semantic_tokens = 1
 vim.opt.backspace = "indent,eol,start"
 vim.opt.cmdheight = 0
 vim.opt.expandtab = true

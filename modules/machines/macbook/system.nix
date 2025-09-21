@@ -20,9 +20,14 @@
 
     brews = [
       "autoconf"
+      "gettext"
       "gmp"
+      "jpeg-turbo"
+      "libnghttp2"
+      "libyaml"
       "libyaml"
       "openssl@3"
+      "pkgconf"
       "readline"
       "zstd"
     ];

@@ -17,4 +17,4 @@ dotnet = "latest"
 # Use experimental features for better compatibility
 experimental = true
 legacy_version_file = true
-idiomatic_version_file_enable_tools = ["ruby"]
+idiomatic_version_file_enable_tools = ["ruby", "rust"]

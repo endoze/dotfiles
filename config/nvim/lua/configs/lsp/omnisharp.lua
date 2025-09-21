@@ -12,7 +12,7 @@ function M.setup(on_attach, capabilities)
     setup_autoformat("Omnisharp", bufnr)
   end
 
-  require("lspconfig").omnisharp.setup({
+  vim.lsp.config("omnisharp", {
     cmd = { "omnisharp" },
     on_attach = custom_on_attach,
     capabilities = capabilities,

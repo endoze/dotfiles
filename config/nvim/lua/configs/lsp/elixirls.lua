@@ -12,7 +12,7 @@ function M.setup(on_attach, capabilities)
     setup_autoformat("ElixirLs", bufnr)
   end
 
-  require("lspconfig").elixirls.setup({
+  vim.lsp.config("elixirls", {
     cmd = { "elixir-ls" },
     on_attach = custom_on_attach,
     capabilities = capabilities,

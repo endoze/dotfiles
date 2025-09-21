@@ -15,7 +15,7 @@ function M.setup(on_attach, capabilities)
     setup_autoformat("FishLsp", bufnr)
   end
 
-  require("lspconfig").fish_lsp.setup({
+  vim.lsp.config("fish_lsp", {
     cmd_env = {
       fish_lsp_format_tabsize = 2,
       fish_lsp_show_client_popups = false,

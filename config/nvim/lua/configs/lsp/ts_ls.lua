@@ -15,7 +15,7 @@ function M.setup(on_attach, capabilities)
     setup_autoformat("TsLs", bufnr)
   end
 
-  require("lspconfig").ts_ls.setup({
+  vim.lsp.config("ts_ls", {
     on_attach = custom_on_attach,
     capabilities = capabilities,
     init_options = {

@@ -5,7 +5,7 @@ function M.setup(on_attach, capabilities)
     on_attach(client, bufnr)
   end
 
-  require("lspconfig").intelephense.setup({
+  vim.lsp.config("intelephense", {
     on_attach = custom_on_attach,
     capabilities = capabilities,
     filetypes = { "php", "blade" },
