@@ -34,6 +34,7 @@ format = '\[[$symbol($profile)(\($region\))(\[$duration\])]($style)\]'
 symbol = " "
 
 [bun]
+symbol = " "
 format = '\[[$symbol($version)]($style)\]'
 
 [c]

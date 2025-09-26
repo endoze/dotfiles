@@ -12,20 +12,60 @@ function M.setup(on_attach, capabilities)
     setup_autoformat("Omnisharp", bufnr)
   end
 
-  vim.lsp.config("omnisharp", {
-    cmd = { "omnisharp" },
+  ---@type vim.lsp.Config
+  local config = {
+    cmd = {
+      vim.fn.executable("OmniSharp") == 1 and "OmniSharp" or "omnisharp",
+      "-z", -- https://github.com/OmniSharp/omnisharp-vscode/pull/4300
+      "--hostPID",
+      tostring(vim.fn.getpid()),
+      "DotNet:enablePackageRestore=false",
+      "--encoding",
+      "utf-8",
+      "--languageserver",
+    },
+    filetypes = { "cs", "vb" },
+    root_markers = {
+      "*.sln",
+      "*.csproj",
+      "omnisharp.json",
+      "function.json",
+      ".git",
+    },
     on_attach = custom_on_attach,
-    capabilities = capabilities,
-    settings = {
-      RoslynExtensionsOptions = {
-        EnableAnalyzersSupport = true,
-        EnableEditorConfigSupport = true,
+    capabilities = vim.tbl_deep_extend("force", capabilities or {}, {
+      workspace = {
+        workspaceFolders = false, -- https://github.com/OmniSharp/omnisharp-roslyn/issues/909
       },
+    }),
+    init_options = {},
+    settings = {
       FormattingOptions = {
         EnableEditorConfigSupport = true,
+        OrganizeImports = nil,
+      },
+      MsBuild = {
+        LoadProjectsOnDemand = nil,
+      },
+      RoslynExtensionsOptions = {
+        EnableAnalyzersSupport = true,
+        EnableImportCompletion = nil,
+        AnalyzeOpenDocumentsOnly = nil,
+        EnableDecompilationSupport = nil,
+      },
+      RenameOptions = {
+        RenameInComments = nil,
+        RenameOverloads = nil,
+        RenameInStrings = nil,
+      },
+      Sdk = {
+        IncludePrereleases = true,
       },
     },
-  })
+  }
+
+  vim.lsp.config("omnisharp", config)
+  vim.lsp.enable("omnisharp")
 end
 
 return M

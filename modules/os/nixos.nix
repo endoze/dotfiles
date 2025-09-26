@@ -1,4 +1,4 @@
-{ config, pkgs, lib, userConfig ? { }, ... }:
+{ config, pkgs, lib, userConfig, ... }:
 
 {
   # Allow unfree packages
@@ -30,6 +30,9 @@
 
     # Clean /tmp on boot
     tmp.cleanOnBoot = true;
+
+    # Enable NTFS support
+    supportedFilesystems = [ "ntfs" ];
   };
 
   # Networking
@@ -47,6 +50,7 @@
     wget
     curl
     htop
+    ntfs3g
   ];
 
   # Enable basic services
@@ -72,7 +76,7 @@
   };
 
   # User configuration
-  users.users.${userConfig.username or "user"} = {
+  users.users.${userConfig.username} = {
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" "audio" "video" ];
     shell = pkgs.fish;

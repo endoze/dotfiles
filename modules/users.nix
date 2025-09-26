@@ -6,7 +6,10 @@ let
   sudoUser = builtins.getEnv "SUDO_USER";
   homeDir =
     if sudoUser != ""
-    then "/Users/${sudoUser}"
+    then
+      if builtins.pathExists (/. + "/home/${sudoUser}")
+      then "/home/${sudoUser}"
+      else "/Users/${sudoUser}"
     else builtins.getEnv "HOME";
 
   # Try to use configured dotfilesPath if available, otherwise fall back to default

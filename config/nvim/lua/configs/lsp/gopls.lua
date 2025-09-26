@@ -32,6 +32,8 @@ function M.setup(on_attach, capabilities)
       },
     },
   })
+
+  vim.lsp.enable("gopls")
 end
 
 return M

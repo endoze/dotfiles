@@ -17,6 +17,8 @@ function M.setup(on_attach, capabilities)
     on_attach = custom_on_attach,
     capabilities = capabilities,
   })
+
+  vim.lsp.enable("elixirls")
 end
 
 return M

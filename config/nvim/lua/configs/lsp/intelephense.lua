@@ -26,6 +26,8 @@ function M.setup(on_attach, capabilities)
       },
     },
   })
+
+  vim.lsp.enable("intelephense")
 end
 
 return M

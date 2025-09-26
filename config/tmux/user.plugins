@@ -5,6 +5,10 @@ set -g @plugin 'endoze/tmux#add-overrides-for-all-colors'
 set -g @plugin 'tmux-plugins/tmux-sensible'
 set -g @plugin 'tmux-plugins/tmux-resurrect'
 set -g @plugin 'tmux-plugins/tmux-continuum'
+
+# Enable automatic restore
+set -g @continuum-restore 'on'
+
 set-option -g renumber-windows on
 
 # plugin settings

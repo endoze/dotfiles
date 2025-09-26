@@ -1,0 +1,23 @@
+/* Wal color scheme for SwayNC */
+@define-color foreground #83dae3;
+@define-color background #0C1424;
+@define-color cursor #83dae3;
+@define-color color0 #0C1424;
+@define-color color1 #33528E;
+@define-color color2 #62509D;
+@define-color color3 #9952AD;
+@define-color color4 #B746B4;
+@define-color color5 #EF58AD;
+@define-color color6 #EB5ED1;
+@define-color color7 #83dae3;
+@define-color color8 #5b989e;
+@define-color color9 #33528E;
+@define-color color10 #62509D;
+@define-color color11 #9952AD;
+@define-color color12 #B746B4;
+@define-color color13 #EF58AD;
+@define-color color14 #EB5ED1;
+@define-color color15 #83dae3;
+
+/* Additional variable needed by swaync nova-dark theme */
+@define-color background-sec #1a2033;

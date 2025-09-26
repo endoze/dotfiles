@@ -51,8 +51,8 @@
           "browser.urlbar.suggest.openpage" = false;
           "browser.urlbar.suggest.quickactions" = false;
 
-          "keyword.enabled" = false;
-          "browser.fixup.alternate.enabled" = false;
+          "keyword.enabled" = true;
+          "browser.fixup.alternate.enabled" = true;
 
           # Privacy settings
           "privacy.trackingprotection.enabled" = true;
@@ -76,6 +76,16 @@
           "browser.compactmode.show" = true;
           "browser.uidensity" = 1; # 0=normal, 1=compact, 2=touch
 
+          # Scaling settings for HiDPI displays
+          "layout.css.devPixelsPerPx" = "1.0"; # Override system DPI scaling (default is -1.0 for system)
+
+          # Dark mode settings
+          "browser.theme.content-theme" = 0; # 0=dark, 1=light, 2=system
+          "browser.theme.toolbar-theme" = 0; # 0=dark, 1=light, 2=system
+          "extensions.activeThemeID" = "firefox-compact-dark@mozilla.org"; # Use built-in dark theme
+          "ui.systemUsesDarkTheme" = 1; # Tell websites system uses dark theme
+          "layout.css.prefers-color-scheme.content-override" = 0; # 0=dark, 1=light, 2=system
+
           # Behavior settings
           "browser.startup.page" = 3; # 0=blank, 1=home, 2=last visited, 3=resume previous
           "browser.startup.homepage" = "https://start.duckduckgo.com";
@@ -84,6 +94,14 @@
           "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
           "browser.showQuitWarning" = false;
           "browser.warnOnQuit" = false;
+
+          # Startup optimization settings
+          "browser.sessionstore.restore_on_demand" = true; # Don't load all tabs at once
+          "browser.sessionstore.restore_pinned_tabs_on_demand" = true; # Lazy load pinned tabs
+          "browser.sessionstore.max_resumed_crashes" = 0; # Skip crash recovery checks
+
+          # Linux-specific optimizations
+          "accessibility.force_disabled" = 1; # Disable accessibility services if not needed
 
           # Disable all Firefox Home content
           "browser.newtabpage.activity-stream.feeds.topsites" = false;
@@ -140,25 +158,9 @@
 
         # User chrome CSS customization (optional)
         userChrome = ''
-          /* Hide tab bar when only one tab */
-          #tabbrowser-tabs .tabbrowser-tab:only-of-type {
-            visibility: collapse !important;
-          }
-          
-          /* Compact density adjustments */
-          :root[uidensity="compact"] {
-            --tab-min-height: 29px !important;
-            --urlbar-min-height: 26px !important;
-          }
         '';
 
         userContent = ''
-          /* Custom CSS for web content */
-          @-moz-document url(about:blank) {
-            body {
-              background-color: #1e1e1e !important;
-            }
-          }
         '';
       };
     };

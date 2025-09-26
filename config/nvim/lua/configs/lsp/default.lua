@@ -14,6 +14,8 @@ function M.setup(lsp, on_attach, capabilities, on_init)
     capabilities = capabilities,
     on_init = on_init,
   })
+
+  vim.lsp.enable(lsp)
 end
 
 return M

@@ -1,0 +1,9 @@
+module Components
+Clock 1.0 Clock.qml
+LoginPanel 1.0 LoginPanel.qml
+PasswordField 1.0 PasswordField.qml
+PowerButton 1.0 PowerButton.qml
+RebootButton 1.0 RebootButton.qml
+SessionPanel 1.0 SessionPanel.qml
+SleepButton 1.0 SleepButton.qml
+UserField 1.0 UserField.qml

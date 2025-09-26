@@ -1,0 +1,30 @@
+# wallust v3 Configuration
+
+# Backend for image color parsing
+# Options: fastresize, kmeans, wal, thumb, resized, full
+backend = "kmeans"
+
+# Color space for color selection
+# Options: lab, labmixed, lch, lchmixed
+color_space = "lch"
+
+# Color palette style
+# Options: dark, dark16, darkcomp, darkcomp16, light, light16, harddark, harddark16, softdark, softdark16, softlight, softlight16
+palette = "dark"
+
+# Optional: Ensure colors meet contrast requirements (default: false)
+#check_contrast = false
+
+# Optional: Threshold for color difference (0-100)
+threshold = 10
+
+# Optional: Alpha value for templating (0-100)
+#alpha = 100
+
+[templates]
+# Template configurations
+# The 'template' field should match the template filename in ~/.config/wallust/templates/
+# The 'target' field is where the generated file will be saved
+hyprland = { template = "hyprland.conf", target = "~/.cache/wallust/hyprland.conf" }
+waybar = { template = "waybar.css", target = "~/.cache/wallust/waybar.css" }
+swaync = { template = "swaync-colors.css", target = "~/.cache/wallust/swaync.css"}

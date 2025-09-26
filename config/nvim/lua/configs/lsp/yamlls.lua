@@ -4,7 +4,9 @@ function M.setup(on_attach, capabilities)
   local config = require("schema-companion").setup_client(
     require("schema-companion").adapters.yamlls.setup({
       sources = {
-        require("schema-companion").sources.matchers.kubernetes.setup({ version = "master" }),
+        require("schema-companion").sources.matchers.kubernetes.setup({
+          version = "master",
+        }),
         require("schema-companion").sources.lsp.setup(),
       },
     }),
@@ -15,6 +17,8 @@ function M.setup(on_attach, capabilities)
   )
 
   vim.lsp.config("yamlls", config)
+
+  vim.lsp.enable("yamlls")
 end
 
 return M

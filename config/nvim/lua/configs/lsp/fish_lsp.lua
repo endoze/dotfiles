@@ -23,6 +23,8 @@ function M.setup(on_attach, capabilities)
     capabilities = capabilities,
     on_attach = custom_on_attach,
   })
+
+  vim.lsp.enable("fish_lsp")
 end
 
 return M

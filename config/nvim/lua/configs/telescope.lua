@@ -16,7 +16,7 @@ return {
     },
   },
   defaults = {
-    prompt_prefix = "   ",
+    prompt_prefix = "   ",
     file_ignore_patterns = {
       "%.eot",
       "%.eps",

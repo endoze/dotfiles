@@ -32,6 +32,8 @@ function M.setup(on_attach, capabilities)
       },
     },
   })
+
+  vim.lsp.enable("ts_ls")
 end
 
 return M

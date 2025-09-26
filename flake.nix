@@ -24,9 +24,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    hyprland = {
+      url = "github:hyprwm/Hyprland";
+      # Don't follow nixpkgs - let Hyprland use its own pinned version
+      # inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
-  outputs = { self, nixpkgs, home-manager, nix-darwin, mac-app-util, nur, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nix-darwin, mac-app-util, nur, hyprland, ... }@inputs:
     let
       supportedSystems = [ "x86_64-linux" "aarch64-darwin" "x86_64-darwin" ];
 
@@ -44,26 +50,6 @@
     in
     {
       homeConfigurations = {
-        "linux" =
-          let
-            userConfig = localConfig.getUserConfig {
-              system = "x86_64-linux";
-            };
-            systemConfig = localConfig.getSystemConfig;
-          in
-          home-manager.lib.homeManagerConfiguration {
-            pkgs = nixpkgsFor.x86_64-linux;
-            modules = [
-              ./modules/home/default.nix
-              ./modules/home/linux.nix
-              ./modules/machines/linux-desktop/home.nix
-            ];
-            extraSpecialArgs = {
-              inherit inputs userConfig systemConfig;
-              sourceRoot = self;
-            };
-          };
-
         "macbook" =
           let
             userConfig = localConfig.getUserConfig {
@@ -78,6 +64,26 @@
               ./modules/home/default.nix
               ./modules/home/darwin.nix
               ./modules/machines/macbook/home.nix
+            ];
+            extraSpecialArgs = {
+              inherit inputs userConfig systemConfig;
+              sourceRoot = self;
+            };
+          };
+
+        "deadmau5" =
+          let
+            userConfig = localConfig.getUserConfig {
+              system = "x86_64-linux";
+            };
+            systemConfig = localConfig.getSystemConfig;
+          in
+          home-manager.lib.homeManagerConfiguration {
+            pkgs = nixpkgsFor.x86_64-linux;
+            modules = [
+              ./modules/home/default.nix
+              ./modules/home/linux.nix
+              ./modules/machines/deadmau5/home.nix
             ];
             extraSpecialArgs = {
               inherit inputs userConfig systemConfig;
@@ -108,7 +114,7 @@
       };
 
       nixosConfigurations = {
-        "linux-desktop" =
+        "deadmau5" =
           let
             userConfig = localConfig.getUserConfig {
               system = "x86_64-linux";
@@ -119,20 +125,10 @@
             system = "x86_64-linux";
             modules = [
               ./modules/os/nixos.nix
-              ./modules/machines/linux-desktop/system.nix
-              home-manager.nixosModules.home-manager
-              {
-                home-manager.useGlobalPkgs = true;
-                home-manager.useUserPackages = true;
-                home-manager.users.${userConfig.username} = import ./modules/home/default.nix;
-                home-manager.extraSpecialArgs = {
-                  inherit inputs userConfig systemConfig;
-                  sourceRoot = self;
-                };
-              }
+              ./modules/machines/deadmau5/system.nix
             ];
             specialArgs = {
-              inherit inputs userConfig systemConfig;
+              inherit inputs userConfig systemConfig hyprland;
               sourceRoot = self;
             };
           };
