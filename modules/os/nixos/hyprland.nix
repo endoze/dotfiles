@@ -13,6 +13,7 @@
 
   programs.hyprland = {
     enable = true;
+    withUWSM = true;
     xwayland = {
       enable = true;
     };
@@ -24,7 +25,7 @@
 
   services = {
     displayManager = {
-      defaultSession = "hyprland";
+      defaultSession = "hyprland-uwsm";
       sddm = {
         enable = true;
         theme = "cyberpunk";
