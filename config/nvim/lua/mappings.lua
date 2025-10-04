@@ -74,20 +74,38 @@ local keymap_table = {
   telescope = {
     n = {
       ["<C-t>"] = {
-        "<cmd> Telescope find_files no_ignore=true <CR>",
+        function()
+          require("telescope.builtin").find_files({
+            find_command = { "rg", "--files" },
+          })
+        end,
         " find files",
       },
       ["<leader>be"] = {
-        "<cmd> Telescope buffers initial_mode=normal <CR>",
+        function()
+          require("telescope.builtin").buffers({ initial_mode = "normal" })
+        end,
         "open buffers in telescope",
       },
-      ["<leader>a"] = { "<cmd> Telescope live_grep_args <CR>", " live grep" },
+      ["<leader>a"] = {
+        function()
+          require("telescope").extensions.live_grep_args.live_grep_args()
+        end,
+        " live grep",
+      },
       ["<C-f>"] = {
-        "<cmd> Telescope current_buffer_fuzzy_find <CR>",
+        function()
+          require("telescope.builtin").current_buffer_fuzzy_find()
+        end,
         " current buffer search",
       },
       ["<leader>fo"] = {
-        ":lua require('telescope.builtin').oldfiles({prompt_title='Recent Files', only_cwd=true})<CR>",
+        function()
+          require("telescope.builtin").oldfiles({
+            prompt_title = "Recent Files",
+            only_cwd = true,
+          })
+        end,
         " find recent files",
       },
     },

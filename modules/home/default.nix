@@ -29,35 +29,28 @@
     stateVersion = "24.05";
 
     packages = with pkgs; [
-      # Core utilities
-      fzf
-      jq
-      tldr
-
-      # Development tools
       chromedriver
-      deno
+      dnsmasq
       docker
       docker-buildx
       docker-compose
-      google-cloud-sdk
-      ktlint
-      kubectl
-      nix-diff
-      terraform
-
-      # Security
-      openssl
-
-      # Networking
-      dnsmasq
-      ngrok
-
-      # Image processing
+      gitAndTools.delta
+      htop
       imagemagick
-
-      # Fonts
+      jq
+      kubectl
       nerd-fonts.inconsolata-go
+      nerd-fonts.jetbrains-mono
+      ngrok
+      nix-diff
+      openssl
+      terraform
+      tldr
+      unar
+      unrar
+      unzip
+      zip
+      zsh
     ];
   };
 

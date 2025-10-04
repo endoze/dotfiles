@@ -57,7 +57,7 @@ local options = {
       {
         txt = "  Find File",
         keys = "<C-t>",
-        cmd = "Telescope find_files no_ignore=true",
+        cmd = ":lua require('telescope.builtin').find_files({ find_command = { 'rg', '--files' } })",
       },
       {
         txt = "󱔗  Recent Files",

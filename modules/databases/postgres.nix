@@ -4,7 +4,10 @@ let
   isDarwin = pkgs.stdenv.isDarwin;
   isLinux = pkgs.stdenv.isLinux;
 
-  postgresqlWithExtensions = pkgs.postgresql.withPackages (p: [ p.pgvector ]);
+  postgresqlWithExtensions = pkgs.postgresql.withPackages (p: [
+    p.pgvector
+    p.postgis
+  ]);
   postgresDataDir = "${config.home.homeDirectory}/.local/share/postgresql";
   postgresBin = "${postgresqlWithExtensions}/bin";
 in

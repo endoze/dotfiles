@@ -102,7 +102,6 @@ return {
     },
     cmd = "BlameToggle",
   },
-  { "kchmck/vim-coffee-script", event = "BufReadPre *.coffee" },
   {
     "nvim-treesitter/nvim-treesitter",
     opts = function()

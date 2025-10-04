@@ -1,9 +1,15 @@
 { config, pkgs, lib, ... }:
 
 {
+  nixpkgs.config = {
+    allowUnsupportedSystem = true;
+    allowUnfree = true;
+  };
+
   home.packages = with pkgs; [
+    caffeine
     colima
-    tableplus
+    notion-app
     trash-cli
   ];
 

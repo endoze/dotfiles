@@ -15,7 +15,16 @@ return {
       require("telescope.themes").get_dropdown(),
     },
   },
+  pickers = {
+    find_files = {
+      find_command = { "rg", "--files" },
+    },
+  },
   defaults = {
+    path_display = { "truncate" },
+    cache_picker = {
+      num_pickers = 10,
+    },
     prompt_prefix = "   ",
     file_ignore_patterns = {
       "%.eot",

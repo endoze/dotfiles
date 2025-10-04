@@ -1,9 +1,7 @@
 { config, pkgs, lib, ... }:
 
 {
-  home.packages = with pkgs; [
-    _1password-cli
-  ];
+  home.packages = with pkgs; [ ];
 
   home.sessionVariables = {
     DEVELOPMENT_MACHINE = "macbook";

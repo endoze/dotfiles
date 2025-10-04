@@ -3,6 +3,9 @@ if is_macos
 
   alias dnsflush "sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder;"
   alias pubkey 'pbcopy < ~/.ssh/id_rsa.pub'
+
+  # OrbStack: command-line tools and integration
+  source ~/.orbstack/shell/init2.fish 2>/dev/null || :
 end
 
 if is_linux

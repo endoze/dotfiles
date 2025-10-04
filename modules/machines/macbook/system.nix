@@ -33,8 +33,12 @@
     ];
 
     casks = [
-      "sequel-ace"
+      "alfred"
       "ghostty"
+      "orbstack"
+      "postico"
+      "sequel-ace"
+      "sizeup"
     ];
   };
 
