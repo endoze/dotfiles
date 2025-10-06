@@ -4,10 +4,6 @@ return function()
     popup = {
       autofocus = true,
     },
-    null_ls = {
-      enabled = true,
-      name = "crates.nvim",
-    },
 
     on_attach = function(bufnr)
       local function show_documentation()

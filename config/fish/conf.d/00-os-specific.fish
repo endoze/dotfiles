@@ -1,7 +1,9 @@
 if is_macos
   fish_add_path -a /opt/homebrew/bin
 
-  alias dnsflush "sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder;"
+  function dnsflush
+    sudo dscacheutil -flushcache; and sudo killall -HUP mDNSResponder
+  end
   alias pubkey 'pbcopy < ~/.ssh/id_rsa.pub'
 
   # OrbStack: command-line tools and integration

@@ -42,14 +42,14 @@ function M.setup(on_attach, capabilities)
     settings = {
       FormattingOptions = {
         EnableEditorConfigSupport = true,
-        OrganizeImports = nil,
+        OrganizeImports = true,
       },
       MsBuild = {
         LoadProjectsOnDemand = nil,
       },
       RoslynExtensionsOptions = {
         EnableAnalyzersSupport = true,
-        EnableImportCompletion = nil,
+        EnableImportCompletion = true,
         AnalyzeOpenDocumentsOnly = nil,
         EnableDecompilationSupport = nil,
       },

@@ -18,7 +18,7 @@ return function()
       end,
     }),
 
-    -- require("none-ls.diagnostics.eslint"),
+    require("none-ls.diagnostics.eslint"),
 
     -- Swift
     b.formatting.swiftformat,

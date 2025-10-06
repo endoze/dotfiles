@@ -33,10 +33,11 @@
     stylua
 
     # Tools
-    tree-sitter
-    ripgrep
     fd
     fzf
+    mkcert
+    ripgrep
+    tree-sitter
   ];
 
   xdg.configFile = {

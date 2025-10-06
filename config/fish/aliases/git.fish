@@ -10,3 +10,5 @@ alias gunapply 'git stash show -p | git apply -R'
 alias gup "git pull --rebase"
 alias gupp 'git fetch -p && gup'
 alias gfu 'git commit --amend --no-edit'
+alias gri 'git rebase -i --autosquash (git head-branch)'
+alias griu 'git rebase -i --autosquash (git upstream-name)/(git head-branch)'

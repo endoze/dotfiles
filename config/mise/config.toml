@@ -2,17 +2,20 @@
 # Individual projects can override these with their own .mise.toml or .tool-versions files
 
 [tools]
+bun = "latest"
+dotnet = "latest"
+elixir = "latest"
+erlang = "latest"
+go = "1.25"
+java = "24"
+jj = "latest"
+lua = "5.1"
+node = "22"
+ocaml = "5.2"
 python = "3.13"
 ruby = "3.4"
 rust = { version = "stable", profile = "default" }  # includes rustc, cargo, rust-std, rust-docs, rustfmt, clippy
-go = "1.25"
-java = "24"
-node = "22"
-ocaml = "5.2"
 yarn = "3.8.7"
-bun = "latest"
-dotnet = "latest"
-lua = "5.1"
 
 [settings]
 # Use experimental features for better compatibility

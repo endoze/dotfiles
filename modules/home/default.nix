@@ -39,6 +39,7 @@
       imagemagick
       jq
       kubectl
+      kubectx
       nerd-fonts.inconsolata-go
       nerd-fonts.jetbrains-mono
       ngrok
