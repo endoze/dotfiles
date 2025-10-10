@@ -77,7 +77,7 @@
           "browser.uidensity" = 1; # 0=normal, 1=compact, 2=touch
 
           # Scaling settings for HiDPI displays
-          "layout.css.devPixelsPerPx" = "1.0"; # Override system DPI scaling (default is -1.0 for system)
+          "layout.css.devPixelsPerPx" = if pkgs.stdenv.isDarwin then "-1.0" else "1.0";
 
           # Dark mode settings
           "browser.theme.content-theme" = 0; # 0=dark, 1=light, 2=system

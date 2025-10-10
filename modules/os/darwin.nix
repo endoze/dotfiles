@@ -4,6 +4,10 @@ let
   username = userConfig.username or "work-user";
 in
 {
+  imports = [
+    ./darwin/dnsmasq.nix
+  ];
+
   # Disable nix-darwin's management of Nix since we're using Determinate Nix
   # Determinate Nix handles the nix daemon and configuration itself
   nix.enable = false;

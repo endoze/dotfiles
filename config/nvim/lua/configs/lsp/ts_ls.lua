@@ -1,6 +1,5 @@
 local M = {}
 
-local setup_autoformat = require("utils").setup_autoformat
 local ih = require("inlay-hints")
 
 function M.setup(on_attach, capabilities)
@@ -11,8 +10,6 @@ function M.setup(on_attach, capabilities)
     if client.server_capabilities.inlayHintProvider then
       vim.lsp.inlay_hint.enable(false)
     end
-
-    setup_autoformat("TsLs", bufnr)
   end
 
   vim.lsp.config("ts_ls", {

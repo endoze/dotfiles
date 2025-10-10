@@ -9,11 +9,14 @@ function M.setup(on_attach, capabilities)
   end
 
   vim.lsp.config("ruby_lsp", {
-    cmd = { "ruby-lsp" },
+    cmd = { "mise", "x", "--", "ruby-lsp" },
     on_attach = custom_on_attach,
     capabilities = capabilities,
     init_options = {
       formatter = "standard",
+      rubyVersionManager = {
+        identifier = "mise",
+      },
     },
   })
 

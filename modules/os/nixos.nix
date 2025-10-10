@@ -1,6 +1,10 @@
 { config, pkgs, lib, userConfig, ... }:
 
 {
+  imports = [
+    ./nixos/dnsmasq.nix
+  ];
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 

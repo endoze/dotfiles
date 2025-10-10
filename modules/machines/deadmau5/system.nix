@@ -20,6 +20,8 @@ in
     ../../os/nixos/steam.nix
   ];
 
+  services.dnsmasq-resolver.enable = true;
+
   networking.hostName = systemConfig.hostName or "deadmau5";
 
   time.timeZone = "America/New_York";

@@ -1,6 +1,10 @@
 { config, pkgs, lib, ... }:
 
 {
+  imports = [
+    ../../firefox.nix
+  ];
+
   home.packages = with pkgs; [ ];
 
   home.sessionVariables = {

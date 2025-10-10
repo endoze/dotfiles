@@ -3,7 +3,16 @@ return function()
   local b = null_ls.builtins
 
   local sources = {
-    b.formatting.prettierd.with({ filetypes = { "html", "css" } }),
+    b.formatting.prettierd.with({
+      filetypes = {
+        "html",
+        "css",
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+      },
+    }),
 
     -- Lua
     b.formatting.stylua,

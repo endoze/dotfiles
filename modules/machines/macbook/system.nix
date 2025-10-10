@@ -5,6 +5,8 @@
     ../../os/php.nix
   ];
 
+  services.dnsmasq-resolver.enable = true;
+
   networking = {
     hostName = systemConfig.hostName or "macbook";
     computerName = systemConfig.computerName or "MacBook";

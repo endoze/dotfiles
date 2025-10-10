@@ -30,11 +30,11 @@
 
     packages = with pkgs; [
       chromedriver
-      dnsmasq
       docker
       docker-buildx
       docker-compose
       gitAndTools.delta
+      gh-dash
       htop
       imagemagick
       jq
