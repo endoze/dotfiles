@@ -7,6 +7,7 @@
     ../fish.nix
     ../ghostty.nix
     ../git.nix
+    ../jujutsu.nix
     ../lsd.nix
     ../mise.nix
     ../neovim.nix
