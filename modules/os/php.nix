@@ -4,7 +4,8 @@ with lib;
 
 let
   cfg = config.programs.php;
-in {
+in
+{
   options.programs.php = {
     enable = mkEnableOption "PHP development environment";
   };

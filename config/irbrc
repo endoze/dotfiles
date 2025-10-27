@@ -1,146 +1,20 @@
 #!/usr/bin/ruby
 
-require "rubygems"
-
 if defined? IRB
   require "irb/completion"
-  require "irb/ext/save-history"
 
   IRB.conf[:SAVE_HISTORY] = 1000
   IRB.conf[:HISTORY_FILE] = "#{ENV["HOME"]}/.irb_history"
   IRB.conf[:PROMPT_MODE] = :SIMPLE
   IRB.conf[:AUTO_INDENT] = true
-end
-
-# -----------------------------------------
-#  Method to clean up hash output
-# -----------------------------------------
-begin
-  require "pp"
-rescue LoadError => err
-end
-
-# -----------------------------------------
-#  External editor support
-# -----------------------------------------
-begin
-  require "interactive_editor"
-rescue LoadError => err
-end
-
-# -----------------------------------------
-#  Wirble - Coloring and other irb niceties
-# -----------------------------------------
-begin
-  require "wirble"
-  Wirble.init
-  Wirble.colorize
-rescue LoadError => err
-end
-
-# -----------------------------------------
-#  What methods (and result) are available
-# -----------------------------------------
-begin
-  require "what_methods"
-rescue LoadError => err
-end
-
-# -----------------------------------------
-#  Indent blocks
-# -----------------------------------------
-
-class Object
-  # list methods which aren't in superclass
-  def local_methods(obj = self)
-    (obj.methods - obj.class.superclass.instance_methods).sort
-  end
-
-  # print documentation
-  #
-  #   ri 'Array#pop'
-  #   Array.ri
-  #   Array.ri :pop
-  #   arr.ri :pop
-  def ri(method = nil)
-    unless method && method =~ /^[A-Z]/ # if class isn't specified
-      klass = is_a?(Class) ? name : self.class.name
-      method = [klass, method].compact.join("#")
-    end
-    puts `ri '#{method}'`
-  end
-end
-
-def me
-  User.find_by_login("endoze")
+  IRB.conf[:USE_AUTOCOMPLETE] = true
+  IRB.conf[:USE_COLORIZE] = true
 end
 
 def r
   reload!
 end
 
-# -----------------------------------------
-#  Benchmark block run time
-# -----------------------------------------
-def benchmark
-  # From http://blog.evanweaver.com/articles/2006/12/13/benchmark/
-  # Call benchmark { } with any block and you get the wallclock runtime
-  # as well as a percent change + or - from the last run
-  cur = Time.now
-  result = yield
-  print "#{cur = Time.now - cur} seconds"
-  begin
-    puts " (#{(cur / $last_benchmark * 100).to_i - 100}% change)"
-  rescue
-    puts ""
-  end
-  $last_benchmark = cur
-  result
-end
-
-# -----------------------------------------
-#  Hirb - Pretty ActiveRecord tables, seems
-#         to require loading at the end to
-#         avoid conflicts with other tools
-# -----------------------------------------
-begin
-  require "hirb"
-  Hirb::View.enable
-rescue LoadError => err
-end
-
-# -----------------------------------------
-#  When in Rails, output the log entries
-#  that give us nice SQL statements when
-#  using ActiveRecord
-# -----------------------------------------
-if ENV.include?("RAILS_ENV") && !Object.const_defined?("RAILS_DEFAULT_LOGGER")
-  require "logger"
-  RAILS_DEFAULT_LOGGER = Logger.new(STDOUT)
-end
-
-if defined?(Rails) && Rails.env && defined?(ActiveRecord)
-  Bundler.require :console
-
-  def toggle_sql
-    if ActiveRecord::Base.logger
-      set_logger nil and return false
-    else
-      set_logger Logger.new(STDOUT) and return true
-    end
-  end
-
-  def set_logger(logger)
-    ActiveRecord::Base.logger = logger
-    ActiveRecord::Base.clear_active_connections!
-  end
-
-  set_logger nil # start with the normal logger
-end
-
-# -----------------------------------------
-#  Prompt to include project name and env (Rails)
-# -----------------------------------------
 if rails_env = ENV["RAILS_ENV"] || (defined?(Rails) && rails_env = Rails.env)
   rails_root = File.basename(Dir.pwd)
   prompt = "#{rails_root}[#{rails_env}]"
@@ -153,10 +27,6 @@ if rails_env = ENV["RAILS_ENV"] || (defined?(Rails) && rails_env = Rails.env)
   }
   IRB.conf[:PROMPT_MODE] = :RAILS
 
-  # Called after the irb session is initialized and Rails has
-  # been loaded (props: Mike Clark).
   IRB.conf[:IRB_RC] = proc do
-    # Shows what's logged in realtime (beats tailing the log in another terminal)
-    # ActiveRecord::Base.logger = Logger.new(STDOUT)
   end
 end

@@ -3,6 +3,8 @@ export CLICOLOR="YES"
 export DOTFILES=$HOME/.dotfiles
 export EDITOR="nvim"
 export STARSHIP_LOG=error
+export XDG_CONFIG_HOME=$HOME/.config
+export RUBY_YJIT_ENABLE=1
 
 for f in $HOME/.config/fish/aliases/*fish
   source $f

@@ -7,6 +7,7 @@
     ../fish.nix
     ../ghostty.nix
     ../git.nix
+    ../hn-tui.nix
     ../jujutsu.nix
     ../lsd.nix
     ../mise.nix
@@ -15,6 +16,7 @@
     ../shell-ai.nix
     ../starship.nix
     ../tmux.nix
+    ../weechat.nix
 
     # Language modules
     ../ruby.nix

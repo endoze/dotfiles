@@ -1,6 +1,10 @@
 { config, pkgs, lib, ... }:
 
 {
+  imports = [
+    ../karabiner.nix
+  ];
+
   nixpkgs.config = {
     allowUnsupportedSystem = true;
     allowUnfree = true;

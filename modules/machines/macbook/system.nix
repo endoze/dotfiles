@@ -36,11 +36,14 @@
 
     casks = [
       "alfred"
+      "claude"
       "ghostty"
+      "karabiner-elements"
       "orbstack"
       "postico"
       "sequel-ace"
       "sizeup"
+      "tailscale"
     ];
   };
 
