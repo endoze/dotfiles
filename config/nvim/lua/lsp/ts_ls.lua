@@ -1,20 +1,18 @@
 local M = {}
 
-local ih = require("inlay-hints")
+function M.setup()
+  local helpers = require("lsp.helpers")
+  local ih = require("inlay-hints")
 
-function M.setup(on_attach, capabilities)
-  local custom_on_attach = function(client, bufnr)
-    on_attach(client, bufnr)
-    ih.on_attach(client, bufnr)
+  helpers.setup_lsp("ts_ls", {
+    autoformat = false,
+    on_attach_extra = function(client, bufnr)
+      ih.on_attach(client, bufnr)
 
-    if client.server_capabilities.inlayHintProvider then
-      vim.lsp.inlay_hint.enable(false)
-    end
-  end
-
-  vim.lsp.config("ts_ls", {
-    on_attach = custom_on_attach,
-    capabilities = capabilities,
+      if client.server_capabilities.inlayHintProvider then
+        vim.lsp.inlay_hint.enable(false)
+      end
+    end,
     init_options = {
       jsx = true,
       preferences = {
@@ -29,8 +27,6 @@ function M.setup(on_attach, capabilities)
       },
     },
   })
-
-  vim.lsp.enable("ts_ls")
 end
 
 return M

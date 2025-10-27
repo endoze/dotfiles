@@ -1,13 +1,10 @@
 local M = {}
 
-function M.setup(on_attach, capabilities)
-  local custom_on_attach = function(client, bufnr)
-    on_attach(client, bufnr)
-  end
+function M.setup()
+  local helpers = require("lsp.helpers")
 
-  vim.lsp.config("intelephense", {
-    on_attach = custom_on_attach,
-    capabilities = capabilities,
+  helpers.setup_lsp("intelephense", {
+    autoformat = false,
     filetypes = { "php", "blade" },
     settings = {
       intelephense = {
@@ -26,8 +23,6 @@ function M.setup(on_attach, capabilities)
       },
     },
   })
-
-  vim.lsp.enable("intelephense")
 end
 
 return M

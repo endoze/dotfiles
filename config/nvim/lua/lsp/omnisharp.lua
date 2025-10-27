@@ -1,22 +1,14 @@
 local M = {}
 
-local setup_autoformat = require("utils").setup_autoformat
+function M.setup()
+  local base_capabilities = require("nvchad.configs.lspconfig").capabilities
+  local helpers = require("lsp.helpers")
 
-function M.setup(on_attach, capabilities)
-  local custom_on_attach = function(client, bufnr)
-    on_attach(client, bufnr)
-
-    client.server_capabilities.documentFormattingProvider = true
-    client.server_capabilities.documentRangeFormattingProvider = true
-
-    setup_autoformat("Omnisharp", bufnr)
-  end
-
-  ---@type vim.lsp.Config
-  local config = {
+  helpers.setup_lsp("omnisharp", {
+    autoformat = true,
     cmd = {
       vim.fn.executable("OmniSharp") == 1 and "OmniSharp" or "omnisharp",
-      "-z", -- https://github.com/OmniSharp/omnisharp-vscode/pull/4300
+      "-z",
       "--hostPID",
       tostring(vim.fn.getpid()),
       "DotNet:enablePackageRestore=false",
@@ -25,19 +17,15 @@ function M.setup(on_attach, capabilities)
       "--languageserver",
     },
     filetypes = { "cs", "vb" },
-    root_markers = {
-      "*.sln",
-      "*.csproj",
-      "omnisharp.json",
-      "function.json",
-      ".git",
-    },
-    on_attach = custom_on_attach,
-    capabilities = vim.tbl_deep_extend("force", capabilities or {}, {
+    capabilities = vim.tbl_deep_extend("force", base_capabilities or {}, {
       workspace = {
-        workspaceFolders = false, -- https://github.com/OmniSharp/omnisharp-roslyn/issues/909
+        workspaceFolders = false,
       },
     }),
+    on_attach_extra = function(client, _)
+      client.server_capabilities.documentFormattingProvider = true
+      client.server_capabilities.documentRangeFormattingProvider = true
+    end,
     init_options = {},
     settings = {
       FormattingOptions = {
@@ -62,10 +50,7 @@ function M.setup(on_attach, capabilities)
         IncludePrereleases = true,
       },
     },
-  }
-
-  vim.lsp.config("omnisharp", config)
-  vim.lsp.enable("omnisharp")
+  })
 end
 
 return M

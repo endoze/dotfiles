@@ -42,6 +42,10 @@ vim.filetype.add({
     ["Brewfile"] = "ruby",
     ["Podfile"] = "ruby",
     ["Fastfile"] = "ruby",
+    [".pryrc"] = "ruby",
+    ["pryrc"] = "ruby",
+    [".irbrc"] = "ruby",
+    ["irbrc"] = "ruby",
   },
   pattern = {
     [".*/templates/.*%.tpl"] = "helm",

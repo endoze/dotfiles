@@ -9,21 +9,9 @@ local keymap_table = {
         ":noh<CR>",
         "Remove all highlights",
       },
-      ["<F2>"] = {
-        ":lua vim.lsp.buf.rename()<CR>",
-        "LSP Rename",
-      },
       ["<F3>"] = {
         ":%s/\\s\\+$//e<cr>:noh<cr>",
         "Remove extraneous whitespace",
-      },
-      ["<leader>lf"] = {
-        ":lua vim.diagnostic.open_float(nil, { focusable = false })<CR>",
-        "Floating diagnostic",
-      },
-      ["<leader>fm"] = {
-        ":lua vim.lsp.buf.format()<CR>",
-        "General Format file",
       },
       ["<leader>th"] = {
         function()
