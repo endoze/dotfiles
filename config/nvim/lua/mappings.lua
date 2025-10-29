@@ -13,6 +13,14 @@ local keymap_table = {
         ":%s/\\s\\+$//e<cr>:noh<cr>",
         "Remove extraneous whitespace",
       },
+      ["<leader>lf"] = {
+        ":lua vim.diagnostic.open_float(nil, { focusable = false })<CR>",
+        "Floating diagnostic",
+      },
+      ["<leader>fm"] = {
+        ":lua vim.lsp.buf.format()<CR>",
+        "General Format file",
+      },
       ["<leader>th"] = {
         function()
           require("nvchad.themes").open({
@@ -59,65 +67,9 @@ local keymap_table = {
       },
     },
   },
-  telescope = {
-    n = {
-      ["<C-t>"] = {
-        function()
-          require("telescope.builtin").find_files({
-            find_command = { "rg", "--files" },
-          })
-        end,
-        " find files",
-      },
-      ["<leader>be"] = {
-        function()
-          require("telescope.builtin").buffers({ initial_mode = "normal" })
-        end,
-        "open buffers in telescope",
-      },
-      ["<leader>a"] = {
-        function()
-          require("telescope").extensions.live_grep_args.live_grep_args()
-        end,
-        " live grep",
-      },
-      ["<C-f>"] = {
-        function()
-          require("telescope.builtin").current_buffer_fuzzy_find()
-        end,
-        " current buffer search",
-      },
-      ["<leader>fo"] = {
-        function()
-          require("telescope.builtin").oldfiles({
-            prompt_title = "Recent Files",
-            only_cwd = true,
-          })
-        end,
-        " find recent files",
-      },
-    },
-  },
   nvimtree = {
     n = {
       ["<leader>n"] = { "<cmd> NvimTreeToggle <CR>", "Toggle nvimtree" },
-    },
-  },
-  comment = {
-    n = {
-      ["<leader>c "] = {
-        function()
-          require("Comment.api").toggle.linewise.current()
-        end,
-
-        "Toggle comment",
-      },
-    },
-    v = {
-      ["<leader>c "] = {
-        "<ESC><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<CR>",
-        "Toggle comment",
-      },
     },
   },
 }

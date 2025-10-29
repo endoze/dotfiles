@@ -11,12 +11,14 @@
     elixir-ls
     gopls
     helm-ls
+    hyprls
     lua-language-server
     lua-language-server
     marksman
     nil
     nodePackages.bash-language-server
     nodePackages.typescript-language-server
+    omnisharp-roslyn
     pyright
     taplo-lsp
     templ

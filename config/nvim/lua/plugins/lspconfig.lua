@@ -1,5 +1,8 @@
 return {
   "neovim/nvim-lspconfig",
+  dependencies = {
+    "nvimtools/none-ls.nvim",
+  },
   config = function()
     require("nvchad.configs.lspconfig").defaults()
 

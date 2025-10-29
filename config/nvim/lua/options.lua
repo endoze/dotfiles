@@ -15,13 +15,24 @@ vim.g.health = { style = "float" }
 vim.env.PAGER = "less"
 vim.env.MANPAGER = "less -X"
 
--- remove autocomplete from git commit messages
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "gitcommit",
-  callback = function()
-    require("cmp").setup.buffer({ enabled = false })
-  end,
-})
+vim.keymap.set(
+  "c",
+  "<C-f>",
+  "<C-y>",
+  { desc = "Accept completion", remap = true }
+)
+vim.keymap.set(
+  "c",
+  "<C-j>",
+  "<C-n>",
+  { desc = "Next completion", remap = true }
+)
+vim.keymap.set(
+  "c",
+  "<C-k>",
+  "<C-p>",
+  { desc = "Previous completion", remap = true }
+)
 
 -- prevent . from triggering treesitter indents in ruby files
 vim.api.nvim_create_autocmd("FileType", {
@@ -85,13 +96,6 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = "pkl",
   callback = function()
     vim.opt.foldmethod = "manual"
-  end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "gitcommit",
-  callback = function()
-    require("cmp").setup.buffer({ enabled = false })
   end,
 })
 

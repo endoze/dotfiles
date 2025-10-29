@@ -1,11 +1,9 @@
 return {
   { "stevearc/conform.nvim", enabled = false },
   { "Bilal2453/luvit-meta", lazy = true },
-  { "lukas-reineke/indent-blankline.nvim", enabled = true },
-  {
-    "numToStr/Comment.nvim",
-    opts = {},
-  },
+  { "lukas-reineke/indent-blankline.nvim", enabled = false },
+  { import = "nvchad.blink.lazyspec" },
+  { "numToStr/Comment.nvim", enabled = false },
   {
     "MeanderingProgrammer/render-markdown.nvim",
     opts = {
@@ -22,4 +20,5 @@ return {
       require("nvim-surround").setup({})
     end,
   },
+  { "hrsh7th/nvim-cmp", enable = false },
 }
