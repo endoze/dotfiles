@@ -13,6 +13,7 @@ return {
         end,
         hover_actions = {
           replace_builtin_hover = false,
+          auto_focus = false,
         },
       },
       server = {

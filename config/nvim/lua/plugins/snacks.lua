@@ -80,6 +80,20 @@ return {
             filter = { cwd = true },
           })
         end, { desc = "Find recent files" })
+
+        vim.keymap.set("n", "<leader>sn", function()
+          require("snacks").picker.notifications()
+        end, { desc = "Show notifications" })
+
+        vim.keymap.set("n", "<leader>sr", function()
+          require("snacks").picker.resume()
+        end, { desc = "Resume last picker" })
+
+        vim.keymap.set("n", "<leader>sm", function()
+          require("snacks").picker.marks({
+            filter = { cwd = true },
+          })
+        end, { desc = "Show marks" })
       end,
     })
   end,

@@ -1,5 +1,8 @@
 return {
   "nvim-treesitter/nvim-treesitter",
+  event = { "BufReadPost", "BufNewFile" },
+  cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
+  build = ":TSUpdate",
   opts = function()
     local custom_config = {
       highlight = {
@@ -34,5 +37,8 @@ return {
     local nvconf = require("nvchad.configs.treesitter")
 
     return vim.tbl_deep_extend("force", nvconf, custom_config)
+  end,
+  config = function(_, opts)
+    require("nvim-treesitter.configs").setup(opts)
   end,
 }

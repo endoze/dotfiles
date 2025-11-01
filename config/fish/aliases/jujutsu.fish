@@ -1,0 +1,6 @@
+alias jst 'jj status'
+alias jb 'jj bookmark'
+alias jd 'jj diff'
+alias jc 'jj describe'
+alias jup 'jj git fetch'
+alias jupp 'jj git fetch --all-remotes'

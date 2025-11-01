@@ -1,4 +1,4 @@
-function jjpush -d "Push the current local bookmark to remote"
+function jp -d "Push the current local bookmark to remote"
     # Try to get bookmarks from @ (current commit) first
     set -l bookmarks (jj log -r '@' -T 'bookmarks' --no-graph --color=never 2>/dev/null | string trim)
     set -l revision '@'
@@ -57,8 +57,7 @@ function jjpush -d "Push the current local bookmark to remote"
 
     # Push each local bookmark
     for bookmark in $local_bookmarks
-        echo "Would push bookmark: $bookmark"
-        echo "Command: jj git push --bookmark $bookmark"
-        # jj git push --bookmark "$bookmark"
+        echo "Pushing bookmark: $bookmark"
+        jj git push --bookmark "$bookmark"
     end
 end

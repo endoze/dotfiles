@@ -64,7 +64,7 @@ local lazy_config = {
       },
     },
   },
-} 
+}
 
 -- load plugins
 require("lazy").setup({
@@ -72,7 +72,6 @@ require("lazy").setup({
     "NvChad/NvChad",
     lazy = false,
     branch = "v2.5",
-    import = "nvchad.plugins",
   },
 
   { import = "plugins" },
@@ -83,7 +82,7 @@ dofile(vim.g.base46_cache .. "defaults")
 dofile(vim.g.base46_cache .. "statusline")
 
 require("options")
-require("nvchad.autocmds")
+require("autocmds")
 
 vim.schedule(function()
   local keymap_table = require("mappings")

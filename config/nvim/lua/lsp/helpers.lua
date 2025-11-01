@@ -2,14 +2,74 @@ local M = {}
 
 local map = vim.keymap.set
 
+M.capabilities = vim.lsp.protocol.make_client_capabilities()
+
+M.capabilities.textDocument.completion.completionItem = {
+  documentationFormat = { "markdown", "plaintext" },
+  snippetSupport = true,
+  preselectSupport = true,
+  insertReplaceSupport = true,
+  labelDetailsSupport = true,
+  deprecatedSupport = true,
+  commitCharactersSupport = true,
+  tagSupport = { valueSet = { 1 } },
+  resolveSupport = {
+    properties = {
+      "documentation",
+      "detail",
+      "additionalTextEdits",
+    },
+  },
+}
+
+M.on_init = function(client, _)
+  if vim.fn.has "nvim-0.11" ~= 1 then
+    if client.supports_method "textDocument/semanticTokens" then
+      client.server_capabilities.semanticTokensProvider = nil
+    end
+  else
+    if client:supports_method "textDocument/semanticTokens" then
+      client.server_capabilities.semanticTokensProvider = nil
+    end
+  end
+end
+
+M.on_attach = function(_, bufnr)
+  local function opts(desc)
+    return { buffer = bufnr, desc = "LSP " .. desc }
+  end
+
+  map("n", "gD", vim.lsp.buf.declaration, opts "Go to declaration")
+  map("n", "gd", vim.lsp.buf.definition, opts "Go to definition")
+  map("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, opts "Add workspace folder")
+  map("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, opts "Remove workspace folder")
+
+  map("n", "<leader>wl", function()
+    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+  end, opts "List workspace folders")
+
+  map("n", "<leader>D", vim.lsp.buf.type_definition, opts "Go to type definition")
+  map("n", "<leader>ra", require "nvchad.lsp.renamer", opts "NvRenamer")
+end
+
+M.diagnostic_config = function()
+  local x = vim.diagnostic.severity
+
+  vim.diagnostic.config {
+    virtual_text = { prefix = "" },
+    signs = { text = { [x.ERROR] = "󰅙", [x.WARN] = "", [x.INFO] = "󰋼", [x.HINT] = "󰌵" } },
+    underline = true,
+    float = { border = "single" },
+  }
+end
+
 function M.create_on_attach(opts)
   opts = opts or {}
   local lsp_name = opts.lsp_name
   local enable_autoformat = opts.autoformat ~= false
 
   return function(client, bufnr)
-    local base_on_attach = require("nvchad.configs.lspconfig").on_attach
-    base_on_attach(client, bufnr)
+    M.on_attach(client, bufnr)
 
     local function keymap_opts(desc)
       return { buffer = bufnr, desc = "LSP " .. desc }
@@ -66,17 +126,14 @@ end
 function M.setup_lsp(name, opts)
   opts = opts or {}
 
-  local base_capabilities = require("nvchad.configs.lspconfig").capabilities
-  local base_on_init = require("nvchad.configs.lspconfig").on_init
-
   local config = {
     on_attach = M.create_on_attach({
       lsp_name = name,
       autoformat = opts.autoformat,
       on_attach_extra = opts.on_attach_extra,
     }),
-    capabilities = opts.capabilities or base_capabilities,
-    on_init = opts.on_init or base_on_init,
+    capabilities = opts.capabilities or M.capabilities,
+    on_init = opts.on_init or M.on_init,
   }
 
   if opts.cmd then

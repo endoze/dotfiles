@@ -1,10 +1,14 @@
 return {
   "neovim/nvim-lspconfig",
+  event = "User FilePost",
   dependencies = {
     "nvimtools/none-ls.nvim",
   },
   config = function()
-    require("nvchad.configs.lspconfig").defaults()
+    local helpers = require("lsp.helpers")
+
+    dofile(vim.g.base46_cache .. "lsp")
+    helpers.diagnostic_config()
 
     local languages = require("lsp.languages")
 
