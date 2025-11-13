@@ -116,23 +116,27 @@ local keymap_table = {
         "Edit NvChad settings",
       },
       ["<leader>ft"] = {
-        function()
-          if vim.fn.foldclosedend(".") ~= -1 then
-            vim.api.nvim_feedkeys(
-              vim.api.nvim_replace_termcodes("zO", true, true, true),
-              "n",
-              true
-            )
-          else
-            vim.api.nvim_feedkeys(
-              vim.api.nvim_replace_termcodes("$zf%", true, true, true),
-              "n",
-              true
-            )
-          end
-        end,
+        "za",
         "Toggle fold",
       },
+      -- ["<leader>ft"] = {
+      --   function()
+      --     if vim.fn.foldclosedend(".") ~= -1 then
+      --       vim.api.nvim_feedkeys(
+      --         vim.api.nvim_replace_termcodes("zO", true, true, true),
+      --         "n",
+      --         true
+      --       )
+      --     else
+      --       vim.api.nvim_feedkeys(
+      --         vim.api.nvim_replace_termcodes("$zf%", true, true, true),
+      --         "n",
+      --         true
+      --       )
+      --     end
+      --   end,
+      --   "Toggle fold",
+      -- },
     },
     i = {
       ["jj"] = {

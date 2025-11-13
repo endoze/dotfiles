@@ -4,7 +4,6 @@
   home.packages = with pkgs; [
     git
     git-lfs
-    delta
     gh
     lazygit
   ];
@@ -15,15 +14,12 @@
 
   programs.git = {
     enable = true;
-    userEmail = userConfig.userEmail;
-    userName = config.home.username;
+    settings = {
+      user = {
+        email = userConfig.userEmail;
+        userName = config.home.username;
+      };
 
-    signing = {
-      key = userConfig.gpgKey;
-      signByDefault = userConfig.gpgKey != "";
-    };
-
-    extraConfig = {
       init = {
         defaultBranch = "master";
 
@@ -73,9 +69,15 @@
         some = "!git switch $(git head-branch) && git pull --rebase && git remote prune origin && git cleanlocal";
         branches = "for-each-ref --sort=-committerdate --format=\"%(color:blue)%(authordate:relative)\t%(color:red)%(authorname)\t%(color:white)%(color:bold)%(refname:short)\" refs/remotes";
       };
-
     };
 
+    signing = {
+      key = userConfig.gpgKey;
+      signByDefault = userConfig.gpgKey != "";
+    };
+  };
+
+  programs = {
     delta = {
       enable = true;
       options = {

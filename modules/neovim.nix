@@ -4,7 +4,6 @@
 
   home.packages = with pkgs; [
     neovim
-    deno
 
     # Language servers
     dockerfile-language-server
@@ -20,7 +19,7 @@
     nodePackages.typescript-language-server
     omnisharp-roslyn
     pyright
-    taplo-lsp
+    taplo
     templ
     terraform-ls
     vscode-langservers-extracted

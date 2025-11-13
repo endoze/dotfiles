@@ -43,6 +43,12 @@ g.rust_recommended_style = false
 
 vim.hl.priorities.semantic_tokens = 1
 
+o.foldmethod = "expr"
+o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+o.foldlevel = 99
+o.foldlevelstart = 99
+o.foldenable = true
+
 -- add binaries installed by mason.nvim to path
 local is_windows = vim.fn.has("win32") ~= 0
 local sep = is_windows and "\\" or "/"
@@ -57,6 +63,7 @@ vim.filetype.add({
     ["podspec"] = "ruby",
     ["http"] = "http",
     ["gotmpl"] = "gotmpl",
+    ["ejson"] = "json",
   },
   filename = {
     ["Brewfile"] = "ruby",
