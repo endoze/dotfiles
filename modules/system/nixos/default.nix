@@ -48,15 +48,6 @@
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.UTF-8";
 
-  # System packages
-  environment.systemPackages = with pkgs; [
-    vim
-    wget
-    curl
-    htop
-    ntfs3g
-  ];
-
   # Enable basic services
   services = {
     openssh = {

@@ -2,7 +2,8 @@
 
 {
   imports = [
-    ../../system/darwin/php.nix
+    ../../system/meta/cli-darwin.nix
+    ../../system/meta/gui-darwin.nix
   ];
 
   services.dnsmasq-resolver.enable = true;
@@ -16,39 +17,9 @@
     enable = true;
     onActivation = {
       autoUpdate = true;
-      # Don't remove anything - leave manually installed packages alone
       cleanup = "none";
     };
-
-    brews = [
-      "autoconf"
-      "gettext"
-      "gmp"
-      "jpeg-turbo"
-      "libnghttp2"
-      "libyaml"
-      "libyaml"
-      "openssl@3"
-      "pkgconf"
-      "readline"
-      "zstd"
-    ];
-
-    casks = [
-      "alfred"
-      "claude"
-      "ghostty"
-      "karabiner-elements"
-      "orbstack"
-      "postico"
-      "sequel-ace"
-      "sizeup"
-      "tailscale"
-    ];
   };
-
-  # Additional system packages for this machine
-  environment.systemPackages = with pkgs; [ ];
 
   # Configure screenshot settings
   system.defaults = {

@@ -1,40 +1,10 @@
 { config, pkgs, lib, userConfig, sourceRoot, systemConfig, ... }:
 
 {
-  imports = [
-    ./common/default.nix
-  ];
-
   home = {
     username = userConfig.username;
     homeDirectory = userConfig.homeDirectory;
-
     stateVersion = "24.05";
-
-    packages = with pkgs; [
-      chromedriver
-      docker
-      docker-buildx
-      docker-compose
-      gh-dash
-      htop
-      imagemagick
-      jq
-      kubectl
-      kubectx
-      nerd-fonts.inconsolata-go
-      nerd-fonts.jetbrains-mono
-      ngrok
-      nix-diff
-      openssl
-      terraform
-      tldr
-      unar
-      unrar
-      unzip
-      zip
-      zsh
-    ];
   };
 
   home.file = {

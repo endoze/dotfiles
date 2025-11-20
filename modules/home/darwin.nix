@@ -1,21 +1,10 @@
 { config, pkgs, lib, ... }:
 
 {
-  imports = [
-    ./darwin/default.nix
-  ];
-
   nixpkgs.config = {
     allowUnsupportedSystem = true;
     allowUnfree = true;
   };
-
-  home.packages = with pkgs; [
-    caffeine
-    colima
-    notion-app
-    trash-cli
-  ];
 
   services.gpg-agent = {
     enable = true;

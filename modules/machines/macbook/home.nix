@@ -2,6 +2,8 @@
 
 {
   imports = [
+    ../../home/meta/cli.nix
+    ../../home/meta/gui-darwin.nix
   ];
 
   home.packages = with pkgs; [ ];

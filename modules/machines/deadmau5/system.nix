@@ -12,12 +12,8 @@ in
 {
   imports = [
     ./hardware-configuration.nix
-    ../../system/nixos/bluetooth.nix
-    ../../system/nixos/docker.nix
-    ../../system/nixos/hyprland.nix
-    ../../system/nixos/nvidia.nix
-    ../../system/nixos/pipewire.nix
-    ../../system/nixos/steam.nix
+    ../../system/meta/cli-nixos.nix
+    ../../system/meta/gui-nixos.nix
   ];
 
   services.dnsmasq-resolver.enable = true;
@@ -54,106 +50,15 @@ in
     XDG_RUNTIME_DIR = "/run/user/1000";
     XDG_PICTURES_DIR = "${userConfig.homeDirectory}/Pictures";
     HYPRSHOT_DIR = "${userConfig.homeDirectory}/Pictures/screenshots";
-    # GDK_FONT_SCALE = "1.5";
-    # GDK_SCALE = "1.5";
     NIXOS_OZONE_WL = "1";
   };
 
-  environment.systemPackages = with pkgs; [
-    # CLI
-    curl
-    fish
-    git
-    killall
-    neovim
-    wget
-
-    # System tools
-    lsb-release
-    pciutils
-    usbutils
-
-    # GUI
-    (pkgs.wrapFirefox (pkgs.firefox-unwrapped.override { pipewireSupport = true; }) { })
-    (pkgs.callPackage ../../system/nixos/sddm-theme.nix { })
-    cliphist
-    adwaita-icon-theme
-    file-roller
-    kdePackages.gwenview
-    hyprpaper
-    hyprshot
-    kitty
-    nwg-look
-    obs-studio
-    qt5.qtwayland
-    qt6.qtwayland
-    qt6.qt5compat
-    qt6.qtdeclarative
-    rofi
-    slack
-    swaynotificationcenter
-    waybar
-    wl-clipboard
-
-    protontricks
-  ];
-
-  programs = {
-    appimage = {
-      enable = true;
-      binfmt = true;
-    };
-    fish = {
-      enable = true;
-      shellAliases = {
-        vim = "nvim";
-      };
-    };
-
-    thunar = {
-      enable = true;
-      plugins = with pkgs.xfce; [
-        thunar-archive-plugin
-        thunar-volman
-      ];
-    };
-
-    xfconf.enable = true;
-
-    nix-ld = {
-      enable = true;
-      libraries = with pkgs; [
-        # Standard C/C++ libraries
-        stdenv.cc.cc.lib
-        zlib
-
-        # Libraries for lua (including development headers)
-        readline.dev
-        readline
-        ncurses.dev
-        ncurses
-
-        # Dotnet and OmniSharp dependencies
-        icu
-        openssl
-        krb5
-        curl
-      ];
+  programs.fish = {
+    enable = true;
+    shellAliases = {
+      vim = "nvim";
     };
   };
-
-  xdg = {
-    portal = {
-      enable = true;
-      extraPortals = with pkgs; [
-        xdg-desktop-portal-wlr
-        xdg-desktop-portal-gtk
-      ];
-    };
-  };
-
-  services.openssh.enable = true;
-  services.flatpak.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

@@ -12,13 +12,6 @@ in
   # Determinate Nix handles the nix daemon and configuration itself
   nix.enable = false;
 
-  environment.systemPackages = with pkgs; [
-    coreutils
-    curl
-    fish
-    vim
-  ];
-
   # Enable Touch ID for sudo  
   security.pam.services.sudo_local.touchIdAuth = true;
 
