@@ -5,7 +5,7 @@ let
 in
 {
   imports = [
-    ./darwin/dnsmasq.nix
+    ./dnsmasq.nix
   ];
 
   # Disable nix-darwin's management of Nix since we're using Determinate Nix

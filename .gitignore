@@ -1,5 +1,5 @@
 *.local.nix
-modules/users.local.nix
+modules/users/local.nix
 config/fish/fish_variables
 config/fish/completions/docker.fish
 config/fish/completions/kubectl.fish

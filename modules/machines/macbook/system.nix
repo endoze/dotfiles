@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ../../os/php.nix
+    ../../system/darwin/php.nix
   ];
 
   services.dnsmasq-resolver.enable = true;

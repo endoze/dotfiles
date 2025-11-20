@@ -19,11 +19,11 @@ let
     else builtins.toString sourceRoot;
 
   localConfigPath =
-    if builtins.pathExists (/. + dotfilesPath + "/modules/users.local.nix")
-    then /. + dotfilesPath + "/modules/users.local.nix"
-    else if homeDir != "" && builtins.pathExists (/. + homeDir + "/.dotfiles/modules/users.local.nix")
-    then /. + homeDir + "/.dotfiles/modules/users.local.nix"
-    else sourceRoot + "/modules/users.local.nix";
+    if builtins.pathExists (/. + dotfilesPath + "/modules/users/local.nix")
+    then /. + dotfilesPath + "/modules/users/local.nix"
+    else if homeDir != "" && builtins.pathExists (/. + homeDir + "/.dotfiles/modules/users/local.nix")
+    then /. + homeDir + "/.dotfiles/modules/users/local.nix"
+    else sourceRoot + "/modules/users/local.nix";
 
   config =
     if builtins.pathExists localConfigPath

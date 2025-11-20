@@ -1,6 +1,10 @@
 { config, pkgs, lib, ... }:
 
 {
+  imports = [
+    ./linux/default.nix
+  ];
+
   home.packages = with pkgs; [
     clang-tools
     cmake

@@ -7,9 +7,7 @@
     gcr
   ];
 
-  services.gnome.gnome-keyring.enable = true;
   security.pam.services.sddm.enableGnomeKeyring = true;
-
 
   programs.hyprland = {
     enable = true;
@@ -74,6 +72,7 @@
     };
 
     gnome = {
+      gnome-keyring.enable = true;
       sushi.enable = true;
     };
   };

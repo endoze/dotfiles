@@ -4,21 +4,12 @@
   home.stateVersion = "24.05";
 
   imports = [
-    ./tokyonight-icon-theme.nix
-    ./dconf.nix
-    ../../firefox.nix
-    ../../hyprland.nix
-    ../../kitty.nix
-    ../../rofi.nix
-    ../../swaync.nix
-    ../../wallust.nix
-    ../../waybar.nix
   ];
 
   home = {
     packages = with pkgs; [
       elixir
-      elixir_ls
+      elixir-ls
       gimp
       libnotify
       lyrebird

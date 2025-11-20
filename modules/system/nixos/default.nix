@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ./nixos/dnsmasq.nix
+    ./dnsmasq.nix
   ];
 
   # Allow unfree packages

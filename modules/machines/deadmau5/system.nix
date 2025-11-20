@@ -12,12 +12,12 @@ in
 {
   imports = [
     ./hardware-configuration.nix
-    ../../os/nixos/bluetooth.nix
-    ../../os/nixos/docker.nix
-    ../../os/nixos/hyprland.nix
-    ../../os/nixos/nvidia.nix
-    ../../os/nixos/pipewire.nix
-    ../../os/nixos/steam.nix
+    ../../system/nixos/bluetooth.nix
+    ../../system/nixos/docker.nix
+    ../../system/nixos/hyprland.nix
+    ../../system/nixos/nvidia.nix
+    ../../system/nixos/pipewire.nix
+    ../../system/nixos/steam.nix
   ];
 
   services.dnsmasq-resolver.enable = true;
@@ -75,7 +75,7 @@ in
 
     # GUI
     (pkgs.wrapFirefox (pkgs.firefox-unwrapped.override { pipewireSupport = true; }) { })
-    (pkgs.callPackage ../../sddm-theme.nix { })
+    (pkgs.callPackage ../../system/nixos/sddm-theme.nix { })
     cliphist
     adwaita-icon-theme
     file-roller

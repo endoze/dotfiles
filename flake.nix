@@ -44,7 +44,7 @@
         overlays = [ nur.overlays.default ];
       });
 
-      localConfig = import ./modules/users.nix {
+      localConfig = import ./modules/users/default.nix {
         sourceRoot = ./.;
       };
     in
@@ -103,7 +103,7 @@
           nix-darwin.lib.darwinSystem {
             system = "aarch64-darwin";
             modules = [
-              ./modules/os/darwin.nix
+              ./modules/system/darwin/default.nix
               ./modules/machines/macbook/system.nix
             ];
             specialArgs = {
@@ -124,7 +124,7 @@
           nixpkgs.lib.nixosSystem {
             system = "x86_64-linux";
             modules = [
-              ./modules/os/nixos.nix
+              ./modules/system/nixos/default.nix
               ./modules/machines/deadmau5/system.nix
             ];
             specialArgs = {

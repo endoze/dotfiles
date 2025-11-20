@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ../karabiner.nix
+    ./darwin/default.nix
   ];
 
   nixpkgs.config = {

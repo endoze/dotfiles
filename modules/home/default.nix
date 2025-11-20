@@ -2,27 +2,7 @@
 
 {
   imports = [
-    # Tool modules
-    ../bat.nix
-    ../fish.nix
-    ../ghostty.nix
-    ../git.nix
-    ../hn-tui.nix
-    ../jujutsu.nix
-    ../lsd.nix
-    ../mise.nix
-    ../neovim.nix
-    ../selene.nix
-    ../shell-ai.nix
-    ../starship.nix
-    ../tmux.nix
-    ../weechat.nix
-
-    # Language modules
-    ../ruby.nix
-
-    # Service modules
-    ../databases.nix
+    ./common/default.nix
   ];
 
   home = {
