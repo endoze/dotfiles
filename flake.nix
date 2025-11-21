@@ -90,6 +90,28 @@
               sourceRoot = self;
             };
           };
+
+        "docker" =
+          let
+            userConfig = import ./modules/users/docker.nix // {
+              homeDirectory = "/home/endoze";
+            };
+            systemConfig = {
+              hostName = "docker-nix";
+              computerName = "docker-nix";
+            };
+          in
+          home-manager.lib.homeManagerConfiguration {
+            pkgs = nixpkgsFor.x86_64-linux;
+            modules = [
+              ./modules/home/default.nix
+              ./modules/machines/docker/home.nix
+            ];
+            extraSpecialArgs = {
+              inherit inputs userConfig systemConfig;
+              sourceRoot = self;
+            };
+          };
       };
 
       darwinConfigurations = {
@@ -129,6 +151,27 @@
             ];
             specialArgs = {
               inherit inputs userConfig systemConfig hyprland;
+              sourceRoot = self;
+            };
+          };
+
+        "docker" =
+          let
+            userConfig = import ./modules/users/docker.nix // {
+              homeDirectory = "/home/endoze";
+            };
+            systemConfig = {
+              hostName = "docker-nix";
+              computerName = "docker-nix";
+            };
+          in
+          nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            modules = [
+              ./modules/machines/docker/system.nix
+            ];
+            specialArgs = {
+              inherit inputs userConfig systemConfig;
               sourceRoot = self;
             };
           };

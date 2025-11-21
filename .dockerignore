@@ -1,0 +1,6 @@
+.git/
+.github/
+result*
+modules/users/local.nix
+*.local.nix
+.DS_Store

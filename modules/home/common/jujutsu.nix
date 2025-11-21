@@ -17,7 +17,11 @@
         pager = "delta";
         paginate = "auto";
         color = "auto";
-        default-command = ["log" "-n" "10"];
+        default-command = ["shortlog"];
+      };
+
+      aliases = {
+        shortlog = ["log" "-n" "10"];
       };
 
       signing = lib.mkIf (userConfig.gpgKey != "") {
