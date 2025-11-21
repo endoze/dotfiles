@@ -8,6 +8,7 @@
     ../nixos/nvidia.nix
     ../nixos/pipewire.nix
     ../nixos/steam.nix
+    ../nixos/tailscale.nix
   ];
 
   environment.systemPackages = with pkgs; [

@@ -49,11 +49,20 @@
     fastfetch
     gcc
     gnumake
+    inotify-tools
     less
+    lsof
     lua
     luarocks
     ncdu
+    nettools
     nodejs
+    procps
+    psmisc
+    strace
+    sysstat
+    tcpdump
+    traceroute
     usbutils
   ];
 }

@@ -5,7 +5,7 @@ let
   publicKeysFile = builtins.readFile (pkgs.fetchurl {
     url = "https://github.com/${githubUser}.keys";
     # sha256 = "1VwDw+Z6+WeWyPrpFE8C8KiR9Iq+GZfH29SgjPZyWC0=";
-    sha256 = "uchnIjzaC7KYW9VzKp01EcMG7d+eG+HyGdrQrzNS+44=";
+    sha256 = "AGdXILIxc/JDkNVjCo/By5FsVAmRZ+MmawzqvcV4SNM=";
   });
   publicKeys = lib.splitString "\n" (lib.removeSuffix "\n" publicKeysFile);
 in
@@ -40,9 +40,28 @@ in
     openssh.authorizedKeys.keys = publicKeys;
   };
 
+  # Enable Chaotic-Nyx for CachyOS kernel and other packages
+  # chaotic.nyx.cache.enable = true;
+
+  # Use CachyOS kernel for better gaming performance
+  # Note: Using standard variant instead of LTO due to NVIDIA driver compatibility
+  # boot.kernelPackages = pkgs.linuxPackages_cachyos;
+
+  # Enable sched-ext with scx_rusty scheduler for improved gaming performance
+  # services.scx = {
+  #   enable = true;
+  #   scheduler = "scx_rusty";
+  # };
+
   nix.settings = {
-    substituters = [ "https://hyprland.cachix.org" ];
-    trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
+    substituters = [
+      "https://hyprland.cachix.org"
+      "https://chaotic-nyx.cachix.org"
+    ];
+    trusted-public-keys = [
+      "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+      "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
+    ];
     download-buffer-size = 524288000;
   };
 

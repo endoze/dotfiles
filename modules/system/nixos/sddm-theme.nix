@@ -4,7 +4,7 @@ pkgs.stdenv.mkDerivation rec {
   pname = "sddm-cyberpunk-theme";
   version = "1.0";
 
-  src = ../config/sddm/theme/cyberpunk;
+  src = ../../../config/sddm/theme/cyberpunk;
 
   buildInputs = with pkgs; [
     qt6.qt5compat
@@ -19,7 +19,7 @@ pkgs.stdenv.mkDerivation rec {
     cp -r * $out/share/sddm/themes/cyberpunk/
 
     # Copy the wallpaper into the theme directory
-    cp ${../wallpapers/woman-in-cyberpunk-city.jpg} $out/share/sddm/themes/cyberpunk/backgrounds/woman-in-cyberpunk-city.jpg
+    cp ${../../../wallpapers/woman-in-cyberpunk-city.jpg} $out/share/sddm/themes/cyberpunk/backgrounds/woman-in-cyberpunk-city.jpg
 
     # Update the background path in theme.conf to use the wallpaper in the theme directory
     substituteInPlace $out/share/sddm/themes/cyberpunk/theme.conf \

@@ -10,6 +10,9 @@
     };
   };
 
+  # Allow Docker containers to communicate with host services
+  networking.firewall.trustedInterfaces = [ "docker0" ];
+
   users.users.${userConfig.username}.extraGroups = [ "docker" ];
 
   environment.systemPackages = with pkgs; [

@@ -8,5 +8,12 @@
     ../../home/meta/gui-linux.nix
   ];
 
-  xdg.userDirs.enable = true;
+  home.packages = with pkgs; [
+    ollama-cuda
+  ];
+
+  xdg.userDirs = {
+    enable = true;
+    createDirectories = true;
+  };
 }
