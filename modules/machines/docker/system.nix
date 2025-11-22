@@ -1,35 +1,41 @@
-{ config, pkgs, lib, userConfig, ... }:
+{ pkgs, lib, userConfig, ... }:
 
+# This module provides a user setup script for Docker containers.
+# Since we can't run full NixOS activation in a Docker build,
+# we generate a script that creates the user from the NixOS-style config.
+
+let
+  username = userConfig.username;
+  homeDirectory = userConfig.homeDirectory;
+  uid = "1000";
+  gid = "100";  # users group
+  shell = "${pkgs.fish}/bin/fish";
+in
 {
-  boot.isContainer = true;
+  # Script to create the user (mirrors NixOS users.users behavior)
+  userSetupScript = pkgs.writeShellScriptBin "setup-user" ''
+    set -e
 
-  networking.hostName = userConfig.hostName;
+    # Create user group if needed
+    if ! getent group ${username} >/dev/null 2>&1; then
+      echo "${username}:x:${uid}:" >> /etc/group
+    fi
 
-  time.timeZone = "America/New_York";
+    # Create user if needed
+    if ! getent passwd ${username} >/dev/null 2>&1; then
+      echo "${username}:x:${uid}:${gid}:${username}:${homeDirectory}:${shell}" >> /etc/passwd
+      echo "${username}:!:1::::::" >> /etc/shadow 2>/dev/null || true
+    fi
 
-  users.users.${userConfig.username} = {
-    isNormalUser = true;
-    home = userConfig.homeDirectory;
-    extraGroups = [ "wheel" ];
-    shell = pkgs.fish;
-    uid = 1000;
-  };
+    # Create home directory
+    mkdir -p ${homeDirectory}
+    chown ${uid}:${gid} ${homeDirectory}
 
-  programs.fish.enable = true;
+    # Create nix profile directory for user
+    mkdir -p /nix/var/nix/profiles/per-user/${username}
+    chown ${uid}:${gid} /nix/var/nix/profiles/per-user/${username}
+  '';
 
-  environment.systemPackages = with pkgs; [
-    git
-    vim
-  ];
-
-  nix = {
-    settings = {
-      experimental-features = [ "nix-command" "flakes" ];
-      trusted-users = [ "root" userConfig.username ];
-    };
-  };
-
-  nixpkgs.config.allowUnfree = true;
-
-  system.stateVersion = "24.05";
+  # Export for reference
+  inherit username homeDirectory uid gid shell;
 }

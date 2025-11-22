@@ -64,6 +64,7 @@
     sysstat
     tcpdump
     traceroute
+    dnsutils
     usbutils
   ];
 }

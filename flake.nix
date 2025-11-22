@@ -49,6 +49,20 @@
       };
     in
     {
+      # Docker user setup package
+      packages.x86_64-linux.dockerUserSetup =
+        let
+          pkgs = nixpkgsFor.x86_64-linux;
+          userConfig = import ./modules/users/docker.nix // {
+            homeDirectory = "/home/endoze";
+          };
+          dockerSystem = import ./modules/machines/docker/system.nix {
+            inherit pkgs userConfig;
+            lib = nixpkgs.lib;
+          };
+        in
+        dockerSystem.userSetupScript;
+
       homeConfigurations = {
         "macbook" =
           let
@@ -155,26 +169,6 @@
             };
           };
 
-        "docker" =
-          let
-            userConfig = import ./modules/users/docker.nix // {
-              homeDirectory = "/home/endoze";
-            };
-            systemConfig = {
-              hostName = "docker-nix";
-              computerName = "docker-nix";
-            };
-          in
-          nixpkgs.lib.nixosSystem {
-            system = "x86_64-linux";
-            modules = [
-              ./modules/machines/docker/system.nix
-            ];
-            specialArgs = {
-              inherit inputs userConfig systemConfig;
-              sourceRoot = self;
-            };
-          };
       };
     };
 }
