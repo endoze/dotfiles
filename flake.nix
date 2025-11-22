@@ -49,7 +49,7 @@
       };
     in
     {
-      # Docker user setup package
+      # Docker user setup package (for Dockerfile-based builds)
       packages.x86_64-linux.dockerUserSetup =
         let
           pkgs = nixpkgsFor.x86_64-linux;
@@ -62,6 +62,25 @@
           };
         in
         dockerSystem.userSetupScript;
+
+      # Pure Nix Docker image (alternative to Dockerfile)
+      packages.x86_64-linux.dockerImage =
+        let
+          pkgs = nixpkgsFor.x86_64-linux;
+          userConfig = import ./modules/users/docker.nix // {
+            homeDirectory = "/home/endoze";
+          };
+          systemConfig = {
+            hostName = "docker-nix";
+            computerName = "docker-nix";
+          };
+          dockerContainer = import ./modules/machines/docker/container.nix {
+            inherit pkgs home-manager userConfig systemConfig inputs;
+            lib = nixpkgs.lib;
+            sourceRoot = self;
+          };
+        in
+        dockerContainer.dockerImage;
 
       homeConfigurations = {
         "macbook" =
