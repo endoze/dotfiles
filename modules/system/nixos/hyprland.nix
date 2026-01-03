@@ -63,7 +63,6 @@
         variant = "";
       };
       excludePackages = [ pkgs.xterm ];
-      videoDrivers = [ "nvidia" ];
     };
 
     seatd = {

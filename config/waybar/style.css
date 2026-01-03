@@ -57,6 +57,7 @@ window#waybar.hidden {
 #memory,
 #custom-power,
 #custom-notification,
+#custom-theme,
 #battery,
 #backlight,
 #wireplumber,
@@ -127,6 +128,10 @@ window#waybar.hidden {
 
 #custom-notification {
   background-color: @foreground;
+}
+
+#custom-theme {
+  background-color: @color13;
 }
 
 tooltip {

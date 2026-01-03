@@ -121,32 +121,33 @@ in
       # Make dotfiles writable (they come from nix store as read-only)
       chmod -R u+w .${homeDirectory}/.dotfiles
 
-      # Create nix profile directories
+      # Create nix profile directories and set up profile symlink
       mkdir -p ./nix/var/nix/profiles/per-user/${username}
       mkdir -p ./nix/var/nix/gcroots/per-user/${username}
-
-      # Link home-manager as the user's nix profile
       ln -sf ${hmActivation} .${homeDirectory}/.nix-profile
 
-      # Link home-manager managed files
-      if [ -d "${hmActivation}/home-files" ]; then
-        # Link .config contents
-        if [ -d "${hmActivation}/home-files/.config" ]; then
-          for item in ${hmActivation}/home-files/.config/*; do
-            itemname=$(basename "$item")
-            ln -sf "$item" ".${homeDirectory}/.config/$itemname"
-          done
-        fi
+      # Link home-manager files directly (activation script doesn't work in fakeroot)
+      # Link .config entries
+      for item in ${hmActivation}/home-files/.config/*; do
+        name=$(basename "$item")
+        ln -sf "$item" .${homeDirectory}/.config/"$name"
+      done
 
-        # Link other dotfiles from home-files
-        for item in ${hmActivation}/home-files/.*; do
-          itemname=$(basename "$item")
-          case "$itemname" in
-            .|..|.config) continue ;;
-            *) ln -sf "$item" ".${homeDirectory}/$itemname" ;;
-          esac
+      # Link .local/share entries
+      if [ -d "${hmActivation}/home-files/.local/share" ]; then
+        for item in ${hmActivation}/home-files/.local/share/*; do
+          name=$(basename "$item")
+          ln -sf "$item" .${homeDirectory}/.local/share/"$name"
         done
       fi
+
+      # Link top-level dotfiles (like .bashrc, .profile, etc.)
+      for item in ${hmActivation}/home-files/.*; do
+        name=$(basename "$item")
+        if [ "$name" != "." ] && [ "$name" != ".." ] && [ "$name" != ".config" ] && [ "$name" != ".local" ]; then
+          ln -sf "$item" .${homeDirectory}/"$name"
+        fi
+      done
 
       # Create tmp directories
       mkdir -p ./tmp ./var/tmp ./run

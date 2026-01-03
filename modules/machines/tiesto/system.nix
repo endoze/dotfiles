@@ -4,7 +4,6 @@ let
   githubUser = userConfig.username;
   publicKeysFile = builtins.readFile (pkgs.fetchurl {
     url = "https://github.com/${githubUser}.keys";
-    # sha256 = "1VwDw+Z6+WeWyPrpFE8C8KiR9Iq+GZfH29SgjPZyWC0=";
     sha256 = "AGdXILIxc/JDkNVjCo/By5FsVAmRZ+MmawzqvcV4SNM=";
   });
   publicKeys = lib.splitString "\n" (lib.removeSuffix "\n" publicKeysFile);
@@ -14,39 +13,11 @@ in
     ./hardware-configuration.nix
     ../../system/meta/cli-nixos.nix
     ../../system/meta/gui-nixos.nix
-    # Machine-specific: nvidia GPU and custom pipewire config
-    ../../system/nixos/nvidia.nix
-    ../../system/nixos/pipewire.nix
+    # Basic pipewire without device-specific config
+    ../../system/nixos/pipewire-basic.nix
   ];
 
-  # Use nvidia driver for Xorg/Wayland
-  services.xserver.videoDrivers = [ "nvidia" ];
-
-  services.dnsmasq-resolver.enable = true;
-
-  # Preload daemon - learns usage patterns and preloads frequently used apps
-  services.preload.enable = true;
-
-  services.sunshine = {
-    enable = true;
-    autoStart = true;
-    capSysAdmin = true;
-    openFirewall = true;
-  };
-
-  # Allow input group to create virtual input devices (for Sunshine gamepad/keyboard/mouse)
-  services.udev.extraRules = ''
-    KERNEL=="uinput", GROUP="input", MODE="0660"
-  '';
-
-  # Ensure Sunshine starts after graphical session is ready
-  systemd.user.services.sunshine = {
-    after = [ "graphical-session.target" ];
-    wants = [ "graphical-session.target" ];
-    serviceConfig.Restart = "on-failure";
-  };
-
-  networking.hostName = systemConfig.hostName or "deadmau5";
+  networking.hostName = systemConfig.hostName or "tiesto";
 
   time.timeZone = "America/New_York";
 
@@ -64,18 +35,45 @@ in
   };
 
   users.users."${userConfig.username}" = {
-    extraGroups = [ "pipewire" "input" ];
+    extraGroups = [ "pipewire" ];
     openssh.authorizedKeys.keys = publicKeys;
   };
 
-  # Use CachyOS kernel with BORE scheduler for better desktop/gaming performance
+  # EFI boot partition is at /boot/efi on this machine
+  boot.loader.efi.efiSysMountPoint = "/boot/efi";
+
+  # Use CachyOS kernel with BORE scheduler (includes T2 patches)
   boot.kernelPackages = pkgs.linuxPackages_cachyos;
 
-  # Enable sched-ext with scx_rusty scheduler for improved gaming performance
-  # services.scx = {
-  #   enable = true;
-  #   scheduler = "scx_rusty";
-  # };
+  # T2 MacBook kernel parameters
+  boot.kernelParams = [
+    "intel_iommu=on"
+    "iommu=pt"
+    "pcie_ports=compat"
+    # WiFi fix for wpa_supplicant 2.11 regression
+    "brcmfmac.feature_disable=0x82000"
+  ];
+
+  # Enable redistributable firmware (needed for T2 WiFi/Bluetooth)
+  hardware.enableRedistributableFirmware = true;
+
+  # T2 MacBook WiFi/Bluetooth firmware (stored at /etc/nixos/firmware/brcm on the machine)
+  hardware.firmware = [
+    (pkgs.stdenvNoCC.mkDerivation {
+      name = "brcm-firmware";
+      src = /etc/nixos/firmware/brcm;
+      installPhase = ''
+        mkdir -p $out/lib/firmware/brcm
+        cp $src/* "$out/lib/firmware/brcm"
+      '';
+    })
+  ];
+
+  # Intel graphics
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
 
   nix.settings = {
     substituters = [

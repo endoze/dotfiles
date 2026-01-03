@@ -7,17 +7,17 @@
 
     # Use the netfilter (iptables) implementation instead of userspace networking
     # This provides better performance and allows Tailscale to work as an exit node
-    useRoutingFeatures = "both";
+    # "server" = advertise routes/exit node, "client" = accept routes, "both" = both
+    useRoutingFeatures = "server";
 
     # Open the firewall for Tailscale
     openFirewall = true;
 
     # Extra flags to pass to tailscale up
     extraUpFlags = [
-      "--accept-routes"
-      # Uncomment to advertise this machine as an exit node:
+      "--exit-node="
+      "--accept-routes=false"
       "--advertise-exit-node"
-      # Uncomment to advertise subnet routes (example):
       "--advertise-routes=192.168.1.0/24"
     ];
   };

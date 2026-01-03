@@ -30,9 +30,13 @@
       # inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
   };
 
-  outputs = { self, nixpkgs, home-manager, nix-darwin, mac-app-util, nur, hyprland, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nix-darwin, mac-app-util, nur, hyprland, chaotic, nixos-hardware, ... }@inputs:
     let
       supportedSystems = [ "x86_64-linux" "aarch64-darwin" "x86_64-darwin" ];
 
@@ -145,6 +149,26 @@
               sourceRoot = self;
             };
           };
+
+        "tiesto" =
+          let
+            userConfig = localConfig.getUserConfig {
+              system = "x86_64-linux";
+            };
+            systemConfig = localConfig.getSystemConfig;
+          in
+          home-manager.lib.homeManagerConfiguration {
+            pkgs = nixpkgsFor.x86_64-linux;
+            modules = [
+              ./modules/home/default.nix
+              ./modules/home/linux.nix
+              ./modules/machines/tiesto/home.nix
+            ];
+            extraSpecialArgs = {
+              inherit inputs userConfig systemConfig;
+              sourceRoot = self;
+            };
+          };
       };
 
       darwinConfigurations = {
@@ -181,6 +205,28 @@
             modules = [
               ./modules/system/nixos/default.nix
               ./modules/machines/deadmau5/system.nix
+              chaotic.nixosModules.default
+            ];
+            specialArgs = {
+              inherit inputs userConfig systemConfig hyprland;
+              sourceRoot = self;
+            };
+          };
+
+        "tiesto" =
+          let
+            userConfig = localConfig.getUserConfig {
+              system = "x86_64-linux";
+            };
+            systemConfig = localConfig.getSystemConfig;
+          in
+          nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            modules = [
+              ./modules/system/nixos/default.nix
+              ./modules/machines/tiesto/system.nix
+              nixos-hardware.nixosModules.apple-t2
+              chaotic.nixosModules.default
             ];
             specialArgs = {
               inherit inputs userConfig systemConfig hyprland;

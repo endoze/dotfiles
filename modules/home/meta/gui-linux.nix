@@ -11,6 +11,7 @@
     ../linux/kitty.nix
     ../linux/rofi.nix
     ../linux/swaync.nix
+    ../linux/swayosd.nix
     ../linux/tokyonight-icon-theme.nix
     ../linux/wallust.nix
     ../linux/waybar.nix

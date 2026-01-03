@@ -5,8 +5,6 @@
     ../nixos/bluetooth.nix
     ../nixos/docker.nix
     ../nixos/hyprland.nix
-    ../nixos/nvidia.nix
-    ../nixos/pipewire.nix
     ../nixos/steam.nix
     ../nixos/tailscale.nix
   ];
@@ -17,10 +15,12 @@
     cliphist
     adwaita-icon-theme
     file-roller
+    gvfs
     kdePackages.gwenview
     hyprpaper
     hyprshot
     kitty
+    nautilus
     nwg-look
     obs-studio
     qt5.qtwayland
@@ -29,6 +29,7 @@
     qt6.qtdeclarative
     rofi
     slack
+    sushi
     swaynotificationcenter
     waybar
     wl-clipboard
@@ -39,14 +40,6 @@
     appimage = {
       enable = true;
       binfmt = true;
-    };
-
-    thunar = {
-      enable = true;
-      plugins = with pkgs.xfce; [
-        thunar-archive-plugin
-        thunar-volman
-      ];
     };
 
     xfconf.enable = true;
@@ -79,4 +72,5 @@
   };
 
   services.flatpak.enable = true;
+  services.udisks2.enable = true;
 }

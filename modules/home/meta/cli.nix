@@ -1,6 +1,8 @@
 { config, pkgs, lib, ... }:
 
 {
+  nixpkgs.config.allowUnfree = true;
+
   imports = [
     ../common/bat.nix
     ../common/fish.nix
