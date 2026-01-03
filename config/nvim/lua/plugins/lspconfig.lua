@@ -5,6 +5,8 @@ return {
     "nvimtools/none-ls.nvim",
   },
   config = function()
+    require("lspconfig")
+
     local helpers = require("lsp.helpers")
 
     dofile(vim.g.base46_cache .. "lsp")

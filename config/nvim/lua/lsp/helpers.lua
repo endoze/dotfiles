@@ -156,6 +156,10 @@ function M.setup_lsp(name, opts)
     config.filetypes = opts.filetypes
   end
 
+  if opts.cmd_env then
+    config.cmd_env = opts.cmd_env
+  end
+
   vim.lsp.config(name, config)
   vim.lsp.enable(name)
 end

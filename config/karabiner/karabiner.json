@@ -1,4 +1,5 @@
 {
+    "global": { "ask_for_confirmation_before_quitting": false },
     "profiles": [
         {
             "complex_modifications": {
@@ -27,6 +28,40 @@
             },
             "name": "Default",
             "selected": true,
+            "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
+        },
+        {
+            "complex_modifications": {
+                "rules": [
+                    {
+                        "description": "Caps Lock to Escape on tap, Control on hold (Built-in keyboard only)",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [{ "is_built_in_keyboard": true }],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "caps_lock",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [{ "key_code": "left_control" }],
+                                "to_if_alone": [{ "key_code": "escape" }],
+                                "type": "basic"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "devices": [
+                {
+                    "identifiers": { "is_keyboard": true },
+                    "ignore": true
+                }
+            ],
+            "name": "Disabled",
             "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
         }
     ]

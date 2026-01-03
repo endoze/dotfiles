@@ -1,4 +1,4 @@
-{ config, pkgs, lib, sourceRoot, ... }:
+{ config, pkgs, lib, sourceRoot, userConfig, ... }:
 
 {
   home.packages = with pkgs; [ ];
@@ -8,6 +8,6 @@
     ".irbrc".source = "${sourceRoot}/config/irbrc";
     ".pryrc".source = "${sourceRoot}/config/pryrc";
     ".rubocop.yml".source = "${sourceRoot}/config/rubocop.yml";
-    ".bundle/config".source = "${sourceRoot}/config/bundle/config";
+    ".bundle/config".source = config.lib.file.mkOutOfStoreSymlink "${userConfig.dotfilesPath}/config/bundle/config";
   };
 }

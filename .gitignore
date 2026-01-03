@@ -4,3 +4,4 @@ config/fish/fish_variables
 config/fish/completions/docker.fish
 config/fish/completions/kubectl.fish
 config/fish/completions/orbctl.fish
+config/karabiner/karabiner.json.*.bak

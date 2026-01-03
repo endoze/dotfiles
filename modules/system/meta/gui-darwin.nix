@@ -5,7 +5,7 @@
     "alfred"
     "claude"
     "ghostty"
-    "karabiner-elements"
+    "karabiner-elements@beta"
     "orbstack"
     "postico"
     "sequel-ace"

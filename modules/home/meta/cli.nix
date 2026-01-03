@@ -23,6 +23,7 @@
     docker
     docker-buildx
     docker-compose
+    doctl
     gh-dash
     htop
     imagemagick

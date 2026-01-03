@@ -4,3 +4,7 @@ alias jd 'jj diff'
 alias jc 'jj describe'
 alias jup 'jj git fetch'
 alias jupp 'jj git fetch --all-remotes'
+
+function jnb --description "Create new change with bookmark (like git checkout -b)"
+  jj new && jj bookmark create $argv[1]
+end

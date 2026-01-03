@@ -31,7 +31,20 @@ return {
         end,
       }),
 
-      require("none-ls.diagnostics.eslint"),
+      require("none-ls.diagnostics.eslint").with({
+        condition = function(utils)
+          return utils.root_has_file({
+            "eslint.config.js",
+            "eslint.config.mjs",
+            "eslint.config.cjs",
+            ".eslintrc",
+            ".eslintrc.js",
+            ".eslintrc.json",
+            ".eslintrc.yml",
+            ".eslintrc.yaml",
+          })
+        end,
+      }),
 
       b.formatting.swiftformat,
 
@@ -48,7 +61,7 @@ return {
       b.formatting.nixpkgs_fmt,
 
       b.formatting.yapf,
-      b.diagnostics.mypy,
+      -- b.diagnostics.mypy,
 
       b.formatting.phpcsfixer,
     }
@@ -58,7 +71,8 @@ return {
 
       on_attach = function(client, bufnr)
         if client.supports_method("textDocument/formatting") then
-          local augroup = vim.api.nvim_create_augroup("NullLsFormatting", { clear = false })
+          local augroup =
+            vim.api.nvim_create_augroup("NullLsFormatting", { clear = false })
           vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
 
           vim.api.nvim_create_autocmd("BufWritePre", {

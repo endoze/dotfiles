@@ -17,7 +17,7 @@
     nil
     nodePackages.bash-language-server
     nodePackages.typescript-language-server
-    omnisharp-roslyn
+    roslyn-ls
     pyright
     taplo
     templ
