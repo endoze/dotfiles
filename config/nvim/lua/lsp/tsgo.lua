@@ -6,6 +6,14 @@ function M.setup()
 
   helpers.setup_lsp("tsgo", {
     autoformat = false,
+    filetypes = {
+      "javascript",
+      "javascriptreact",
+      "javascript.jsx",
+      "typescript",
+      "typescriptreact",
+      "typescript.tsx",
+    },
     on_attach_extra = function(client, bufnr)
       ih.on_attach(client, bufnr)
 

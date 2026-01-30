@@ -5,12 +5,25 @@ function M.setup()
 
   helpers.setup_lsp("ruby_lsp", {
     autoformat = true,
-    cmd = { "mise", "x", "--", "ruby-lsp" },
     init_options = {
       formatter = "standard",
       linters = { "standard" },
-      rubyVersionManager = {
-        identifier = "mise",
+      indexing = {
+        excludedPatterns = {
+          "bazel-*/**/*",
+          "node_modules/**/*",
+          ".ruby-lsp/**/*",
+          ".git/**/*",
+          ".jj/**/*",
+          ".claude/**/*",
+          "lrtc/log/**/*",
+          "lrtc/storage/**/*",
+          "lrtc/tmp/**/*",
+          "lrtc/vendor/**/*",
+          "lrtc/public/**/*",
+          "tools/**/*",
+          "bin/**/*",
+        },
       },
     },
   })

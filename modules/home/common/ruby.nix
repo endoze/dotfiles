@@ -7,7 +7,7 @@
     ".gemrc".source = "${sourceRoot}/config/gemrc";
     ".irbrc".source = "${sourceRoot}/config/irbrc";
     ".pryrc".source = "${sourceRoot}/config/pryrc";
-    ".rubocop.yml".source = "${sourceRoot}/config/rubocop.yml";
+    ".config/rubocop/config.yml".source = "${sourceRoot}/config/rubocop.yml";
     ".bundle/config".source = config.lib.file.mkOutOfStoreSymlink "${userConfig.dotfilesPath}/config/bundle/config";
   };
 }

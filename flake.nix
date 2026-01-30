@@ -108,6 +108,27 @@
             };
           };
 
+        "workmac" =
+          let
+            userConfig = localConfig.getUserConfig {
+              system = "aarch64-darwin";
+            };
+            systemConfig = localConfig.getSystemConfig;
+          in
+          home-manager.lib.homeManagerConfiguration {
+            pkgs = nixpkgsFor.aarch64-darwin;
+            modules = [
+              mac-app-util.homeManagerModules.default
+              ./modules/home/default.nix
+              ./modules/home/darwin.nix
+              ./modules/machines/workmac/home.nix
+            ];
+            extraSpecialArgs = {
+              inherit inputs userConfig systemConfig;
+              sourceRoot = self;
+            };
+          };
+
         "deadmau5" =
           let
             userConfig = localConfig.getUserConfig {
@@ -184,6 +205,25 @@
             modules = [
               ./modules/system/darwin/default.nix
               ./modules/machines/macbook/system.nix
+            ];
+            specialArgs = {
+              inherit inputs userConfig systemConfig;
+              sourceRoot = self;
+            };
+          };
+
+        "workmac" =
+          let
+            userConfig = localConfig.getUserConfig {
+              system = "aarch64-darwin";
+            };
+            systemConfig = localConfig.getSystemConfig;
+          in
+          nix-darwin.lib.darwinSystem {
+            system = "aarch64-darwin";
+            modules = [
+              ./modules/system/darwin/default.nix
+              ./modules/machines/workmac/system.nix
             ];
             specialArgs = {
               inherit inputs userConfig systemConfig;

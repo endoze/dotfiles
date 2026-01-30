@@ -17,11 +17,11 @@
         pager = "delta";
         paginate = "auto";
         color = "auto";
-        default-command = ["shortlog"];
+        default-command = [ "shortlog" ];
       };
 
       aliases = {
-        shortlog = ["log" "-n" "10"];
+        shortlog = [ "log" "-n" "10" ];
       };
 
       signing = lib.mkIf (userConfig.gpgKey != "") {
@@ -33,7 +33,7 @@
 
       merge-tools.delta = {
         program = "delta";
-        merge-args = ["--navigate" "--side-by-side" "--syntax-theme" "TwoDark" "--dark"];
+        merge-args = [ "--navigate" "--side-by-side" "--syntax-theme" "TwoDark" "--dark" ];
       };
 
       revsets = {
@@ -46,9 +46,15 @@
 
       git = {
         auto-local-branch = true;
-        fetch = ["origin"];
+        fetch = [ "origin" ];
         push = "origin";
-        push-new-bookmarks = true;
+        auto-track-bookmarks = true;
+      };
+
+      remotes = {
+        origin = {
+          auto-track-bookmarks = "all";
+        };
       };
     };
   };

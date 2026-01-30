@@ -1,8 +1,18 @@
 function nix-home
   set -l flake_config ""
+  set -l hostname_val (hostname -s)
 
   if is_macos
-    set flake_config "macbook"
+    # Map hostname to flake configuration
+    switch $hostname_val
+      case macbook-m3
+        set flake_config "macbook"
+      case workmac
+        set flake_config "workmac"
+      case '*'
+        echo "Unknown macOS hostname: $hostname_val"
+        return 1
+    end
   else if is_linux
     set flake_config "endoze@linux"
   else

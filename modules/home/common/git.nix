@@ -38,6 +38,7 @@
       core = {
         editor = "nvim";
         excludesFile = "~/.gitignore";
+        pager = "delta";
       };
       diff = {
         colorMoved = "default";
@@ -50,6 +51,9 @@
       };
       web = {
         browser = "open";
+      };
+      interactive = {
+        diffFilter = "delta --color-only";
       };
 
       alias = {

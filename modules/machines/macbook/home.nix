@@ -8,10 +8,6 @@
 
   home.packages = with pkgs; [ ];
 
-  home.sessionVariables = {
-    DEVELOPMENT_MACHINE = "macbook";
-  };
-
   programs.mysql = {
     enable = true;
     runAtLoad = true;

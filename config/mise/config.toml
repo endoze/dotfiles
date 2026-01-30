@@ -17,6 +17,8 @@ ruby = "4.0.0"
 rust = { version = "stable", profile = "default" }  # includes rustc, cargo, rust-std, rust-docs, rustfmt, clippy
 yarn = "3.8.7"
 uv = "latest"
+gleam = "latest"
+pnpm = "latest"
 
 [settings]
 # Use experimental features for better compatibility

@@ -12,4 +12,6 @@ dump.rdb
 .claude/
 .php-cs-fixer.cache
 .worktree/
+.worktrees/
 node_modules
+.beads
