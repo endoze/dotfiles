@@ -35,11 +35,13 @@
     ngrok
     nix-diff
     openssl
+    sops
     terraform
     tldr
     unar
     unrar
     unzip
+    yq
     zip
     zsh
   ] ++ lib.optionals pkgs.stdenv.isDarwin [

@@ -34,9 +34,14 @@
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
-  outputs = { self, nixpkgs, home-manager, nix-darwin, mac-app-util, nur, hyprland, chaotic, nixos-hardware, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nix-darwin, mac-app-util, nur, hyprland, chaotic, nixos-hardware, sops-nix, ... }@inputs:
     let
       supportedSystems = [ "x86_64-linux" "aarch64-darwin" "x86_64-darwin" ];
 
@@ -190,6 +195,26 @@
               sourceRoot = self;
             };
           };
+
+        "dosvec" =
+          let
+            userConfig = localConfig.getUserConfig {
+              system = "x86_64-linux";
+            };
+            systemConfig = localConfig.getSystemConfig;
+          in
+          home-manager.lib.homeManagerConfiguration {
+            pkgs = nixpkgsFor.x86_64-linux;
+            modules = [
+              ./modules/home/default.nix
+              ./modules/home/linux.nix
+              ./modules/machines/dosvec/home.nix
+            ];
+            extraSpecialArgs = {
+              inherit inputs userConfig systemConfig;
+              sourceRoot = self;
+            };
+          };
       };
 
       darwinConfigurations = {
@@ -270,6 +295,28 @@
             ];
             specialArgs = {
               inherit inputs userConfig systemConfig hyprland;
+              sourceRoot = self;
+            };
+          };
+
+        # Headless home server with ZFS, k3s, NVIDIA GPU, and Coral TPU
+        "dosvec" =
+          let
+            userConfig = localConfig.getUserConfig {
+              system = "x86_64-linux";
+            };
+            systemConfig = localConfig.getSystemConfig;
+          in
+          nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            modules = [
+              sops-nix.nixosModules.sops
+              ./modules/system/nixos/default.nix
+              ./modules/machines/dosvec/system.nix
+              # No chaotic - not needed for headless server
+            ];
+            specialArgs = {
+              inherit inputs userConfig systemConfig;
               sourceRoot = self;
             };
           };

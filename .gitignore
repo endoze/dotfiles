@@ -6,3 +6,8 @@ config/fish/completions/kubectl.fish
 config/fish/completions/orbctl.fish
 config/karabiner/karabiner.json.*.bak
 config/hypr/current-wallpaper
+
+# Unencrypted secrets (encrypted versions are committed)
+secrets/dosvec.yaml
+secrets/k3s-secrets.yaml
+secrets/k3s-secrets.enc.yaml

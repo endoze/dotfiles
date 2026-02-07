@@ -46,6 +46,17 @@ in
     serviceConfig.Restart = "on-failure";
   };
 
+  # Tailscale as exit node and route advertiser for remote LAN access
+  services.tailscale = {
+    useRoutingFeatures = "server";
+    extraUpFlags = [
+      "--exit-node="
+      "--accept-routes=false"
+      "--advertise-exit-node"
+      "--advertise-routes=192.168.1.0/24"
+    ];
+  };
+
   networking.hostName = systemConfig.hostName or "deadmau5";
 
   time.timeZone = "America/New_York";

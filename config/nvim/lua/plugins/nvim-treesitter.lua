@@ -39,6 +39,6 @@ return {
     return vim.tbl_deep_extend("force", nvconf, custom_config)
   end,
   config = function(_, opts)
-    require("nvim-treesitter.configs").setup(opts)
+    require("nvim-treesitter").setup(opts)
   end,
 }
