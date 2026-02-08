@@ -58,6 +58,18 @@
       };
     };
 
+    sshguard = {
+      enable = true;
+      attack_threshold = 30;
+      blocktime = 600;
+      detection_time = 1800;
+      whitelist = [
+        "127.0.0.0/8"
+        "100.64.0.0/10"
+        "192.168.1.0/24"
+      ];
+    };
+
     # Enable CUPS for printing
     printing.enable = true;
 

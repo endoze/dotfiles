@@ -51,11 +51,13 @@
 
   # Kubernetes management tools
   environment.systemPackages = with pkgs; [
-    kubectl      # Kubernetes CLI
+    kubectl          # Kubernetes CLI
     kubernetes-helm  # Helm package manager
-    k9s          # Terminal UI for Kubernetes
-    stern        # Multi-pod log tailing
-    kubectx      # Switch between clusters/namespaces
+    kustomize        # Standalone kustomize (needed for exec plugins)
+    kustomize-sops   # KSOPS - SOPS integration for kustomize
+    k9s              # Terminal UI for Kubernetes
+    stern            # Multi-pod log tailing
+    kubectx          # Switch between clusters/namespaces
   ];
 
   # Set KUBECONFIG environment variable system-wide
