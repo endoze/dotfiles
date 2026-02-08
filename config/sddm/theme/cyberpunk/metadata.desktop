@@ -1,0 +1,14 @@
+[SddmGreeterTheme]
+Name=Cyberpunk
+Description=Cyberpunk SDDM theme based on Catppuccin Mocha
+Type=sddm-theme
+Version=1.0
+Website=https://github.com/endoze/dotfiles
+Screenshot=preview.png
+MainScript=Main.qml
+ConfigFile=theme.conf
+TranslationsDirectory=translations
+Theme-Id=Cyberpunk
+Theme-API=2.0
+License=MIT
+QtVersion=6

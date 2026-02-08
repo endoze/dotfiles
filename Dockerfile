@@ -1,62 +1,29 @@
-ARG GOLANG_VERSION=1.23.1
-ARG RUST_VERSION=1.81.0
-ARG RUBY_VERSION=3.3.5
-ARG NODE_VERSION=22.9.0
+FROM nixos/nix:latest
 
-FROM ruby:${RUBY_VERSION}-slim-bullseye AS ruby-builder
-FROM rust:${RUST_VERSION}-slim-bullseye AS rust-builder
-FROM node:${NODE_VERSION}-bullseye-slim AS node-builder
-FROM golang:${GOLANG_VERSION}-bullseye AS go-builder
+RUN echo "experimental-features = nix-command flakes" >> /etc/nix/nix.conf
 
-FROM buildpack-deps:24.04
+COPY . /dotfiles
 
-ARG APP_ROOT=/workspace
-ARG BUILD_PACKAGES="zsh fish clang-format cmake rcm ripgrep tmux bat fzf"
+WORKDIR /dotfiles
 
-ENV BUNDLE_APP_CONFIG="$APP_ROOT/.bundle" DEBIAN_FRONTEND=noninteractive
-ENV RUSTUP_HOME=/usr/local/rustup CARGO_HOME=/usr/local/cargo GOPATH=/go
-ENV PATH /usr/local/cargo/bin:$GOPATH/bin:/usr/local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-ENV DOCKER=1
+# Build user setup script and create user via Nix
+RUN nix build .#packages.x86_64-linux.dockerUserSetup -o /tmp/user-setup && \
+    /tmp/user-setup/bin/setup-user
 
-WORKDIR $APP_ROOT
+# Build home-manager activation as root (has nix store permissions)
+RUN nix build .#homeConfigurations.docker.activationPackage -o /home/endoze/.hm-activation && \
+    chown -R 1000:100 /home/endoze && \
+    chown -R 1000:100 /nix
 
-RUN apt-get update -y \
-  && apt-get install -y $BUILD_PACKAGES \
-  && wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.23_amd64.deb \
-  && dpkg -i libssl1.1_1.1.1f-1ubuntu2.23_amd64.deb \
-  && rm -rf libssl1.1_1.1.1f-1ubuntu2.23_amd64.deb \
-  && wget https://github.com/lsd-rs/lsd/releases/download/v1.1.5/lsd_1.1.5_amd64.deb \
-  && dpkg -i lsd_1.1.5_amd64.deb \
-  && rm -rf lsd_1.1.5_amd64.deb \
-  && apt-get -yqq autoclean \
-  && apt-get -yqq autoremove --purge \
-  && apt-get -yqq purge $(dpkg --get-selections | grep deinstall | sed s/deinstall//g) \
-  && wget https://github.com/neovim/neovim/releases/download/v0.10.1/nvim-linux64.tar.gz \
-  && tar xzvf nvim-linux64.tar.gz \
-  && rm nvim-linux64.tar.gz \
-  && mv nvim-linux64 /opt/ \
-  && ln -s /opt/nvim-linux64/bin/nvim /usr/local/bin/nvim \
-  && rm -rf /var/lib/apt/lists/* /tmp/* /var/cache/* /var/tmp/*
+# Copy dotfiles for the user
+RUN cp -r /dotfiles /home/endoze/.dotfiles && \
+    chown -R 1000:100 /home/endoze/.dotfiles
 
-COPY --from=ruby-builder /usr/local/ /usr/local/
-COPY --from=rust-builder /usr/local/rustup/ /usr/local/rustup/
-COPY --from=rust-builder /usr/local/cargo /usr/local/cargo/
-COPY --from=node-builder /usr/local/ /usr/local/
-COPY --from=go-builder /usr/local/ /usr/local/
+# Switch to endoze and activate home-manager
+USER endoze
+ENV USER=endoze
+WORKDIR /home/endoze
+RUN ./.hm-activation/activate
 
-RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 1777 "$GOPATH" \
-  && npm install -g tree-sitter-cli && npm install -g @fsouza/prettierd
-
-COPY . /root/.dotfiles
-
-RUN mv ~/.dotfiles/rcrc.docker ~/.dotfiles/rcrc \
-  && cd ~/.dotfiles \
-  && ./setup/setup \
-  && rm -rf /var/lib/apt/lists/* /tmp/* /var/cache/* /var/tmp/*
-
-RUN nvim --headless "+Lazy! sync" +qa; 
-RUN nvim --headless "+InstallMasonPackages" +qa;
-
-ENV SHELL="/bin/fish"
-
-CMD /bin/fish
+ENV PATH="/home/endoze/.nix-profile/bin:$PATH"
+ENTRYPOINT ["/home/endoze/.nix-profile/bin/fish"]

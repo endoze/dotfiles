@@ -1,0 +1,32 @@
+#!/usr/bin/ruby
+
+if defined? IRB
+  require "irb/completion"
+
+  IRB.conf[:SAVE_HISTORY] = 1000
+  IRB.conf[:HISTORY_FILE] = "#{ENV["HOME"]}/.irb_history"
+  IRB.conf[:PROMPT_MODE] = :SIMPLE
+  IRB.conf[:AUTO_INDENT] = true
+  IRB.conf[:USE_AUTOCOMPLETE] = true
+  IRB.conf[:USE_COLORIZE] = true
+end
+
+def r
+  reload!
+end
+
+if rails_env = ENV["RAILS_ENV"] || (defined?(Rails) && rails_env = Rails.env)
+  rails_root = File.basename(Dir.pwd)
+  prompt = "#{rails_root}[#{rails_env}]"
+  IRB.conf[:PROMPT] ||= {}
+  IRB.conf[:PROMPT][:RAILS] = {
+    PROMPT_I: "#{prompt}> ",
+    PROMPT_S: "#{prompt}* ",
+    PROMPT_C: "#{prompt}? ",
+    RETURN: "=> %s\n"
+  }
+  IRB.conf[:PROMPT_MODE] = :RAILS
+
+  IRB.conf[:IRB_RC] = proc do
+  end
+end

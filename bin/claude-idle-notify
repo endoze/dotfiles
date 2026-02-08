@@ -1,0 +1,19 @@
+#!/bin/bash
+# Claude Code idle notification with tmux context
+
+# Only run on macOS - Linux handles this differently
+if [[ "$(uname)" != "Darwin" ]]; then
+    exit 0
+fi
+
+SESSION=$(tmux display-message -p '#S' 2>/dev/null || echo "")
+WINDOW=$(tmux display-message -p '#I:#W' 2>/dev/null || echo "")
+PANE=$(tmux display-message -p '#P' 2>/dev/null || echo "")
+
+if [[ -n "$SESSION" ]]; then
+    CONTEXT="[$SESSION] Window $WINDOW, Pane $PANE"
+else
+    CONTEXT="Not in tmux"
+fi
+
+alerter -message "Claude is waiting for your input" -subtitle "$CONTEXT" -title "Claude Code" -timeout 0 &

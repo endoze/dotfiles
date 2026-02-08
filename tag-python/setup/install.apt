@@ -1,4 +1,0 @@
-#!/usr/bin/env zsh
-
-apt_install python
-apt_install python3

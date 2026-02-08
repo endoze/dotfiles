@@ -1,0 +1,8 @@
+font-family = InconsolataGo Nerd Font
+font-thicken = true
+font-size = 20
+theme = One-Dark
+cursor-style = block
+cursor-style-blink = false
+shell-integration-features = no-cursor
+quit-after-last-window-closed = true

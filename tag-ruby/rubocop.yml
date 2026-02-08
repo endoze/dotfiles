@@ -1,7 +1,0 @@
-require: standard
-
-inherit_gem:
-  standard: config/base.yml
-
-Style/NegatedIf:
-  Enabled: false
