@@ -30,6 +30,7 @@
     htop
     imagemagick
     jq
+    k9s
     kubectl
     kubectx
     ngrok
