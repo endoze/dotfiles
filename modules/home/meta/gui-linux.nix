@@ -33,7 +33,7 @@
     discord
     wf-recorder
     xdg-utils
-    youtube-music
+    pear-desktop
   ];
 
   gtk = {

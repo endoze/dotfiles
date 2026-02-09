@@ -19,11 +19,12 @@
     services.resolved = {
       enable = true;
       domains = [ "~${config.services.dnsmasq-resolver.domain}" ];
-      extraConfig = ''
-        [Resolve]
-        DNS=127.0.0.1
-        Domains=~${config.services.dnsmasq-resolver.domain}
-      '';
+      settings = {
+        Resolve = {
+          DNS = "127.0.0.1";
+          Domains = "~${config.services.dnsmasq-resolver.domain}";
+        };
+      };
     };
 
     services.dnsmasq = {
