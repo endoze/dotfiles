@@ -2,7 +2,7 @@
 
 {
   nixpkgs.config.permittedInsecurePackages = [
-    "ventoy-gtk3-1.1.07"
+    "ventoy-gtk3-1.1.10"
   ];
 
   home.stateVersion = "24.05";
