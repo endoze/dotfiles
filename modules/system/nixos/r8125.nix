@@ -1,5 +1,5 @@
 # Realtek R8125 2.5GbE network driver
-# Required for dosvec's NIC (enp3s0) — NixOS has no DKMS, so we build from source.
+# Required for dosvec's NIC (enp5s0) — NixOS has no DKMS, so we build from source.
 # Source: https://github.com/awesometic/realtek-r8125-dkms
 { config, lib, pkgs, ... }:
 

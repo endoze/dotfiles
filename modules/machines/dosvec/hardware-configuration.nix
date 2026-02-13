@@ -54,10 +54,10 @@
 
   swapDevices = [ ];
 
-  # Bridge network — enp3s0 bridged to br0 with static IP
+  # Bridge network — enp5s0 bridged to br0 with static IP
   # Required for Plex (hardcodes 192.168.1.104:32400) and LAN-addressable VMs
   networking.useDHCP = false;
-  networking.bridges.br0.interfaces = [ "enp3s0" ];
+  networking.bridges.br0.interfaces = [ "enp5s0" ];
   networking.interfaces.br0 = {
     ipv4.addresses = [{
       address = "192.168.1.104";
