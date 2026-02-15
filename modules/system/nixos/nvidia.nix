@@ -22,19 +22,7 @@
     nvidia-container-toolkit.enable = true;
 
     nvidia = {
-      package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
-        version = "580.82.07";
-        sha256_64bit = "sha256-Bh5I4R/lUiMglYEdCxzqm3GLolQNYFB0/yJ/zgYoeYw=";
-        sha256_aarch64 = lib.fakeHash;
-        openSha256 = "sha256-8/7ZrcwBMgrBtxebYtCcH5A51u3lAxXTCY00LElZz08=";
-        settingsSha256 = lib.fakeHash;
-        persistencedSha256 = lib.fakeHash;
-      };
-
-      # The nvidia-settings build is currently broken due to a missing
-      # vulkan header; re-enable whenever
-      # 0384602eac8bc57add3227688ec242667df3ffe3the hits stable.
-      nvidiaSettings = false;
+      package = config.boot.kernelPackages.nvidiaPackages.stable;
 
       modesetting.enable = true;
       # Power management is required to get nvidia GPUs to behave on

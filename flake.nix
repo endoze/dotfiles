@@ -30,9 +30,10 @@
       # inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
-
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    nix-cachyos-kernel = {
+      url = "github:xddxdd/nix-cachyos-kernel/release";
+      # Do not override nixpkgs input to avoid version mismatches
+    };
 
     sops-nix = {
       url = "github:Mic92/sops-nix";
@@ -41,7 +42,7 @@
 
   };
 
-  outputs = { self, nixpkgs, home-manager, nix-darwin, mac-app-util, nur, hyprland, chaotic, nixos-hardware, sops-nix, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nix-darwin, mac-app-util, nur, hyprland, nix-cachyos-kernel, sops-nix, ... }@inputs:
     let
       supportedSystems = [ "x86_64-linux" "aarch64-darwin" "x86_64-darwin" ];
 
@@ -176,26 +177,6 @@
             };
           };
 
-        "tiesto" =
-          let
-            userConfig = localConfig.getUserConfig {
-              system = "x86_64-linux";
-            };
-            systemConfig = localConfig.getSystemConfig;
-          in
-          home-manager.lib.homeManagerConfiguration {
-            pkgs = nixpkgsFor.x86_64-linux;
-            modules = [
-              ./modules/home/default.nix
-              ./modules/home/linux.nix
-              ./modules/machines/tiesto/home.nix
-            ];
-            extraSpecialArgs = {
-              inherit inputs userConfig systemConfig;
-              sourceRoot = self;
-            };
-          };
-
         "dosvec" =
           let
             userConfig = localConfig.getUserConfig {
@@ -270,28 +251,9 @@
             modules = [
               ./modules/system/nixos/default.nix
               ./modules/machines/deadmau5/system.nix
-              chaotic.nixosModules.default
-            ];
-            specialArgs = {
-              inherit inputs userConfig systemConfig hyprland;
-              sourceRoot = self;
-            };
-          };
-
-        "tiesto" =
-          let
-            userConfig = localConfig.getUserConfig {
-              system = "x86_64-linux";
-            };
-            systemConfig = localConfig.getSystemConfig;
-          in
-          nixpkgs.lib.nixosSystem {
-            system = "x86_64-linux";
-            modules = [
-              ./modules/system/nixos/default.nix
-              ./modules/machines/tiesto/system.nix
-              nixos-hardware.nixosModules.apple-t2
-              chaotic.nixosModules.default
+              ({ pkgs, ... }: {
+                nixpkgs.overlays = [ nix-cachyos-kernel.overlays.pinned ];
+              })
             ];
             specialArgs = {
               inherit inputs userConfig systemConfig hyprland;

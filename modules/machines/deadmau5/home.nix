@@ -13,6 +13,7 @@
   ];
 
   home.packages = with pkgs; [
+    file
     ollama-cuda
     vmtouch
     slack
