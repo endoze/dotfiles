@@ -36,7 +36,10 @@
   boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ "dm-snapshot" ];
   boot.kernelModules = [ "kvm-intel" ];
-  boot.kernelParams = [ "pcie_aspm=off" ];
+  boot.kernelParams = [
+    "pcie_aspm=off"
+    "zfs.zfs_arc_max=8589934592"  # 8 GB — limits ARC to reduce total ZFS memory footprint
+  ];
   boot.extraModulePackages = [ ];
 
   # Root filesystem on sda
