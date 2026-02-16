@@ -8,7 +8,6 @@ Multi-platform Nix Flakes configuration managing macOS (aarch64-darwin) and NixO
 - `macbook` (aarch64-darwin) - Personal MacBook
 - `workmac` (aarch64-darwin) - Work MacBook
 - `deadmau5` (x86_64-linux) - Linux desktop with Hyprland, NVIDIA GPU, gaming
-- `tiesto` (x86_64-linux) - Apple T2 MacBook running NixOS
 - `dosvec` (x86_64-linux) - Headless home server (k3s, ZFS, NVIDIA, Coral TPU)
 - `docker` (x86_64-linux) - Docker container
 
@@ -18,7 +17,6 @@ Multi-platform Nix Flakes configuration managing macOS (aarch64-darwin) and NixO
 
 ### NixOS System Configurations
 - `deadmau5` - Linux desktop (Hyprland, gaming, NVIDIA)
-- `tiesto` - T2 MacBook with Linux (CachyOS kernel, T2 firmware)
 - `dosvec` - Headless server (k3s, ZFS, NVIDIA, Coral TPU, sops-nix secrets)
 
 ## Structure
@@ -85,7 +83,6 @@ Multi-platform Nix Flakes configuration managing macOS (aarch64-darwin) and NixO
     │   ├── macbook/           # Personal MacBook
     │   ├── workmac/           # Work MacBook
     │   ├── deadmau5/          # Linux desktop
-    │   ├── tiesto/            # T2 MacBook with Linux
     │   ├── dosvec/            # Headless server
     │   └── docker/            # Docker container
     ├── system/                # System-level configurations
@@ -178,7 +175,7 @@ sudo ./result/sw/bin/darwin-rebuild switch --flake .#macbook --impure
 nix build .#darwinConfigurations.workmac.system --impure
 sudo ./result/sw/bin/darwin-rebuild switch --flake .#workmac --impure
 
-# NixOS (replace <machine> with deadmau5, tiesto, or dosvec)
+# NixOS (replace <machine> with deadmau5 or dosvec)
 nix build .#nixosConfigurations.<machine>.config.system.build.toplevel --impure
 sudo ./result/bin/switch-to-configuration switch
 ```
@@ -194,7 +191,7 @@ nix build .#homeConfigurations.macbook.activationPackage --impure
 nix build .#homeConfigurations.workmac.activationPackage --impure
 ./result/activate
 
-# Linux (replace <machine> with deadmau5, tiesto, or dosvec)
+# Linux (replace <machine> with deadmau5 or dosvec)
 nix build .#homeConfigurations.<machine>.activationPackage --impure
 ./result/activate
 ```
@@ -221,7 +218,7 @@ nix-system  # Update system configuration (darwin-rebuild / nixos-rebuild)
 sudo darwin-rebuild switch --flake ~/.dotfiles#macbook --impure
 sudo darwin-rebuild switch --flake ~/.dotfiles#workmac --impure
 
-# NixOS (replace <machine> with deadmau5, tiesto, or dosvec)
+# NixOS (replace <machine> with deadmau5 or dosvec)
 sudo nixos-rebuild switch --flake ~/.dotfiles#<machine> --impure
 ```
 
@@ -232,7 +229,7 @@ sudo nixos-rebuild switch --flake ~/.dotfiles#<machine> --impure
 home-manager switch --flake ~/.dotfiles#macbook --impure
 home-manager switch --flake ~/.dotfiles#workmac --impure
 
-# Linux (replace <machine> with deadmau5, tiesto, or dosvec)
+# Linux (replace <machine> with deadmau5 or dosvec)
 home-manager switch --flake ~/.dotfiles#<machine> --impure
 ```
 

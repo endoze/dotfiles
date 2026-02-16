@@ -14,7 +14,15 @@ function nix-home
         return 1
     end
   else if is_linux
-    set flake_config "endoze@linux"
+    switch $hostname_val
+      case deadmau5
+        set flake_config "deadmau5"
+      case dosvec
+        set flake_config "dosvec"
+      case '*'
+        echo "Unknown Linux hostname: $hostname_val"
+        return 1
+    end
   else
     echo "Unknown system type: "(uname -s)
 
