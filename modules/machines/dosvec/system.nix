@@ -1,6 +1,6 @@
 # dosvec - Headless NixOS server configuration
 # Home server with k3s, NVIDIA GPU, and Coral TPU
-# ZFS storage will be enabled after Ubuntu is removed
+# NVMe root with ZFS storage pool on separate disks
 { config, pkgs, lib, userConfig ? { }, systemConfig ? { }, sourceRoot, ... }:
 
 let
@@ -24,9 +24,6 @@ in
     ../../system/nixos/tailscale.nix     # VPN as system service
     ../../system/nixos/r8125.nix        # Realtek R8125 2.5GbE driver
   ];
-
-  # IMPORTANT: Don't modify UEFI boot order - preserves Ubuntu dual boot
-  boot.loader.efi.canTouchEfiVariables = lib.mkForce false;
 
   # ==========================================================================
   # sops-nix secrets configuration

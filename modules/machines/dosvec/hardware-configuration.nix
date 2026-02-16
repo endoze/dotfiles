@@ -2,11 +2,11 @@
 #
 # Disk Layout:
 # ============
-# sda (WL2000GSA6472 2TB) - NixOS root filesystem
-#   - Part 1 (512MB): EFI boot partition
-#   - Part 2 (1.8TB): ext4 root partition
+# nvme0n1 (ADATA SX6000LNP 476.9GB) - NixOS root filesystem
+#   - Part 1 (1.5GB): EFI boot partition (NIXBOOT)
+#   - Part 2 (475.4GB): ext4 root partition (nixos-root)
 #
-# nvme0n1 (ADATA SX6000LNP) - Ubuntu (dual boot, will be removed later)
+# sda (WL2000GSA6472 2TB) - Available for repurposing
 #
 # ZFS Pool "hermes" (RAIDZ2 + SSD Cache):
 #   RAIDZ2 vdevs (5x 8TB WD):
@@ -34,7 +34,7 @@
 
   # Kernel modules for hardware support
   boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" ];
-  boot.initrd.kernelModules = [ "dm-snapshot" ];
+  boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.kernelParams = [
     "pcie_aspm=off"
@@ -42,15 +42,15 @@
   ];
   boot.extraModulePackages = [ ];
 
-  # Root filesystem on sda
+  # Root filesystem on nvme0n1
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/4c7bd085-72bc-42b3-9f86-0c9a296fe9cc";
+    { device = "/dev/disk/by-uuid/c727006a-36c1-4332-8a1d-10d21d33e905";
       fsType = "ext4";
     };
 
-  # EFI boot partition on sda
+  # EFI boot partition on nvme0n1
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/99A6-0294";
+    { device = "/dev/disk/by-uuid/932A-DF89";
       fsType = "vfat";
       options = [ "fmask=0022" "dmask=0022" ];
     };
