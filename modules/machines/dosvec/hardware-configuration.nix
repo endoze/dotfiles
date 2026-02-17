@@ -39,8 +39,22 @@
   boot.kernelParams = [
     "pcie_aspm=off"
     "zfs.zfs_arc_max=8589934592"  # 8 GB — limits ARC to reduce total ZFS memory footprint
+    "cpufreq.default_governor=performance"  # No frequency scaling — always-on server
   ];
   boot.extraModulePackages = [ ];
+
+  # Bypass Linux I/O scheduler for ZFS pool disks — ZFS has its own I/O pipeline (ZIO)
+  # Applies to RAIDZ2 HDDs (sdd-sdh) and L2ARC SSDs (sdb-sdc)
+  services.udev.extraRules = ''
+    ACTION=="add|change", KERNEL=="sd[bcdefgh]", ATTR{queue/scheduler}="none"
+  '';
+
+  # k3s with 35+ pods, Sonarr/Radarr directory watching, Alloy log tailing
+  # Default 8192 max_user_watches is easily exhausted
+  boot.kernel.sysctl = {
+    "fs.inotify.max_user_watches" = 524288;
+    "fs.inotify.max_user_instances" = 1024;
+  };
 
   # Root filesystem on nvme0n1
   fileSystems."/" =
