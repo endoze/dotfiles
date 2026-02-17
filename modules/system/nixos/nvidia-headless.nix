@@ -14,7 +14,13 @@
     nvidiaSettings = false;  # headless
     modesetting.enable = true;
     powerManagement.enable = false;
+    # Keep GPU driver loaded at all times (eliminates cold-start latency for CUDA containers)
+    nvidiaPersistenced = true;
   };
+
+  boot.extraModprobeConfig = ''
+    options nvidia NVreg_UsePageAttributeTable=1
+  '';
 
   services.xserver.videoDrivers = [ "nvidia" ];
 

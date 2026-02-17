@@ -29,7 +29,8 @@
 
 {
   imports =
-    [ (modulesPath + "/installer/scan/not-detected.nix")
+    [
+      (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
   # Kernel modules for hardware support
@@ -38,8 +39,9 @@
   boot.kernelModules = [ "kvm-intel" ];
   boot.kernelParams = [
     "pcie_aspm=off"
-    "zfs.zfs_arc_max=8589934592"  # 8 GB — limits ARC to reduce total ZFS memory footprint
-    "cpufreq.default_governor=performance"  # No frequency scaling — always-on server
+    "zfs.zfs_arc_max=8589934592" # 8 GB — limits ARC to reduce total ZFS memory footprint
+    "cpufreq.default_governor=performance" # No frequency scaling — always-on server
+    "transparent_hugepage=madvise" # THP only for apps that request it (CUDA containers benefit)
   ];
   boot.extraModulePackages = [ ];
 
@@ -58,13 +60,16 @@
 
   # Root filesystem on nvme0n1
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/8df19d25-2171-4256-8eef-ef3fab4f4246";
+    {
+      device = "/dev/disk/by-uuid/8df19d25-2171-4256-8eef-ef3fab4f4246";
       fsType = "ext4";
+      options = [ "noatime" ];
     };
 
   # EFI boot partition on nvme0n1
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/DA5E-AC27";
+    {
+      device = "/dev/disk/by-uuid/DA5E-AC27";
       fsType = "vfat";
       options = [ "fmask=0022" "dmask=0022" ];
     };

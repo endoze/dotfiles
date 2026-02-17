@@ -80,9 +80,15 @@
     };
     Service = {
       Type = "simple";
-      Environment = [ "OLLAMA_HOST=0.0.0.0" ];
+      Environment = [
+        "OLLAMA_HOST=0.0.0.0"
+        "OLLAMA_FLASH_ATTENTION=1"   # Faster inference, less VRAM usage
+        "OLLAMA_KV_CACHE_TYPE=q8_0"  # Quantized KV cache (~50% VRAM savings, negligible quality loss)
+        "OLLAMA_KEEP_ALIVE=10m"      # Unload model from VRAM after 10 min idle
+      ];
       ExecStart = "${pkgs.ollama-cuda}/bin/ollama serve";
       Restart = "on-failure";
+      RestartSec = "5";
     };
     # No Install.WantedBy = disabled on boot
   };

@@ -29,6 +29,8 @@
       # suspend, due to firmware bugs. Aren't nvidia great?
       powerManagement.enable = true;
       open = true;
+      # Keep GPU driver loaded at all times (eliminates cold-start latency for CUDA/gaming)
+      nvidiaPersistenced = true;
     };
   };
 
@@ -36,5 +38,12 @@
     GBM_BACKEND = "nvidia-drm";
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
     WLR_NO_HARDWARE_CURSORS = "1";
+    # G-Sync / VRR
+    __GL_GSYNC_ALLOWED = "1";
+    __GL_VRR_ALLOWED = "1";
+    # Reduce input lag (limit pre-rendered frames to 1)
+    __GL_MaxFramesAllowed = "1";
+    # Better yield behavior for lower latency
+    __GL_YIELD = "USLEEP";
   };
 }
