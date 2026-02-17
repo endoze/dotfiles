@@ -175,6 +175,30 @@ in
     cri-tools   # CRI debugging tool (provides crictl)
   ];
 
+  # Set NVMe I/O scheduler to none (NVMe has internal scheduling, software scheduler adds CPU overhead)
+  services.udev.extraRules = ''
+    ACTION=="add|change", KERNEL=="nvme[0-9]*", ATTR{queue/scheduler}="none"
+  '';
+
+  # Periodic TRIM for NVMe longevity (lower overhead than continuous discard)
+  services.fstrim.enable = true;
+
+  # Distribute hardware interrupts across cores
+  services.irqbalance.enable = true;
+
+  boot.kernel.sysctl = {
+    # VM tuning
+    "vm.vfs_cache_pressure" = 50;            # Hold filesystem metadata in memory longer (benefits ZFS/k3s)
+    "vm.min_free_kbytes" = 131072;           # 128 MB free minimum (prevents allocation stalls during GPU ops)
+
+    # Network tuning (k3s pods, Plex, Tailscale, Frigate streams)
+    "net.core.netdev_max_backlog" = 16384;
+    "net.core.somaxconn" = 8192;
+    "net.ipv4.tcp_fastopen" = 3;
+    "net.ipv4.tcp_max_syn_backlog" = 8192;
+    "net.ipv4.tcp_tw_reuse" = 1;
+  };
+
   # Disable suspend/hibernate - server should always be on
   systemd.sleep.extraConfig = ''
     AllowSuspend=no
