@@ -38,6 +38,35 @@
     wants = [ "zfs.target" "network-online.target" "nvidia-container-toolkit-cdi-generator.service" ];
   };
 
+  # Drain k3s node before shutdown/reboot to prevent phantom pods
+  # Without this, pods using hostPath volumes and GPU resources leave stale
+  # entries in etcd that cause duplicate pod attempts on next boot.
+  systemd.services.k3s-node-drain = {
+    description = "Drain k3s node before shutdown";
+    after = [ "k3s.service" ];
+    before = [ "shutdown.target" "reboot.target" "halt.target" ];
+    wantedBy = [ "multi-user.target" ];
+    unitConfig = {
+      DefaultDependencies = false;
+    };
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      Environment = "KUBECONFIG=/etc/rancher/k3s/k3s.yaml";
+      ExecStart = "${pkgs.coreutils}/bin/true";
+      ExecStop = pkgs.writeShellScript "k3s-drain" ''
+        ${pkgs.kubectl}/bin/kubectl cordon "${config.networking.hostName}"
+        ${pkgs.kubectl}/bin/kubectl drain "${config.networking.hostName}" \
+          --delete-emptydir-data \
+          --ignore-daemonsets \
+          --force \
+          --grace-period=30 \
+          --timeout=60s
+      '';
+      TimeoutStopSec = 90;
+    };
+  };
+
   # Trust k3s network interfaces for firewall
   networking.firewall = {
     trustedInterfaces = [

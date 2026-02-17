@@ -44,13 +44,13 @@
 
   # Root filesystem on nvme0n1
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/c727006a-36c1-4332-8a1d-10d21d33e905";
+    { device = "/dev/disk/by-uuid/8df19d25-2171-4256-8eef-ef3fab4f4246";
       fsType = "ext4";
     };
 
   # EFI boot partition on nvme0n1
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/932A-DF89";
+    { device = "/dev/disk/by-uuid/DA5E-AC27";
       fsType = "vfat";
       options = [ "fmask=0022" "dmask=0022" ];
     };
