@@ -187,16 +187,48 @@ in
   services.irqbalance.enable = true;
 
   boot.kernel.sysctl = {
-    # VM tuning
+    # --- VM tuning ---
     "vm.vfs_cache_pressure" = 50;            # Hold filesystem metadata in memory longer (benefits ZFS/k3s)
     "vm.min_free_kbytes" = 131072;           # 128 MB free minimum (prevents allocation stalls during GPU ops)
+    "vm.dirty_ratio" = 10;                   # Cap dirty pages at 10% before blocking (default 20)
+    "vm.dirty_background_ratio" = 3;         # Start background writeback at 3% (default 10) — smoother I/O for ext4 root
 
-    # Network tuning (k3s pods, Plex, Tailscale, Frigate streams)
+    # --- File descriptor limit ---
+    "fs.file-max" = 2097152;                 # 2M ceiling for k3s pods, LGTM stack, Plex, Docker (no cost until opened)
+
+    # --- BBR congestion control ---
+    "net.core.default_qdisc" = "fq";                # Fair queuing — required for BBR pacing
+    "net.ipv4.tcp_congestion_control" = "bbr";       # BBR models bandwidth/RTT instead of reacting to loss
+
+    # --- TCP buffer sizes (16 MB max) ---
+    "net.core.rmem_max" = 16777216;                  # Per-socket receive buffer ceiling
+    "net.core.wmem_max" = 16777216;                  # Per-socket send buffer ceiling
+    "net.ipv4.tcp_rmem" = "4096 87380 16777216";     # min/default/max — kernel autotunes per-connection
+    "net.ipv4.tcp_wmem" = "4096 65536 16777216";
+
+    # --- UDP buffer sizes (1 MB default) ---
+    "net.core.rmem_default" = 1048576;               # Enshrouded/Unity won't call setsockopt — needs sane defaults
+    "net.core.wmem_default" = 1048576;
+    "net.ipv4.udp_rmem_min" = 16384;                 # Minimum UDP buffers under memory pressure
+    "net.ipv4.udp_wmem_min" = 16384;
+    "net.ipv4.udp_mem" = "65536 131072 262144";      # System-wide UDP memory limits (pages)
+
+    # --- Network stack (k3s pods, Plex, Tailscale, Frigate streams) ---
     "net.core.netdev_max_backlog" = 16384;
     "net.core.somaxconn" = 8192;
     "net.ipv4.tcp_fastopen" = 3;
     "net.ipv4.tcp_max_syn_backlog" = 8192;
     "net.ipv4.tcp_tw_reuse" = 1;
+
+    # --- Connection tracking + ARP cache (k3s) ---
+    "net.netfilter.nf_conntrack_max" = 131072;       # Default 65536 fills with many pods + streams + UDP
+    "net.ipv4.neigh.default.gc_thresh1" = 4096;      # ARP cache thresholds — defaults (128/512/1024) too small
+    "net.ipv4.neigh.default.gc_thresh2" = 8192;      # for k3s virtual interfaces (veth/cni0/flannel)
+    "net.ipv4.neigh.default.gc_thresh3" = 16384;
+
+    # --- Reverse path filtering (loose) ---
+    "net.ipv4.conf.all.rp_filter" = 2;               # Loose mode — validates source IP against routing table
+    "net.ipv4.conf.default.rp_filter" = 2;           # Strict mode drops legitimate packets with br0/flannel/tailscale
   };
 
   # Disable suspend/hibernate - server should always be on
