@@ -8,7 +8,7 @@ let
   username = userConfig.username;
   homeDirectory = userConfig.homeDirectory;
   uid = "1000";
-  gid = "100";  # users group
+  gid = "100"; # users group
   shell = "${pkgs.fish}/bin/fish";
 in
 {

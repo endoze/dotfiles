@@ -32,11 +32,11 @@
     autoSnapshot = {
       enable = true;
       # Keep frequent snapshots for quick recovery
-      frequent = 4;    # Every 15 minutes, keep 4
-      hourly = 24;     # Keep 24 hourly snapshots
-      daily = 7;       # Keep 7 daily snapshots
-      weekly = 4;      # Keep 4 weekly snapshots
-      monthly = 12;    # Keep 12 monthly snapshots
+      frequent = 4; # Every 15 minutes, keep 4
+      hourly = 24; # Keep 24 hourly snapshots
+      daily = 7; # Keep 7 daily snapshots
+      weekly = 4; # Keep 4 weekly snapshots
+      monthly = 12; # Keep 12 monthly snapshots
     };
 
     # Enable TRIM for SSDs (cache devices)
@@ -50,8 +50,8 @@
   environment.systemPackages = with pkgs; [
     zfs
     # Useful ZFS utilities
-    smartmontools  # For monitoring disk health
-    lsscsi         # List SCSI devices
+    smartmontools # For monitoring disk health
+    lsscsi # List SCSI devices
   ];
 
   # Ensure ZFS services start properly

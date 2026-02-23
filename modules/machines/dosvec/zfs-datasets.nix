@@ -34,37 +34,37 @@ let
       mountpoint = "/mnt/hermes";
       compression = "lz4";
       atime = "off";
-      recordsize = "128K";  # default
+      recordsize = "128K"; # default
     };
     "hermes/Media" = {
       mountpoint = "/mnt/hermes/Media";
       compression = "lz4";
       atime = "off";
-      recordsize = "1M";  # Optimized for large media files
+      recordsize = "1M"; # Optimized for large media files
     };
     "hermes/backups" = {
       mountpoint = "/mnt/hermes/backups";
       compression = "lz4";
       atime = "off";
-      recordsize = "128K";  # default
+      recordsize = "128K"; # default
     };
     "hermes/docker" = {
       mountpoint = "/mnt/hermes/docker";
-      compression = "zstd";  # Better compression for container layers
+      compression = "zstd"; # Better compression for container layers
       atime = "off";
-      recordsize = "16K";  # Optimized for small container files
+      recordsize = "16K"; # Optimized for small container files
     };
     "hermes/vm_isos" = {
       mountpoint = "/mnt/hermes/vm_isos";
       compression = "lz4";
       atime = "off";
-      recordsize = "1M";  # Optimized for large ISO files
+      recordsize = "1M"; # Optimized for large ISO files
     };
     "hermes/vm_storage" = {
       mountpoint = "/mnt/hermes/vm_storage";
       compression = "lz4";
       atime = "off";
-      recordsize = "64K";  # Balanced for VM disk images
+      recordsize = "64K"; # Balanced for VM disk images
     };
   };
 

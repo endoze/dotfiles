@@ -82,12 +82,12 @@ in
   boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-lts;
 
   boot.kernelParams = [
-    "mitigations=off"              # ~5-15% perf gain on Intel (disables Spectre/Meltdown mitigations)
-    "split_lock_detect=off"        # Prevents severe perf penalty in some Proton games (God of War, etc.)
+    "mitigations=off" # ~5-15% perf gain on Intel (disables Spectre/Meltdown mitigations)
+    "split_lock_detect=off" # Prevents severe perf penalty in some Proton games (God of War, etc.)
     "transparent_hugepage=madvise" # THP only for apps that request it (Proton/CUDA do, avoids overhead for others)
-    "threadirqs"                   # Move IRQ handlers to schedulable kernel threads
-    "nowatchdog"                   # Disable watchdog timers (reduces interrupts)
-    "nmi_watchdog=0"               # Disable NMI watchdog
+    "threadirqs" # Move IRQ handlers to schedulable kernel threads
+    "nowatchdog" # Disable watchdog timers (reduces interrupts)
+    "nmi_watchdog=0" # Disable NMI watchdog
     "quiet"
     "loglevel=3"
     "nvidia_drm.fbdev=1"
@@ -101,22 +101,22 @@ in
 
   boot.kernel.sysctl = {
     # VM tuning
-    "vm.swappiness" = 150;                   # With zram: prefer compressing into zram over evicting file cache
-    "vm.vfs_cache_pressure" = 50;            # Hold filesystem metadata in memory longer
-    "vm.dirty_bytes" = 268435456;            # 256 MB dirty limit before synchronous writeback
+    "vm.swappiness" = 150; # With zram: prefer compressing into zram over evicting file cache
+    "vm.vfs_cache_pressure" = 50; # Hold filesystem metadata in memory longer
+    "vm.dirty_bytes" = 268435456; # 256 MB dirty limit before synchronous writeback
     "vm.dirty_background_bytes" = 134217728; # 128 MB before background writeback starts
-    "vm.dirty_writeback_centisecs" = 1000;   # Flush every 10s instead of 5s
+    "vm.dirty_writeback_centisecs" = 1000; # Flush every 10s instead of 5s
     "vm.dirty_expire_centisecs" = 1000;
-    "vm.compaction_proactiveness" = 0;       # Disable proactive compaction (reduces background CPU)
-    "vm.watermark_boost_factor" = 1;         # Less aggressive page reclaim
-    "vm.min_free_kbytes" = 131072;           # 128 MB free minimum (prevents allocation stalls during CUDA ops)
-    "vm.overcommit_memory" = 1;              # Allow overcommit (important for Ollama/Proton)
-    "vm.page_lock_unfairness" = 1;           # Reduce lock contention
-    "vm.page-cluster" = 0;                   # Disable swap readahead (NVMe is fast enough)
+    "vm.compaction_proactiveness" = 0; # Disable proactive compaction (reduces background CPU)
+    "vm.watermark_boost_factor" = 1; # Less aggressive page reclaim
+    "vm.min_free_kbytes" = 131072; # 128 MB free minimum (prevents allocation stalls during CUDA ops)
+    "vm.overcommit_memory" = 1; # Allow overcommit (important for Ollama/Proton)
+    "vm.page_lock_unfairness" = 1; # Reduce lock contention
+    "vm.page-cluster" = 0; # Disable swap readahead (NVMe is fast enough)
 
     # Kernel
-    "kernel.split_lock_mitigate" = 0;        # Belt and suspenders with boot param
-    "kernel.printk" = "3 3 3 3";             # Reduce printk overhead
+    "kernel.split_lock_mitigate" = 0; # Belt and suspenders with boot param
+    "kernel.printk" = "3 3 3 3"; # Reduce printk overhead
 
     # Network (Ollama serving, Sunshine streaming)
     "net.core.netdev_max_backlog" = 16384;
@@ -172,8 +172,8 @@ in
     NIXOS_OZONE_WL = "1";
 
     # Proton performance
-    PROTON_USE_NTSYNC = "1";       # NTSync for faster Windows synchronization primitives
-    PROTON_ENABLE_WAYLAND = "1";   # Native Wayland in Wine (per-game opt-out: PROTON_ENABLE_WAYLAND=0 %command%)
+    PROTON_USE_NTSYNC = "1"; # NTSync for faster Windows synchronization primitives
+    PROTON_ENABLE_WAYLAND = "1"; # Native Wayland in Wine (per-game opt-out: PROTON_ENABLE_WAYLAND=0 %command%)
 
     # NVIDIA shader cache - increase from 1GB default to 10GB
     __GL_SHADER_DISK_CACHE = "1";

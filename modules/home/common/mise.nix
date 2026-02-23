@@ -15,7 +15,7 @@
   xdg.configFile."mise".source = config.lib.file.mkOutOfStoreSymlink "${userConfig.dotfilesPath}/config/mise";
 
   # Ensure mise data directory exists with proper permissions
-  home.activation.createMiseDataDir = lib.hm.dag.entryAfter ["writeBoundary"] ''
+  home.activation.createMiseDataDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     mkdir -p $HOME/.local/share/mise
   '';
 }

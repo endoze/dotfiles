@@ -34,41 +34,41 @@ let
   dotfilesSource = sourceRoot;
 
   # Create /etc files as a derivation
-  etcFiles = pkgs.runCommand "etc-files" {} ''
-    mkdir -p $out/etc
+  etcFiles = pkgs.runCommand "etc-files" { } ''
+        mkdir -p $out/etc
 
-    cat > $out/etc/passwd << 'EOF'
-root:x:0:0:root:/root:${pkgs.bashInteractive}/bin/bash
-${username}:x:${toString uid}:${toString gid}:${username}:${homeDirectory}:${pkgs.fish}/bin/fish
-nobody:x:65534:65534:Nobody:/nonexistent:/bin/false
-EOF
+        cat > $out/etc/passwd << 'EOF'
+    root:x:0:0:root:/root:${pkgs.bashInteractive}/bin/bash
+    ${username}:x:${toString uid}:${toString gid}:${username}:${homeDirectory}:${pkgs.fish}/bin/fish
+    nobody:x:65534:65534:Nobody:/nonexistent:/bin/false
+    EOF
 
-    cat > $out/etc/group << 'EOF'
-root:x:0:
-users:x:100:${username}
-nobody:x:65534:
-EOF
+        cat > $out/etc/group << 'EOF'
+    root:x:0:
+    users:x:100:${username}
+    nobody:x:65534:
+    EOF
 
-    cat > $out/etc/shadow << 'EOF'
-root:!:1::::::
-${username}:!:1::::::
-nobody:!:1::::::
-EOF
-    chmod 600 $out/etc/shadow
+        cat > $out/etc/shadow << 'EOF'
+    root:!:1::::::
+    ${username}:!:1::::::
+    nobody:!:1::::::
+    EOF
+        chmod 600 $out/etc/shadow
 
-    cat > $out/etc/nsswitch.conf << 'EOF'
-passwd:    files
-group:     files
-shadow:    files
-hosts:     files dns
-networks:  files
-EOF
+        cat > $out/etc/nsswitch.conf << 'EOF'
+    passwd:    files
+    group:     files
+    shadow:    files
+    hosts:     files dns
+    networks:  files
+    EOF
 
-    mkdir -p $out/etc/nix
-    cat > $out/etc/nix/nix.conf << 'EOF'
-experimental-features = nix-command flakes
-sandbox = false
-EOF
+        mkdir -p $out/etc/nix
+        cat > $out/etc/nix/nix.conf << 'EOF'
+    experimental-features = nix-command flakes
+    sandbox = false
+    EOF
   '';
 
   # All packages to include in the image
