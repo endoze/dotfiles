@@ -7,22 +7,21 @@ let
   githubUser = userConfig.username;
   publicKeysFile = builtins.readFile (pkgs.fetchurl {
     url = "https://github.com/${githubUser}.keys";
-    # sha256 = "47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=";
-    sha256 = "6KWN+v3skxU1/h0aJBtE/Opli22VFIsv+Z/f3P7oCgs=";
+    sha256 = "+75tNZAGfdQdnSPUaak4OtGTeiNqI5duNV5y8rDpiGg=";
   });
   publicKeys = lib.splitString "\n" (lib.removeSuffix "\n" publicKeysFile);
 in
 {
   imports = [
     ./hardware-configuration.nix
-    ./zfs-datasets.nix                   # ZFS dataset properties and migration tools
-    ../../system/meta/cli-nixos.nix      # CLI tools only (no GUI)
-    ../../system/nixos/zfs.nix           # ZFS pool management
-    ../../system/nixos/k3s.nix           # k3s Kubernetes
-    ../../system/nixos/nvidia-headless.nix  # NVIDIA without GUI
-    ../../system/nixos/coral-tpu.nix     # Google Coral TPU
-    ../../system/nixos/tailscale.nix     # VPN as system service
-    ../../system/nixos/r8125.nix        # Realtek R8125 2.5GbE driver
+    ./zfs-datasets.nix # ZFS dataset properties and migration tools
+    ../../system/meta/cli-nixos.nix # CLI tools only (no GUI)
+    ../../system/nixos/zfs.nix # ZFS pool management
+    ../../system/nixos/k3s.nix # k3s Kubernetes
+    ../../system/nixos/nvidia-headless.nix # NVIDIA without GUI
+    ../../system/nixos/coral-tpu.nix # Google Coral TPU
+    ../../system/nixos/tailscale.nix # VPN as system service
+    ../../system/nixos/r8125.nix # Realtek R8125 2.5GbE driver
   ];
 
   # ==========================================================================
@@ -48,10 +47,10 @@ in
     extraUpFlags = [
       "--exit-node="
       "--accept-routes=false"
-      "--accept-dns=false"             # Prevent DNS conflict with Pi-hole
+      "--accept-dns=false" # Prevent DNS conflict with Pi-hole
       "--advertise-exit-node"
       "--advertise-routes=192.168.1.0/24"
-      "--advertise-tags=tag:container"  # Required for legacy ACLs
+      "--advertise-tags=tag:container" # Required for legacy ACLs
     ];
   };
   # Ensure sops secrets are decrypted before tailscale tries to use the auth key
@@ -107,24 +106,24 @@ in
 
     # Always allowed ports
     allowedTCPPorts = [
-      22      # SSH
-      53      # Pi-hole DNS
-      80      # HTTP
-      443     # HTTPS
-      6443    # k3s API (also in k3s.nix, but explicit here)
-      6697    # Soju IRC
-      8554    # Frigate RTSP
-      8555    # Frigate WebRTC
-      32400   # Plex
-      58946   # Deluge torrent
+      22 # SSH
+      53 # Pi-hole DNS
+      80 # HTTP
+      443 # HTTPS
+      6443 # k3s API (also in k3s.nix, but explicit here)
+      6697 # Soju IRC
+      8554 # Frigate RTSP
+      8555 # Frigate WebRTC
+      32400 # Plex
+      58946 # Deluge torrent
     ];
 
     allowedUDPPorts = [
-      53      # Pi-hole DNS
-      8555    # Frigate WebRTC
-      15636   # Enshrouded game
-      15637   # Enshrouded query
-      58946   # Deluge torrent
+      53 # Pi-hole DNS
+      8555 # Frigate WebRTC
+      15636 # Enshrouded game
+      15637 # Enshrouded query
+      58946 # Deluge torrent
     ];
   };
 
@@ -171,8 +170,8 @@ in
     tcpdump
 
     # Container/k8s debugging
-    dive        # Docker image explorer
-    cri-tools   # CRI debugging tool (provides crictl)
+    dive # Docker image explorer
+    cri-tools # CRI debugging tool (provides crictl)
   ];
 
   # Set NVMe I/O scheduler to none (NVMe has internal scheduling, software scheduler adds CPU overhead)
@@ -188,30 +187,30 @@ in
 
   boot.kernel.sysctl = {
     # --- VM tuning ---
-    "vm.vfs_cache_pressure" = 50;            # Hold filesystem metadata in memory longer (benefits ZFS/k3s)
-    "vm.min_free_kbytes" = 131072;           # 128 MB free minimum (prevents allocation stalls during GPU ops)
-    "vm.dirty_ratio" = 10;                   # Cap dirty pages at 10% before blocking (default 20)
-    "vm.dirty_background_ratio" = 3;         # Start background writeback at 3% (default 10) — smoother I/O for ext4 root
+    "vm.vfs_cache_pressure" = 50; # Hold filesystem metadata in memory longer (benefits ZFS/k3s)
+    "vm.min_free_kbytes" = 131072; # 128 MB free minimum (prevents allocation stalls during GPU ops)
+    "vm.dirty_ratio" = 10; # Cap dirty pages at 10% before blocking (default 20)
+    "vm.dirty_background_ratio" = 3; # Start background writeback at 3% (default 10) — smoother I/O for ext4 root
 
     # --- File descriptor limit ---
-    "fs.file-max" = 2097152;                 # 2M ceiling for k3s pods, LGTM stack, Plex, Docker (no cost until opened)
+    "fs.file-max" = 2097152; # 2M ceiling for k3s pods, LGTM stack, Plex, Docker (no cost until opened)
 
     # --- BBR congestion control ---
-    "net.core.default_qdisc" = "fq";                # Fair queuing — required for BBR pacing
-    "net.ipv4.tcp_congestion_control" = "bbr";       # BBR models bandwidth/RTT instead of reacting to loss
+    "net.core.default_qdisc" = "fq"; # Fair queuing — required for BBR pacing
+    "net.ipv4.tcp_congestion_control" = "bbr"; # BBR models bandwidth/RTT instead of reacting to loss
 
     # --- TCP buffer sizes (16 MB max) ---
-    "net.core.rmem_max" = 16777216;                  # Per-socket receive buffer ceiling
-    "net.core.wmem_max" = 16777216;                  # Per-socket send buffer ceiling
-    "net.ipv4.tcp_rmem" = "4096 87380 16777216";     # min/default/max — kernel autotunes per-connection
+    "net.core.rmem_max" = 16777216; # Per-socket receive buffer ceiling
+    "net.core.wmem_max" = 16777216; # Per-socket send buffer ceiling
+    "net.ipv4.tcp_rmem" = "4096 87380 16777216"; # min/default/max — kernel autotunes per-connection
     "net.ipv4.tcp_wmem" = "4096 65536 16777216";
 
     # --- UDP buffer sizes (1 MB default) ---
-    "net.core.rmem_default" = 1048576;               # Enshrouded/Unity won't call setsockopt — needs sane defaults
+    "net.core.rmem_default" = 1048576; # Enshrouded/Unity won't call setsockopt — needs sane defaults
     "net.core.wmem_default" = 1048576;
-    "net.ipv4.udp_rmem_min" = 16384;                 # Minimum UDP buffers under memory pressure
+    "net.ipv4.udp_rmem_min" = 16384; # Minimum UDP buffers under memory pressure
     "net.ipv4.udp_wmem_min" = 16384;
-    "net.ipv4.udp_mem" = "65536 131072 262144";      # System-wide UDP memory limits (pages)
+    "net.ipv4.udp_mem" = "65536 131072 262144"; # System-wide UDP memory limits (pages)
 
     # --- Network stack (k3s pods, Plex, Tailscale, Frigate streams) ---
     "net.core.netdev_max_backlog" = 16384;
@@ -221,14 +220,14 @@ in
     "net.ipv4.tcp_tw_reuse" = 1;
 
     # --- Connection tracking + ARP cache (k3s) ---
-    "net.netfilter.nf_conntrack_max" = 131072;       # Default 65536 fills with many pods + streams + UDP
-    "net.ipv4.neigh.default.gc_thresh1" = 4096;      # ARP cache thresholds — defaults (128/512/1024) too small
-    "net.ipv4.neigh.default.gc_thresh2" = 8192;      # for k3s virtual interfaces (veth/cni0/flannel)
+    "net.netfilter.nf_conntrack_max" = 131072; # Default 65536 fills with many pods + streams + UDP
+    "net.ipv4.neigh.default.gc_thresh1" = 4096; # ARP cache thresholds — defaults (128/512/1024) too small
+    "net.ipv4.neigh.default.gc_thresh2" = 8192; # for k3s virtual interfaces (veth/cni0/flannel)
     "net.ipv4.neigh.default.gc_thresh3" = 16384;
 
     # --- Reverse path filtering (loose) ---
-    "net.ipv4.conf.all.rp_filter" = 2;               # Loose mode — validates source IP against routing table
-    "net.ipv4.conf.default.rp_filter" = 2;           # Strict mode drops legitimate packets with br0/flannel/tailscale
+    "net.ipv4.conf.all.rp_filter" = 2; # Loose mode — validates source IP against routing table
+    "net.ipv4.conf.default.rp_filter" = 2; # Strict mode drops legitimate packets with br0/flannel/tailscale
   };
 
   # Disable suspend/hibernate - server should always be on
