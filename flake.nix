@@ -16,7 +16,8 @@
 
     mac-app-util = {
       url = "github:hraban/mac-app-util";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # Don't follow nixpkgs - let mac-app-util use its own pinned version
+      # to avoid SBCL/CL build incompatibilities
     };
 
     nur = {
