@@ -11,7 +11,7 @@
   hardware.nvidia = {
     open = true;
     package = config.boot.kernelPackages.nvidiaPackages.stable;
-    nvidiaSettings = false;  # headless
+    nvidiaSettings = false; # headless
     modesetting.enable = true;
     powerManagement.enable = false;
     # Keep GPU driver loaded at all times (eliminates cold-start latency for CUDA containers)

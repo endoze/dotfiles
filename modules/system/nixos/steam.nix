@@ -16,7 +16,7 @@
         gpu = {
           apply_gpu_optimisations = "accept-responsibility";
           gpu_device = 0;
-          nv_powermizer_mode = 1;  # Force max GPU performance during gaming
+          nv_powermizer_mode = 1; # Force max GPU performance during gaming
         };
         custom = {
           start = "${pkgs.libnotify}/bin/notify-send 'GameMode activated'";

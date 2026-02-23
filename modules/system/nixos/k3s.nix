@@ -70,8 +70,8 @@
   # Trust k3s network interfaces for firewall
   networking.firewall = {
     trustedInterfaces = [
-      "cni0"       # Container network interface
-      "flannel.1"  # Flannel overlay network
+      "cni0" # Container network interface
+      "flannel.1" # Flannel overlay network
     ];
 
     # k3s API server port
@@ -80,13 +80,13 @@
 
   # Kubernetes management tools
   environment.systemPackages = with pkgs; [
-    kubectl          # Kubernetes CLI
-    kubernetes-helm  # Helm package manager
-    kustomize        # Standalone kustomize (needed for exec plugins)
-    kustomize-sops   # KSOPS - SOPS integration for kustomize
-    k9s              # Terminal UI for Kubernetes
-    stern            # Multi-pod log tailing
-    kubectx          # Switch between clusters/namespaces
+    kubectl # Kubernetes CLI
+    kubernetes-helm # Helm package manager
+    kustomize # Standalone kustomize (needed for exec plugins)
+    kustomize-sops # KSOPS - SOPS integration for kustomize
+    k9s # Terminal UI for Kubernetes
+    stern # Multi-pod log tailing
+    kubectx # Switch between clusters/namespaces
   ];
 
   # Set KUBECONFIG environment variable system-wide

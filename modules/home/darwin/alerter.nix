@@ -35,40 +35,40 @@ let
     dontUnpack = true;
 
     installPhase = ''
-      mkdir -p $out/Applications/Alerter.app/Contents/MacOS
-      mkdir -p $out/Applications/Alerter.app/Contents/Resources
+            mkdir -p $out/Applications/Alerter.app/Contents/MacOS
+            mkdir -p $out/Applications/Alerter.app/Contents/Resources
 
-      cp ${alerterBinary}/bin/alerter $out/Applications/Alerter.app/Contents/MacOS/alerter
+            cp ${alerterBinary}/bin/alerter $out/Applications/Alerter.app/Contents/MacOS/alerter
 
-      cat > $out/Applications/Alerter.app/Contents/Info.plist << 'EOF'
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-  <key>CFBundleIdentifier</key>
-  <string>com.github.vjeantet.alerter</string>
-  <key>CFBundleName</key>
-  <string>Alerter</string>
-  <key>CFBundleDisplayName</key>
-  <string>Alerter</string>
-  <key>CFBundleExecutable</key>
-  <string>alerter</string>
-  <key>CFBundleVersion</key>
-  <string>2.0.0</string>
-  <key>CFBundleShortVersionString</key>
-  <string>2.0.0</string>
-  <key>CFBundlePackageType</key>
-  <string>APPL</string>
-  <key>LSMinimumSystemVersion</key>
-  <string>10.14</string>
-  <key>LSUIElement</key>
-  <true/>
-</dict>
-</plist>
-EOF
+            cat > $out/Applications/Alerter.app/Contents/Info.plist << 'EOF'
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+      <dict>
+        <key>CFBundleIdentifier</key>
+        <string>com.github.vjeantet.alerter</string>
+        <key>CFBundleName</key>
+        <string>Alerter</string>
+        <key>CFBundleDisplayName</key>
+        <string>Alerter</string>
+        <key>CFBundleExecutable</key>
+        <string>alerter</string>
+        <key>CFBundleVersion</key>
+        <string>2.0.0</string>
+        <key>CFBundleShortVersionString</key>
+        <string>2.0.0</string>
+        <key>CFBundlePackageType</key>
+        <string>APPL</string>
+        <key>LSMinimumSystemVersion</key>
+        <string>10.14</string>
+        <key>LSUIElement</key>
+        <true/>
+      </dict>
+      </plist>
+      EOF
 
-      mkdir -p $out/bin
-      ln -s $out/Applications/Alerter.app/Contents/MacOS/alerter $out/bin/alerter
+            mkdir -p $out/bin
+            ln -s $out/Applications/Alerter.app/Contents/MacOS/alerter $out/bin/alerter
     '';
 
     meta = with lib; {

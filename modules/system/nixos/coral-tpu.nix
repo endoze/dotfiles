@@ -39,7 +39,7 @@
   # Note: libedgetpu may need to be packaged or use a community overlay
   environment.systemPackages = with pkgs; [
     # libedgetpu  # Edge TPU runtime library (if available in nixpkgs)
-    usbutils      # lsusb for debugging
+    usbutils # lsusb for debugging
   ];
 
   # For Frigate and other ML workloads using Coral:
