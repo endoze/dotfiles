@@ -4,7 +4,7 @@ let
   githubUser = userConfig.username;
   publicKeysFile = builtins.readFile (pkgs.fetchurl {
     url = "https://github.com/${githubUser}.keys";
-    sha256 = "+75tNZAGfdQdnSPUaak4OtGTeiNqI5duNV5y8rDpiGg=";
+    sha256 = "M2WlzzEtbO5nMTU/nsfOpCw/ayjsKk25+04lDSE81jE=";
   });
   publicKeys = lib.splitString "\n" (lib.removeSuffix "\n" publicKeysFile);
 in
