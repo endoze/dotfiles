@@ -33,5 +33,5 @@ function nix-system
   end
 
   echo "Using configuration: $flake_config"
-  sudo $rebuild_cmd switch --flake ~/.dotfiles#$flake_config --impure
+  sudo $rebuild_cmd switch --flake ~/.dotfiles#$flake_config
 end

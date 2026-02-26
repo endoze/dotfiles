@@ -1,6 +1,6 @@
-function worktree -a branch_name -d "Create a new git worktree in .worktrees subdirectory"
+function worktree -a branch_name base_branch -d "Create a new git worktree in .worktrees subdirectory"
   if test -z "$branch_name"
-    echo "Usage: worktree <branch-name>"
+    echo "Usage: worktree <branch-name> [base-branch]"
 
     return 1
   end
@@ -22,6 +22,10 @@ function worktree -a branch_name -d "Create a new git worktree in .worktrees sub
   if git show-ref --verify --quiet "refs/heads/$branch_name"
     git worktree add "$worktree_path" "$branch_name"
   else
-    git worktree add "$worktree_path" -b "$branch_name"
+    if test -n "$base_branch"
+      git worktree add "$worktree_path" -b "$branch_name" "$base_branch"
+    else
+      git worktree add "$worktree_path" -b "$branch_name"
+    end
   end
 end

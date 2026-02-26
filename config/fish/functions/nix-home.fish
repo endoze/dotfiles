@@ -30,5 +30,5 @@ function nix-home
   end
 
   echo "Using configuration: $flake_config"
-  home-manager switch --flake ~/.dotfiles#$flake_config --impure
+  home-manager switch --flake ~/.dotfiles#$flake_config
 end
