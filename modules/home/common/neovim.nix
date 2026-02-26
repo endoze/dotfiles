@@ -31,6 +31,7 @@
     nixpkgs-fmt
     nixpkgs-fmt
     prettierd
+    shfmt
     stylua
 
     # Tools
