@@ -7,6 +7,7 @@
     ../nixos/hyprland.nix
     ../nixos/steam.nix
     ../nixos/tailscale.nix
+    ../nixos/nix-ld.nix
   ];
 
   environment.systemPackages = with pkgs; [
@@ -43,22 +44,6 @@
     };
 
     xfconf.enable = true;
-
-    nix-ld = {
-      enable = true;
-      libraries = with pkgs; [
-        stdenv.cc.cc.lib
-        zlib
-        readline.dev
-        readline
-        ncurses.dev
-        ncurses
-        icu
-        openssl
-        krb5
-        curl
-      ];
-    };
   };
 
   xdg = {

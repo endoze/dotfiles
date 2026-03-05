@@ -138,6 +138,22 @@
         in
         dockerContainer.dockerImage;
 
+      packages.x86_64-linux.mise-compile =
+        let
+          miseFhs = import ./modules/system/nixos/mise-fhs-env.nix {
+            pkgs = nixpkgsFor.x86_64-linux;
+          };
+        in
+        miseFhs.package;
+
+      devShells.x86_64-linux.mise-compile =
+        let
+          miseFhs = import ./modules/system/nixos/mise-fhs-env.nix {
+            pkgs = nixpkgsFor.x86_64-linux;
+          };
+        in
+        miseFhs.shell;
+
       homeConfigurations = {
         "macbook" = mkHome { name = "macbook"; system = "aarch64-darwin"; };
         "workmac" = mkHome { name = "workmac"; system = "aarch64-darwin"; };
