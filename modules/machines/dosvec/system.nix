@@ -14,6 +14,7 @@
     ../../system/nixos/coral-tpu.nix # Google Coral TPU
     ../../system/nixos/tailscale.nix # VPN as system service
     ../../system/nixos/r8125.nix # Realtek R8125 2.5GbE driver
+    ../../system/nixos/nix-ld.nix # Dynamic library shim for unpatched binaries
   ];
 
   # ==========================================================================
@@ -128,23 +129,6 @@
       kga = "kubectl get all";
       kgn = "kubectl get nodes";
     };
-  };
-
-  # Dynamic library shim for running unpatched binaries
-  programs.nix-ld = {
-    enable = true;
-    libraries = with pkgs; [
-      stdenv.cc.cc.lib
-      zlib
-      readline.dev
-      readline
-      ncurses.dev
-      ncurses
-      icu
-      openssl
-      krb5
-      curl
-    ];
   };
 
   # Server-specific packages

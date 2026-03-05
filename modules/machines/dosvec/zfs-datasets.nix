@@ -41,6 +41,7 @@ let
       compression = "lz4";
       atime = "off";
       recordsize = "1M"; # Optimized for large media files
+      secondarycache = "none"; # L2ARC not useful for streaming media
     };
     "hermes/backups" = {
       mountpoint = "/mnt/hermes/backups";
@@ -98,6 +99,7 @@ let
     check_prop "hermes/Media" "compression" "lz4"
     check_prop "hermes/Media" "atime" "off"
     check_prop "hermes/Media" "recordsize" "1M"
+    check_prop "hermes/Media" "secondarycache" "none"
 
     # hermes/backups
     check_prop "hermes/backups" "compression" "lz4"
