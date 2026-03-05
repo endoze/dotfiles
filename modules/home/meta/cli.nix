@@ -17,6 +17,7 @@
     ../common/starship.nix
     ../common/tmux.nix
     ../common/weechat.nix
+    ../common/worktrunk.nix
     ../common/hn-tui.nix
   ];
 
@@ -43,6 +44,7 @@
     unrar
     unzip
     yq
+    zellij
     zip
     zsh
   ] ++ lib.optionals pkgs.stdenv.isDarwin [

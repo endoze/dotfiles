@@ -23,5 +23,5 @@ unbind-key C-right  ; bind-key -r C-right   resize-pane -R 1
 unbind-key C-up     ; bind-key -r C-up  resize-pane -U 1
 unbind-key C-down   ; bind-key -r C-down    resize-pane -D 1
 unbind-key @        ; bind-key @        confirm-before kill-window
-unbind-key r        ; bind-key r        source-file ~/.tmux.conf \; display "Reloaded!"
+unbind-key r        ; bind-key r        source-file ~/.config/tmux/tmux.conf \; display "Reloaded!"
 unbind-key q        ; bind-key q        list-keys
