@@ -3,14 +3,6 @@
 # NVMe root with ZFS storage pool on separate disks
 { config, pkgs, lib, userConfig ? { }, systemConfig ? { }, sourceRoot, ... }:
 
-let
-  githubUser = userConfig.username;
-  publicKeysFile = builtins.readFile (pkgs.fetchurl {
-    url = "https://github.com/${githubUser}.keys";
-    sha256 = "M2WlzzEtbO5nMTU/nsfOpCw/ayjsKk25+04lDSE81jE=";
-  });
-  publicKeys = lib.splitString "\n" (lib.removeSuffix "\n" publicKeysFile);
-in
 {
   imports = [
     ./hardware-configuration.nix
@@ -86,7 +78,6 @@ in
 
   # User configuration
   users.users."${userConfig.username}" = {
-    openssh.authorizedKeys.keys = publicKeys;
     extraGroups = [ "wheel" "docker" "coral" ];
   };
 

@@ -1,13 +1,5 @@
 { config, pkgs, lib, userConfig ? { }, systemConfig ? { }, ... }:
 
-let
-  githubUser = userConfig.username;
-  publicKeysFile = builtins.readFile (pkgs.fetchurl {
-    url = "https://github.com/${githubUser}.keys";
-    sha256 = "M2WlzzEtbO5nMTU/nsfOpCw/ayjsKk25+04lDSE81jE=";
-  });
-  publicKeys = lib.splitString "\n" (lib.removeSuffix "\n" publicKeysFile);
-in
 {
   imports = [
     ../../system/meta/cli-darwin.nix
@@ -30,10 +22,6 @@ in
     casks = [
       "google-cloud-sdk"
     ];
-  };
-
-  users.users."${userConfig.username}" = {
-    openssh.authorizedKeys.keys = publicKeys;
   };
 
   system.defaults = {

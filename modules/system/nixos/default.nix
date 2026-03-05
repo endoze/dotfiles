@@ -3,6 +3,7 @@
 {
   imports = [
     ./dnsmasq.nix
+    ../common/github-keys.nix
   ];
 
   # Allow unfree packages

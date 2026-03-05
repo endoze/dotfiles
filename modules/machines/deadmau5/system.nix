@@ -1,13 +1,5 @@
 { config, pkgs, lib, userConfig ? { }, systemConfig ? { }, ... }:
 
-let
-  githubUser = userConfig.username;
-  publicKeysFile = builtins.readFile (pkgs.fetchurl {
-    url = "https://github.com/${githubUser}.keys";
-    sha256 = "M2WlzzEtbO5nMTU/nsfOpCw/ayjsKk25+04lDSE81jE=";
-  });
-  publicKeys = lib.splitString "\n" (lib.removeSuffix "\n" publicKeysFile);
-in
 {
   imports = [
     ./hardware-configuration.nix
@@ -74,7 +66,6 @@ in
 
   users.users."${userConfig.username}" = {
     extraGroups = [ "pipewire" "input" ];
-    openssh.authorizedKeys.keys = publicKeys;
   };
 
   # Use CachyOS LTS kernel (6.18) with BORE scheduler for better desktop/gaming performance
