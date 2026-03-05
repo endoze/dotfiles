@@ -5,9 +5,11 @@
 
   imports = [
     ../common/bat.nix
+    ../common/fastfetch.nix
     ../common/fish.nix
     ../common/git.nix
     ../common/jujutsu.nix
+    ../common/lua.nix
     ../common/lsd.nix
     ../common/mise.nix
     ../common/neovim.nix

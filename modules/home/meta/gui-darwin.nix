@@ -5,7 +5,6 @@
     ../common/firefox.nix
     ../common/ghostty.nix
     ../common/databases.nix
-    ../darwin/alerter.nix
     ../darwin/karabiner.nix
   ];
 
