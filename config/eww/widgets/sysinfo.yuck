@@ -1,0 +1,43 @@
+; System info polling
+(defpoll cpu :interval "3s"
+  "~/.config/eww/scripts/sysinfo.sh cpu"
+)
+
+(defpoll memory :interval "3s"
+  "~/.config/eww/scripts/sysinfo.sh memory"
+)
+
+(defpoll volume :interval "1s"
+  "~/.config/eww/scripts/volume.sh"
+)
+
+; System info widget
+(defwidget sysinfo []
+  (box :class "sysinfo" :orientation "h" :spacing 20 :space-evenly false
+    (box :orientation "h" :spacing 12
+      (box :class "cpu" :orientation "h" :spacing 4
+        (label :class "cpu-icon" :text "󰍛")
+        (label :text "${cpu}%")
+      )
+      (box :class "mem" :orientation "h" :spacing 4
+        (label :class "mem-icon" :text "󰘚")
+        (label :text "${memory}%")
+      )
+      (button :class "vol" :onclick "~/.config/eww/scripts/volume-osd.sh mute"
+        (box :orientation "h" :spacing 4
+          (label :class "vol-icon" :text {volume})
+        )
+      )
+    )
+    (box :orientation "h" :spacing 16 :hexpand false
+      (button :class "notif-btn" :halign "center"
+        :onclick "busctl --user call org.freedesktop.shirase.Control /org/freedesktop/shirase/Control org.freedesktop.shirase.Control ToggleCenter"
+        :tooltip "Notifications"
+        (label :class "notif-icon" :text "󰂚")
+      )
+      (button :class "power-btn" :halign "center" :onclick "eww open --toggle powermenu"
+        (label :class "power-icon" :text "󰐥")
+      )
+    )
+  )
+)

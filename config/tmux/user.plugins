@@ -31,9 +31,9 @@ if [ -n "$name" ] && [ -f ~/.config/tmux/themes/$name.tmux ]; then
 fi
 '
 
-set -g @dracula-battery-colors "blue white"
-set -g @dracula-network-colors "cyan white"
-set -g @dracula-weather-colors "orange white"
+set -g @dracula-battery-colors "blue black"
+set -g @dracula-network-colors "cyan black"
+set -g @dracula-weather-colors "orange black"
 
 set -g @dracula-battery-label "󰁹"
 
@@ -43,5 +43,6 @@ set -g @dracula-military-time false
 set -g @dracula-day-month true
 set -g @dracula-show-timezone true
 set -g @dracula-time-format "%a %b %e %I:%M %p"
+set -g @dracula-time-colors "purple black"
 
 set -g @dracula-plugins "battery network time"

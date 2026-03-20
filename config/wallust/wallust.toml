@@ -26,5 +26,3 @@ threshold = 10
 # The 'template' field should match the template filename in ~/.config/wallust/templates/
 # The 'target' field is where the generated file will be saved
 hyprland = { template = "hyprland.conf", target = "~/.cache/wallust/hyprland.conf" }
-waybar = { template = "waybar.css", target = "~/.cache/wallust/waybar.css" }
-swaync = { template = "swaync-colors.css", target = "~/.cache/wallust/swaync.css"}

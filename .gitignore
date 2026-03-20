@@ -5,6 +5,9 @@ config/fish/completions/orbctl.fish
 config/karabiner/karabiner.json.*.bak
 config/hypr/current-wallpaper
 
+config/monban/*
+/scripts
+
 # Unencrypted secrets (encrypted versions are committed)
 secrets/dosvec.yaml
 secrets/k3s-secrets.yaml

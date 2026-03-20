@@ -64,6 +64,13 @@ return {
       -- b.diagnostics.mypy,
 
       b.formatting.phpcsfixer,
+
+      b.formatting.sqruff.with({
+        extra_args = {
+          "--config",
+          vim.fn.expand("~/.config/sqruff/config.cfg"),
+        },
+      }),
     }
 
     null_ls.setup({

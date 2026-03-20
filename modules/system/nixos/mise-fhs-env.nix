@@ -36,6 +36,8 @@ let
       libxml2.dev
       libxslt
       libxslt.dev
+      libyaml
+      libyaml.dev
 
       # Erlang
       gnum4

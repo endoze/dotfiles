@@ -3,7 +3,6 @@
 {
   environment.systemPackages = with pkgs; [
     rnnoise-plugin
-    helvum
   ];
 
   security.pam.loginLimits = [
@@ -35,7 +34,9 @@
       "context.properties" = {
         "default.clock.rate" = 48000;
         "default.clock.allowed-rates" = [ 44100 48000 88200 96000 ];
-        "default.clock.min-quantum " = 16;
+        "default.clock.quantum" = 256;
+        "default.clock.min-quantum" = 64;
+        "default.clock.max-quantum" = 2048;
       };
       "context.modules" = [
         {
@@ -43,12 +44,23 @@
           args = {
             "nice.level" = -12;
             "rt.prio" = 45;
-            "rt.time.soft" = 200000;
-            "rt.time.hard" = 200000;
+            # Increase from 200ms to 2s — prevents RLIMIT_RTTIME kills during
+            # plugin init (rnnoise LADSPA) or transient load spikes
+            "rt.time.soft" = 2000000;
+            "rt.time.hard" = 2000000;
           };
           flags = [ "ifexists" "nofail" ];
         }
       ];
+    };
+
+    extraConfig.pipewire-pulse."10-latency" = {
+      "pulse.properties" = {
+        "pulse.min.req" = "256/48000";
+        "pulse.min.frag" = "256/48000";
+        "pulse.min.quantum" = "256/48000";
+        "pulse.max.quantum" = "2048/48000";
+      };
     };
 
     extraConfig.pipewire."09-main-virtual-sink" = {
@@ -148,7 +160,9 @@
                   "plugin" = "${pkgs.rnnoise-plugin}/lib/ladspa/librnnoise_ladspa.so";
                   "label" = "noise_suppressor_stereo";
                   "control" = {
-                    "VAD Threshold (%)" = 90.0;
+                    # 90% caused onset clipping (first syllable cut off);
+                    # 75% gives aggressive noise rejection with better speech onset
+                    "VAD Threshold (%)" = 75.0;
                   };
                 }
               ];
@@ -169,14 +183,6 @@
         }
       ];
     };
-
-    # extraConfig.pipewire-pulse."increase-quants" = {
-    #   "pulse.properties" = {
-    #     "pulse.min.req" = "256/48000";
-    #     "pulse.min.frag" = "256/48000";
-    #     "pulse.min.quantum" = "256/48000";
-    #   };
-    # };
 
     wireplumber = {
       enable = true;

@@ -1,0 +1,32 @@
+; Volume OSD variables
+(defvar vol_osd_icon "󰕾")
+(defvar vol_osd_value 50)
+(defvar vol_osd_muted false)
+
+; Volume OSD widget
+(defwidget volume-osd []
+  (box :class "vol-osd ${vol_osd_muted == 'true' ? 'muted' : ''}"
+       :orientation "v" :spacing 8 :space-evenly false
+    (label :class "vol-osd-icon" :text vol_osd_icon)
+    (scale :class "vol-osd-bar" :min 0 :max 100 :value vol_osd_value
+           :orientation "h"
+           :onchange "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ {}% && ~/.config/eww/scripts/volume-osd.sh noop"
+    )
+    (label :class "vol-osd-pct" :text "${vol_osd_value}%")
+  )
+)
+
+; Volume OSD window
+(defwindow volume-osd
+  :monitor 0
+  :geometry (geometry
+    :x "0%"
+    :y "40%"
+    :width "200px"
+    :height "120px"
+    :anchor "center"
+  )
+  :stacking "overlay"
+  :namespace "eww-volume-osd"
+  (volume-osd)
+)

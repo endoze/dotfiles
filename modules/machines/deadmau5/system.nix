@@ -65,8 +65,10 @@
   };
 
   users.users."${userConfig.username}" = {
-    extraGroups = [ "pipewire" "input" ];
+    extraGroups = [ "pipewire" "input" "kvm" ];
   };
+
+  virtualisation.waydroid.enable = true;
 
   # Use CachyOS LTS kernel (6.18) with BORE scheduler for better desktop/gaming performance
   # The "latest" (6.19) kernel is incompatible with nvidia open modules
@@ -157,7 +159,6 @@
   };
 
   environment.sessionVariables = {
-    XDG_RUNTIME_DIR = "/run/user/1000";
     XDG_PICTURES_DIR = "${userConfig.homeDirectory}/Pictures";
     HYPRSHOT_DIR = "${userConfig.homeDirectory}/Pictures/screenshots";
     NIXOS_OZONE_WL = "1";

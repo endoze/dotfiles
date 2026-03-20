@@ -41,11 +41,8 @@ Multi-platform Nix Flakes configuration managing macOS (aarch64-darwin) and NixO
 │   ├── mise/                  # Runtime version manager config
 │   ├── nvim/                  # Neovim configuration
 │   ├── rofi/                  # Application launcher config
-│   ├── sddm/                  # Login screen theme
-│   ├── swaync/                # Notification center config
 │   ├── tmux/                  # Tmux configuration
 │   ├── wallust/               # Color scheme generator config
-│   ├── waybar/                # Status bar config
 │   ├── weechat/               # IRC client config
 │   └── ...                    # Other tool configs
 └── modules/                   # All Nix configuration modules
@@ -71,9 +68,8 @@ Multi-platform Nix Flakes configuration managing macOS (aarch64-darwin) and NixO
     │   │   └── karabiner.nix  # Keyboard remapping
     │   ├── linux/             # Linux-only modules
     │   │   ├── hyprland.nix   # Wayland compositor
-    │   │   ├── waybar.nix     # Status bar
     │   │   ├── rofi.nix       # App launcher
-    │   │   ├── swaync.nix     # Notification daemon
+    │   │   ├── shirase.nix    # Notification daemon
     │   │   └── ...            # More linux modules
     │   └── meta/              # Meta-modules (bundles of tools)
     │       ├── cli.nix        # Common CLI tools bundle

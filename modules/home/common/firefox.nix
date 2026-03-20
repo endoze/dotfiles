@@ -76,8 +76,11 @@
           "browser.compactmode.show" = true;
           "browser.uidensity" = 1; # 0=normal, 1=compact, 2=touch
 
+          # Font settings
+          "font.size.variable.x-western" = 18;
+
           # Scaling settings for HiDPI displays
-          "layout.css.devPixelsPerPx" = if pkgs.stdenv.isDarwin then "-1.0" else "0.75";
+          "layout.css.devPixelsPerPx" = if pkgs.stdenv.isLinux then "1.75" else "-1.0";
 
           # Dark mode settings
           "browser.theme.content-theme" = 0; # 0=dark, 1=light, 2=system
@@ -140,6 +143,24 @@
           # Enable extensions by default
           "extensions.autoDisableScopes" = 0; # Don't auto-disable any extensions
 
+          # Disable AI features
+          "browser.ml.enable" = false;
+          "browser.ml.chat.enabled" = false;
+          "browser.ml.chat.sidebar" = false;
+          "browser.ml.chat.provider" = "";
+          "browser.ml.chat.shortcuts" = false;
+          "browser.ml.chat.shortcuts.custom" = false;
+          "browser.ml.chat.menu" = false;
+          "browser.ml.chat.page" = false;
+          "browser.ml.chat.page.footerBadge" = false;
+          "browser.ml.chat.page.menuBadge" = false;
+          "browser.ml.genai.enabled" = false;
+          "browser.ml.linkPreview.enabled" = false;
+          "browser.ml.pageAssist.enabled" = false;
+          "browser.tabs.groups.smart.enabled" = false;
+          "browser.tabs.groups.smart.userEnabled" = false;
+          "extensions.ml.enabled" = false;
+
           # Disable password manager
           "signon.rememberSignons" = false; # Disable saving passwords
           "signon.autofillForms" = false; # Disable autofilling login forms
@@ -182,6 +203,58 @@
           Status = "unlocked";
         };
         "extensions.formautofill.creditCards.enabled" = {
+          Value = false;
+          Status = "locked";
+        };
+        "browser.ml.enable" = {
+          Value = false;
+          Status = "locked";
+        };
+        "browser.ml.chat.enabled" = {
+          Value = false;
+          Status = "locked";
+        };
+        "browser.ml.chat.sidebar" = {
+          Value = false;
+          Status = "locked";
+        };
+        "browser.ml.chat.provider" = {
+          Value = "";
+          Status = "locked";
+        };
+        "browser.ml.chat.shortcuts" = {
+          Value = false;
+          Status = "locked";
+        };
+        "browser.ml.chat.shortcuts.custom" = {
+          Value = false;
+          Status = "locked";
+        };
+        "browser.ml.chat.menu" = {
+          Value = false;
+          Status = "locked";
+        };
+        "browser.ml.chat.page" = {
+          Value = false;
+          Status = "locked";
+        };
+        "browser.ml.genai.enabled" = {
+          Value = false;
+          Status = "locked";
+        };
+        "browser.ml.linkPreview.enabled" = {
+          Value = false;
+          Status = "locked";
+        };
+        "browser.ml.pageAssist.enabled" = {
+          Value = false;
+          Status = "locked";
+        };
+        "browser.tabs.groups.smart.enabled" = {
+          Value = false;
+          Status = "locked";
+        };
+        "extensions.ml.enabled" = {
           Value = false;
           Status = "locked";
         };

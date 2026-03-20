@@ -1,0 +1,64 @@
+; Component includes
+(include "./widgets/workspaces.yuck")
+(include "./widgets/clock.yuck")
+(include "./widgets/sysinfo.yuck")
+(include "./widgets/volume-osd.yuck")
+(include "./widgets/powermenu.yuck")
+
+; System tray widget
+(defwidget tray []
+  (box :class "tray" :orientation "h" :spacing 4
+    (systray :icon-size 22 :orientation "h" :spacing 8)
+  )
+)
+
+; Left pill
+(defwidget left []
+  (box :class "pill left-pill" :orientation "h" :space-evenly false
+    (workspaces)
+  )
+)
+
+; Center pill
+(defwidget center []
+  (box :class "pill center-pill" :orientation "h" :space-evenly false
+    (clock)
+  )
+)
+
+; Right pill
+(defwidget right []
+  (box :orientation "h" :spacing 8 :space-evenly false
+    (box :class "pill tray-pill" :orientation "h" :space-evenly false
+      (tray)
+    )
+    (box :class "pill right-pill" :orientation "h" :space-evenly false
+      (sysinfo)
+    )
+  )
+)
+
+; Bar layout
+(defwidget bar []
+  (centerbox :orientation "h"
+    (box :halign "start" (left))
+    (box :halign "center" :hexpand false (center))
+    (box :halign "end" (right))
+  )
+)
+
+; Bar window
+(defwindow bar
+  :monitor 0
+  :geometry (geometry
+    :x "0%"
+    :y "8px"
+    :width "98%"
+    :height "42px"
+    :anchor "top center"
+  )
+  :stacking "fg"
+  :exclusive true
+  :namespace "eww-bar"
+  (bar)
+)

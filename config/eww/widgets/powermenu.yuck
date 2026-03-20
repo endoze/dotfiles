@@ -1,0 +1,44 @@
+; Power menu widget
+(defwidget powermenu []
+  (box :class "powermenu" :orientation "v" :spacing 15 :space-evenly false
+    (button :class "pm-btn pm-lock"
+      :onclick "eww close powermenu && swaylock"
+      :tooltip "Lock"
+      (label :text "󰌾")
+    )
+    (button :class "pm-btn pm-suspend"
+      :onclick "eww close powermenu && systemctl suspend"
+      :tooltip "Suspend"
+      (label :text "󰒲")
+    )
+    (button :class "pm-btn pm-logout"
+      :onclick "eww close powermenu && hyprctl dispatch exit"
+      :tooltip "Logout"
+      (label :text "󰍃")
+    )
+    (button :class "pm-btn pm-reboot"
+      :onclick "eww close powermenu && systemctl reboot"
+      :tooltip "Reboot"
+      (label :text "󰜉")
+    )
+    (button :class "pm-btn pm-shutdown"
+      :onclick "eww close powermenu && systemctl poweroff"
+      :tooltip "Shutdown"
+      (label :text "󰐥")
+    )
+  )
+)
+
+; Power menu window
+(defwindow powermenu
+  :monitor 0
+  :geometry (geometry
+    :x "0px"
+    :y "0%"
+    :width "115px"
+    :anchor "center right"
+  )
+  :stacking "overlay"
+  :namespace "eww-powermenu"
+  (powermenu)
+)

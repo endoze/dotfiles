@@ -15,6 +15,7 @@
     ../common/neovim.nix
     ../common/ruby.nix
     ../common/selene.nix
+    ../common/sqruff.nix
     ../common/shell-ai.nix
     ../common/starship.nix
     ../common/tmux.nix
@@ -24,18 +25,25 @@
   ];
 
   home.packages = with pkgs; [
+    age
+    btop
     chromedriver
     docker
     docker-buildx
     docker-compose
     doctl
+    frp
     gh-dash
     htop
     imagemagick
     jq
+    postgresql
+    mariadb.client
+    sqlite
     k9s
     kubectl
     kubectx
+    lazydocker
     ngrok
     nix-diff
     openssl
@@ -54,6 +62,7 @@
   ] ++ lib.optionals pkgs.stdenv.isLinux [
     clang-tools
     cmake
+    dnsutils
     elixir
     elixir-ls
     fastfetch
@@ -73,7 +82,6 @@
     sysstat
     tcpdump
     traceroute
-    dnsutils
     usbutils
   ];
 }

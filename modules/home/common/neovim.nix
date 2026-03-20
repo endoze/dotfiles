@@ -6,6 +6,7 @@
     neovim
 
     # Language servers
+    sqls
     dockerfile-language-server
     elixir-ls
     gopls

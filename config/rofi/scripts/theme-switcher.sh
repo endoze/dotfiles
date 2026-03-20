@@ -65,18 +65,6 @@ generate_theme() {
     wallust run --skip-sequences "$wallpaper"
 }
 
-# Reload waybar
-reload_waybar() {
-    killall -SIGUSR2 .waybar-wrapped &>/dev/null || killall -SIGUSR2 waybar &>/dev/null || true
-}
-
-# Reload swaync - try CSS reload first, fallback to full restart if it times out
-reload_swaync() {
-    if ! timeout 2 swaync-client -rs &>/dev/null; then
-        systemctl --user restart swaync &>/dev/null || true
-    fi
-}
-
 # Format wallpapers for rofi with icon support
 # Format: "display_name\0icon\x1f/path/to/image"
 format_for_rofi() {
@@ -132,8 +120,6 @@ main() {
         wallust run --skip-sequences --quiet "$selected" 2>/dev/null
 
         # Reload apps in parallel
-        reload_waybar &
-        reload_swaync &
         wait
     ) &
 

@@ -25,6 +25,9 @@
       # Don't follow nixpkgs - let Hyprland use its own pinned version
       # inputs.nixpkgs.follows = "nixpkgs";
     };
+    hyprpaper = {
+      url = "github:hyprwm/hyprpaper";
+    };
     nix-cachyos-kernel = {
       url = "github:xddxdd/nix-cachyos-kernel/release";
       # Do not override nixpkgs input to avoid version mismatches
@@ -33,9 +36,21 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    monban = {
+      url = "git+ssh://git@github.com/endoze/monban";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    shirase = {
+      url = "git+ssh://git@github.com/endoze/shirase";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    claude-desktop = {
+      url = "github:k3d3/claude-desktop-linux-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, nix-darwin, mac-app-util, nur, hyprland, nix-cachyos-kernel, sops-nix, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nix-darwin, mac-app-util, nur, hyprland, hyprpaper, nix-cachyos-kernel, sops-nix, monban, shirase, claude-desktop, ... }@inputs:
     let
       supportedSystems = [ "x86_64-linux" "aarch64-darwin" "x86_64-darwin" ];
 
@@ -88,6 +103,8 @@
         home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgsFor.${system};
           modules = osSpecificModules ++ [
+            sops-nix.homeManagerModules.sops
+            shirase.homeManagerModules.default
             ./modules/home/default.nix
             ./modules/machines/${name}/home.nix
           ];
@@ -184,6 +201,7 @@
         "deadmau5" = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
+            monban.nixosModules.default
             ./modules/system/nixos/default.nix
             ./modules/machines/deadmau5/system.nix
             ({ pkgs, ... }: {

@@ -78,6 +78,7 @@
     signing = {
       key = userConfig.gpgKey;
       signByDefault = userConfig.gpgKey != "";
+      format = "openpgp";
     };
   };
 

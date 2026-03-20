@@ -26,6 +26,15 @@ autocmd({ "UIEnter", "BufReadPost", "BufNewFile" }, {
   end,
 })
 
+-- enable treesitter highlighting for any filetype with an installed parser
+autocmd("FileType", {
+  callback = function()
+    if pcall(vim.treesitter.start) then
+      vim.bo.syntax = ""
+    end
+  end,
+})
+
 -- prevent . from triggering treesitter indents in ruby files
 autocmd("FileType", {
   pattern = "ruby",

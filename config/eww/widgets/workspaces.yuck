@@ -1,0 +1,18 @@
+; Workspace tracking via Hyprland IPC
+(deflisten workspaces :initial "[]"
+  "~/.config/eww/scripts/workspaces.sh"
+)
+
+; Workspace widget
+(defwidget workspaces []
+  (box :class "workspaces" :orientation "h" :spacing 6
+    (for ws in workspaces
+      (button
+        :class {ws.active ? "ws-btn active" :
+                ws.occupied ? "ws-btn occupied" : "ws-btn"}
+        :onclick "hyprctl dispatch workspace ${ws.id}"
+        "${ws.id}"
+      )
+    )
+  )
+)
