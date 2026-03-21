@@ -18,7 +18,8 @@
     nil
     nodePackages.bash-language-server
     nodePackages.typescript-language-server
-    roslyn-ls
+    # TODO: uncomment when roslyn-ls binary is available in the nixpkgs cache
+    # roslyn-ls
     pyright
     taplo
     templ

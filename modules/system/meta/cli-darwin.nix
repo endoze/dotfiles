@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ../darwin/file-limits.nix
     ../darwin/php.nix
   ];
 

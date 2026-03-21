@@ -21,7 +21,9 @@
     ../common/tmux.nix
     ../common/weechat.nix
     ../common/worktrunk.nix
+    ../common/zellij.nix
     ../common/hn-tui.nix
+    ../common/matcha.nix
   ];
 
   home.packages = with pkgs; [
@@ -53,8 +55,8 @@
     unar
     unrar
     unzip
+    websocat
     yq
-    zellij
     zip
     zsh
   ] ++ lib.optionals pkgs.stdenv.isDarwin [

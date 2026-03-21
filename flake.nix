@@ -48,9 +48,12 @@
       url = "github:k3d3/claude-desktop-linux-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    matcha = {
+      url = "github:floatpane/matcha";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, nix-darwin, mac-app-util, nur, hyprland, hyprpaper, nix-cachyos-kernel, sops-nix, monban, shirase, claude-desktop, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nix-darwin, mac-app-util, nur, hyprland, hyprpaper, nix-cachyos-kernel, sops-nix, monban, shirase, claude-desktop, matcha, ... }@inputs:
     let
       supportedSystems = [ "x86_64-linux" "aarch64-darwin" "x86_64-darwin" ];
 
