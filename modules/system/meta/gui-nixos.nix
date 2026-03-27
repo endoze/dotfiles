@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
 {
   imports = [
@@ -12,35 +12,34 @@
 
   environment.systemPackages = with pkgs; [
     (pkgs.wrapFirefox (pkgs.firefox-unwrapped.override { pipewireSupport = true; }) { })
-    (pkgs.callPackage ../nixos/sddm-theme.nix { })
     cliphist
     adwaita-icon-theme
     file-roller
     gvfs
     kdePackages.gwenview
-    hyprpaper
+    inputs.hyprpaper.packages.${pkgs.stdenv.hostPlatform.system}.hyprpaper
     hyprshot
     kitty
     nautilus
     nwg-look
     obs-studio
-    qt5.qtwayland
-    qt6.qtwayland
-    qt6.qt5compat
-    qt6.qtdeclarative
     rofi
     slack
     sushi
-    swaynotificationcenter
-    waybar
     wl-clipboard
     protontricks
+    crosspipe
   ];
 
   programs = {
     appimage = {
       enable = true;
       binfmt = true;
+    };
+
+    gamescope = {
+      enable = true;
+      capSysNice = true;
     };
 
     xfconf.enable = true;
@@ -50,9 +49,17 @@
     portal = {
       enable = true;
       extraPortals = with pkgs; [
-        xdg-desktop-portal-wlr
+        # xdg-desktop-portal-hyprland is added automatically by programs.hyprland;
+        # xdg-desktop-portal-wlr is removed — it claims the same interfaces
+        # (screencopy/screencast) and causes Discord/Chrome/OBS to pick wrong portal.
         xdg-desktop-portal-gtk
       ];
+      # Explicit routing prevents ambiguity when multiple portals are present.
+      # hyprland handles screencopy/screencast; gtk handles everything else.
+      config.common.default = "*";
+      config.hyprland = {
+        default = [ "hyprland" "gtk" ];
+      };
     };
   };
 

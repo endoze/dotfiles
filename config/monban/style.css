@@ -1,0 +1,137 @@
+/* style.css — greeter theme */
+/* This is standard GTK4 CSS. Customize freely. */
+/* Loaded at USER priority for full control over GTK theme. */
+
+/* ── Fullscreen background ───────────────────────────────── */
+window {
+  background-color: #1e1e2e;
+}
+
+/* ── Login card ──────────────────────────────────────────── */
+.login-container {
+  padding: 48px 56px;
+}
+
+/* ── Clock ───────────────────────────────────────────────── */
+.clock {
+  font-size: 64px;
+  font-weight: 200;
+  color: #cdd6f4;
+  margin-bottom: 0px;
+}
+
+.date {
+  font-size: 16px;
+  font-weight: 400;
+  color: #a6adc8;
+  margin-bottom: 12px;
+}
+
+/* ── Greeting text ───────────────────────────────────────── */
+.greeting {
+  font-size: 24px;
+  font-weight: 600;
+  color: #cdd6f4;
+  margin-bottom: 8px;
+}
+
+/* ── Text inputs ─────────────────────────────────────────── */
+.input entry,
+entry.input {
+  min-width: 320px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(69, 71, 90, 0.6);
+  background-color: rgba(49, 50, 68, 0.5);
+  color: #cdd6f4;
+  font-size: 15px;
+  caret-color: #89b4fa;
+}
+
+entry:focus {
+  border-color: #89b4fa;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(137, 180, 250, 0.25);
+}
+
+entry placeholder {
+  color: #6c7086;
+}
+
+/* ── Login button ────────────────────────────────────────── */
+.login-button {
+  padding: 8px 28px;
+  border-radius: 10px;
+  background-color: #89b4fa;
+  background-image: none;
+  color: #1e1e2e;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+}
+
+.login-button:hover {
+  background-color: #b4d0fb;
+  background-image: none;
+}
+
+.login-button:active {
+  background-color: #74c7ec;
+  background-image: none;
+}
+
+/* ── Session dropdown ────────────────────────────────────── */
+dropdown.session-dropdown {
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+dropdown.session-dropdown > button {
+  background-color: rgba(49, 50, 68, 0.5);
+  background-image: none;
+  border: 1px solid rgba(69, 71, 90, 0.6);
+  box-shadow: none;
+  color: #cdd6f4;
+  font-size: 15px;
+  padding: 8px 12px;
+  border-radius: 10px;
+}
+
+dropdown.session-dropdown > button:hover {
+  background-color: rgba(69, 71, 90, 0.5);
+  background-image: none;
+}
+
+dropdown.session-dropdown arrow {
+  color: #a6adc8;
+}
+
+/* ── Session dropdown popover ────────────────────────────── */
+.session-dropdown popover contents {
+  background-color: rgba(30, 30, 46, 0.95);
+  background-image: none;
+  border: 1px solid rgba(69, 71, 90, 0.6);
+  border-radius: 10px;
+  padding: 4px;
+  color: #cdd6f4;
+}
+
+.session-dropdown popover row {
+  color: #cdd6f4;
+  border-radius: 6px;
+  padding: 6px 12px;
+}
+
+.session-dropdown popover row:selected {
+  background-color: rgba(137, 180, 250, 0.2);
+  color: #89b4fa;
+}
+
+/* ── Error message ───────────────────────────────────────── */
+.error {
+  color: #f38ba8;
+  font-size: 14px;
+  min-height: 20px;
+}

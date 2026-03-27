@@ -7,6 +7,7 @@
     git
     htop
     killall
+    lazyjournal
     neovim
     ntfs3g
     vim

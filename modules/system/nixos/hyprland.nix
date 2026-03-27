@@ -3,11 +3,10 @@
 {
   environment.systemPackages = with pkgs; [
     hypridle
-    hyprlock
     gcr
   ];
 
-  security.pam.services.sddm.enableGnomeKeyring = true;
+  security.pam.services.monban.enableGnomeKeyring = true;
 
   programs.hyprland = {
     enable = true;
@@ -21,36 +20,82 @@
     portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
   };
 
-  services = {
-    displayManager = {
-      defaultSession = "hyprland-uwsm";
-      sddm = {
-        enable = true;
-        theme = "cyberpunk";
-        package = pkgs.kdePackages.sddm;
-        wayland = {
-          enable = false;
+  programs.monban = {
+    enable = true;
+    greeterEnvironment = { WLR_RENDERER = "vulkan"; };
+    greeterGroups = [ "seat" "video" "render" ];
+    style = ../../../config/monban/style.css;
+    background = ../../../wallpapers/woman-in-cyberpunk-city.jpg;
+    lock.enable = true;
+    settings = {
+      log_level = "warn";
+      greeter = {
+        window = { monitor = 0; fullscreen = true; cursor = true; };
+        style = "./style.css";
+        background = { image = "./background"; blur = 20; };
+        default_session = "Hyprland (uwsm-managed)";
+        vars = {
+          error_msg = "";
+          clock = { poll = "date '+%H:%M'"; interval = 30; };
+          date = { poll = "date '+%A, %B %-d'"; interval = 60; };
         };
-        extraPackages = with pkgs; [
-          qt6.qt5compat
-          qt6.qtdeclarative
-        ];
-        settings = {
-          General = {
-            GreeterEnvironment = "QT_SCALE_FACTOR=1.5,QT_FONT_DPI=144";
-          };
+        layout = {
+          widget = "box";
+          orientation = "vertical";
+          halign = "center";
+          valign = "center";
+          spacing = 24;
+          class = "login-container";
+          children = [
+            { widget = "label"; bind = "clock"; class = "clock"; }
+            { widget = "label"; bind = "date"; class = "date"; }
+            { widget = "label"; text = "Welcome back"; class = "greeting"; }
+            { widget = "entry"; id = "username"; placeholder = "Username"; on_submit = "focus_password"; class = "input"; }
+            { widget = "entry"; id = "password"; placeholder = "Password"; secret = true; on_submit = "attempt_login"; class = "input"; }
+            {
+              widget = "box";
+              orientation = "horizontal";
+              spacing = 12;
+              halign = "center";
+              children = [
+                { widget = "dropdown"; id = "session"; class = "session-dropdown"; }
+                { widget = "button"; text = "Login"; on_click = "attempt_login"; class = "login-button"; }
+              ];
+            }
+            { widget = "label"; id = "error_label"; bind = "error_msg"; class = "error"; }
+          ];
+        };
+      };
+      lock = {
+        style = "./style.css";
+        background = { image = "./background"; blur = 20; };
+        vars = {
+          error_msg = "";
+          clock = { poll = "date '+%H:%M'"; interval = 30; };
+          date = { poll = "date '+%A, %B %-d'"; interval = 60; };
+          current_user = { poll = "whoami"; interval = 86400; };
+        };
+        layout = {
+          widget = "box";
+          orientation = "vertical";
+          halign = "center";
+          valign = "center";
+          spacing = 24;
+          class = "login-container";
+          children = [
+            { widget = "label"; bind = "clock"; class = "clock"; }
+            { widget = "label"; bind = "date"; class = "date"; }
+            { widget = "label"; bind = "current_user"; class = "greeting"; }
+            { widget = "entry"; id = "password"; placeholder = "Password"; secret = true; on_submit = "attempt_unlock"; class = "input"; }
+            { widget = "button"; text = "Unlock"; on_click = "attempt_unlock"; class = "login-button"; }
+            { widget = "label"; bind = "error_msg"; class = "error"; }
+          ];
         };
       };
     };
-    # greetd = {
-    #   enable = true;
-    #   settings = {
-    #     default_session = {
-    #       command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd '${pkgs.dbus}/bin/dbus-run-session ${pkgs.hyprland}/bin/Hyprland'";
-    #       user = "greeter";
-    #     };
-    #   };
-    # };
+  };
+
+  services = {
     libinput.enable = true;
     dbus.enable = true;
     gvfs.enable = true;
@@ -68,6 +113,7 @@
     seatd = {
       enable = true;
       user = userConfig.username;
+      group = "seat";
     };
 
     gnome = {

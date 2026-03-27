@@ -2,10 +2,6 @@
 { pkgs, lib, ... }:
 
 {
-  environment.systemPackages = with pkgs; [
-    helvum
-  ];
-
   security.rtkit.enable = true;
 
   services.pipewire = {

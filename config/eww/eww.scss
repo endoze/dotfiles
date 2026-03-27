@@ -1,0 +1,328 @@
+// One Dark palette
+$bg: rgba(50, 55, 65, 0.82);
+$fg: #abb2bf;
+$fg-dim: #5c6370;
+$border: rgba(100, 110, 130, 0.5);
+$blue: #61afef;
+$green: #98c379;
+$cyan: #56b6c2;
+$yellow: #e5c07b;
+$magenta: #c678dd;
+$red: #e06c75;
+
+// // Tokyo Night Dark palette
+// $bg: rgba(26, 27, 38, 0.93);
+// $fg: #c0caf5;
+// $fg-dim: #565f89;
+// $border: rgba(41, 46, 66, 0.6);
+// $blue: #7aa2f7;
+// $green: #9ece6a;
+// $cyan: #7dcfff;
+// $yellow: #e0af68;
+// $magenta: #bb9af7;
+// $red: #f7768e;
+
+* {
+  all: unset;
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-size: 18px;
+  font-weight: bold;
+  color: $fg;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
+.pill {
+  background: $bg;
+  border-radius: 24px;
+  border: 1px solid $border;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  padding: 4px 16px;
+  margin: 4px 0;
+}
+
+// Workspaces
+.workspaces {
+  padding: 2px 4px;
+}
+
+.ws-btn {
+  font-size: 13px;
+  min-width: 28px;
+  min-height: 28px;
+  border-radius: 50%;
+  color: $fg-dim;
+  margin: 0 3px;
+  transition: all 200ms ease;
+
+  &:hover {
+    color: $fg;
+    background: rgba($blue, 0.15);
+  }
+}
+
+.ws-btn.occupied {
+  color: $fg;
+}
+
+.ws-btn.active {
+  background: $blue;
+  font-weight: bold;
+  border-radius: 50%;
+}
+
+.ws-btn.active * {
+  color: #282c34;
+  text-shadow: none;
+}
+
+// Clock
+.clock-icon {
+  color: $magenta;
+  margin-left: 16px;
+}
+
+.clock-time {
+  font-weight: bold;
+}
+
+.separator {
+  color: $fg-dim;
+  margin: 0 16px;
+}
+
+.date-icon {
+  color: $magenta;
+}
+
+.clock-date {
+  color: $fg;
+  margin-right: 16px;
+}
+
+// System info
+.sysinfo {
+  padding: 2px 4px;
+}
+
+.cpu-icon {
+  color: $green;
+}
+
+.mem-icon {
+  color: $cyan;
+}
+
+.vol {
+  transition: all 200ms ease;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.vol-icon {
+  color: $yellow;
+}
+
+.notif-btn {
+  min-width: 32px;
+  min-height: 32px;
+  font-size: 14px;
+  border-radius: 50%;
+  transition: all 200ms ease;
+
+  &:hover {
+    background: rgba($blue, 0.2);
+  }
+}
+
+.notif-icon {
+  color: $blue;
+}
+
+.power-btn {
+  min-width: 32px;
+  min-height: 32px;
+  font-size: 14px;
+  border-radius: 50%;
+  transition: all 200ms ease;
+
+  &:hover {
+    background: rgba($red, 0.2);
+  }
+}
+
+.power-icon {
+  color: $red;
+}
+
+// Power menu
+.powermenu {
+  background: $bg;
+  border-radius: 8px;
+  border: 1px solid $border;
+  padding: 15px;
+}
+
+.pm-btn label {
+  font-size: 40px;
+}
+
+.pm-btn {
+  min-width: 85px;
+  min-height: 85px;
+  border-radius: 8px;
+  background: rgba($fg-dim, 0.3);
+  transition: all 200ms ease;
+
+  &:hover {
+    background: rgba($fg-dim, 0.45);
+  }
+}
+
+.pm-lock label {
+  color: $green;
+}
+
+.pm-suspend label {
+  color: $yellow;
+}
+
+.pm-logout label {
+  color: $magenta;
+}
+
+.pm-reboot label {
+  color: $cyan;
+}
+
+.pm-shutdown label {
+  color: $red;
+}
+
+.pm-lock:hover {
+  background: rgba($green, 0.25);
+}
+
+.pm-suspend:hover {
+  background: rgba($yellow, 0.25);
+}
+
+.pm-logout:hover {
+  background: rgba($magenta, 0.25);
+}
+
+.pm-reboot:hover {
+  background: rgba($cyan, 0.25);
+}
+
+.pm-shutdown:hover {
+  background: rgba($red, 0.25);
+}
+
+// System tray
+.tray {
+  padding: 2px 4px;
+
+  image {
+    margin: 0 4px;
+  }
+}
+
+menu {
+  background-color: rgba(50, 55, 65, 0.95);
+  color: $fg;
+  border: 1px solid $border;
+  border-radius: 8px;
+  padding: 4px 0;
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-size: 18px;
+  font-weight: normal;
+  text-shadow: none;
+}
+
+menu>menuitem {
+  padding: 6px 12px;
+  color: $fg;
+  background-color: transparent;
+  transition: all 200ms ease;
+}
+
+menu>menuitem:hover {
+  background-color: rgba($blue, 0.2);
+}
+
+menu>menuitem label {
+  color: $fg;
+  font-size: 18px;
+  font-weight: normal;
+  text-shadow: none;
+}
+
+menu separator {
+  background-color: $border;
+  min-height: 1px;
+  margin: 4px 8px;
+}
+
+tooltip {
+  background-color: rgba(50, 55, 65, 0.95);
+  color: $fg;
+  border: 1px solid $border;
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-size: 18px;
+  font-weight: normal;
+  text-shadow: none;
+}
+
+tooltip label {
+  color: $fg;
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-size: 18px;
+  font-weight: normal;
+  text-shadow: none;
+}
+
+.vol-osd {
+  background: $bg;
+  border-radius: 16px;
+  border: 1px solid $border;
+  padding: 16px 24px;
+
+  &.muted {
+    opacity: 0.6;
+  }
+}
+
+.vol-osd-icon {
+  font-size: 32px;
+  color: $blue;
+}
+
+.vol-osd-bar {
+  min-height: 8px;
+  min-width: 150px;
+
+  trough {
+    background: rgba($fg-dim, 0.3);
+    border-radius: 4px;
+    min-height: 8px;
+  }
+
+  highlight {
+    background: $blue;
+    border-radius: 4px;
+    min-height: 8px;
+  }
+
+  slider {
+    all: unset;
+  }
+}
+
+.vol-osd-pct {
+  font-size: 13px;
+  color: $fg-dim;
+}

@@ -1,0 +1,174 @@
+/* Shirase — One Dark Theme (matching eww) */
+
+window {
+  background: none;
+  box-shadow: none;
+}
+
+/* Popup container */
+.notification-popup-container {
+  padding: 8px;
+  background-color: transparent;
+  border: none;
+}
+
+/* Individual notification bubble */
+.notification-bubble {
+  background-color: rgba(50, 55, 65, 0.92);
+  border: 1px solid rgba(100, 110, 130, 0.5);
+  border-radius: 12px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.4);
+  padding: 12px;
+  margin: 4px;
+  min-width: 300px;
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  color: #abb2bf;
+}
+
+.notification-bubble.notification-urgent {
+  border-color: #e06c75;
+  border-width: 2px;
+}
+
+.notification-app-name {
+  font-size: 0.8em;
+  font-weight: bold;
+  color: #5c6370;
+}
+
+.notification-summary {
+  font-weight: bold;
+  font-size: 1em;
+  color: #abb2bf;
+}
+
+.notification-body {
+  font-size: 0.9em;
+  color: #abb2bf;
+  opacity: 0.9;
+}
+
+.notification-close-btn,
+.notification-dismiss-btn {
+  min-width: 24px;
+  min-height: 24px;
+  padding: 0;
+  border-radius: 6px;
+  background-color: transparent;
+  color: #5c6370;
+  font-size: 14px;
+}
+
+.notification-close-btn label,
+.notification-dismiss-btn label {
+  padding: 0;
+  margin: 0;
+}
+
+.notification-close-btn:hover,
+.notification-dismiss-btn:hover {
+  background-color: rgba(97, 175, 239, 0.15);
+  color: #abb2bf;
+}
+
+.notification-actions {
+  margin-top: 4px;
+}
+
+.notification-action-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.9em;
+  background-color: rgba(92, 99, 112, 0.3);
+  color: #abb2bf;
+  border: 1px solid rgba(100, 110, 130, 0.5);
+}
+
+.notification-action-btn:hover {
+  background-color: rgba(97, 175, 239, 0.2);
+}
+
+/* Notification center panel */
+.notification-center {
+  background-color: rgba(50, 55, 65, 0.92);
+  border: 1px solid rgba(100, 110, 130, 0.5);
+  padding: 12px;
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  color: #abb2bf;
+}
+
+.notification-center-header {
+  padding: 8px 4px;
+  border-bottom: 1px solid rgba(100, 110, 130, 0.5);
+  margin-bottom: 8px;
+}
+
+.notification-center-title {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #61afef;
+}
+
+.notification-center-clear {
+  padding: 4px 12px;
+  border-radius: 6px;
+  color: #e06c75;
+  background-color: transparent;
+  font-size: 0.85em;
+}
+
+.notification-center-clear:hover {
+  background-color: rgba(224, 108, 117, 0.15);
+}
+
+.notification-center-content {
+  padding: 4px;
+}
+
+.notification-center-empty {
+  color: #5c6370;
+  font-size: 1em;
+}
+
+/* Notification icon */
+.notification-icon {
+  margin-right: 4px;
+}
+
+/* Notification group */
+.notification-group {
+  margin-bottom: 8px;
+}
+
+.notification-group-header {
+  padding: 6px 8px;
+  background-color: rgba(92, 99, 112, 0.15);
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 0.85em;
+  color: #abb2bf;
+}
+
+.notification-group-toggle {
+  min-width: 24px;
+  min-height: 24px;
+  padding: 0;
+  background-color: transparent;
+  color: #5c6370;
+}
+
+/* Notification row in center */
+.notification-row {
+  padding: 8px;
+  border-bottom: 1px solid rgba(100, 110, 130, 0.2);
+}
+
+.notification-row.notification-urgent {
+  border-left: 3px solid #e06c75;
+  padding-left: 5px;
+}
+
+.notification-timestamp {
+  font-size: 0.8em;
+  color: #5c6370;
+}

@@ -1,4 +1,4 @@
-{ config, pkgs, lib, userConfig, ... }:
+{ config, pkgs, lib, inputs, userConfig, ... }:
 
 {
   nixpkgs.config.permittedInsecurePackages = [
@@ -23,6 +23,7 @@
       beetle-psx-hw
     ]))
     ventoy-full-gtk
+    inputs.claude-desktop.packages.${pkgs.stdenv.hostPlatform.system}.claude-desktop
   ];
 
   # Preload application libraries into memory for faster startup

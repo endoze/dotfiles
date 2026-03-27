@@ -180,6 +180,11 @@ local keymap_table = {
       ["<leader>n"] = { "<cmd> NvimTreeToggle <CR>", "Toggle nvimtree" },
     },
   },
+  sqlua = {
+    n = {
+      ["<leader>sq"] = { "<cmd>SQLua<CR>", "Toggle SQLua" },
+    },
+  },
 }
 
 return keymap_table

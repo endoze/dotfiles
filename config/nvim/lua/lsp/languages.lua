@@ -18,7 +18,7 @@ return {
   -- "pylsp",
   "ruby_lsp",
   "sourcekit",
-  "sqlls",
+  "sqls",
   "templ",
   "terraformls",
   -- "ts_ls",

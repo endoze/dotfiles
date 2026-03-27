@@ -16,4 +16,12 @@ return {
       require("nvim-surround").setup({})
     end,
   },
+  {
+    "xemptuous/sqlua.nvim",
+    lazy = true,
+    cmd = "SQLua",
+    config = function()
+      require("sqlua").setup()
+    end,
+  },
 }

@@ -1,0 +1,19 @@
+; Clock polling
+(defpoll time_val :interval "5s"
+  "date '+%I:%M %p'"
+)
+
+(defpoll date_val :interval "60s"
+  "date '+%a %b %d'"
+)
+
+; Clock widget
+(defwidget clock []
+  (box :class "clock" :orientation "h" :spacing 8 :space-evenly false
+    (label :class "clock-icon" :text "󰥔 ")
+    (label :class "clock-time" :text time_val)
+    (label :class "separator" :text "|")
+    (label :class "date-icon" :text "󰃭 ")
+    (label :class "clock-date" :text date_val)
+  )
+)
