@@ -15,12 +15,14 @@ set-option -g renumber-windows on
 set -g @dracula-show-powerline true
 set -g @dracula-show-flags false
 set -g @dracula-show-left-icon session
-
-set -g @dracula-color-black "#073642"
-set -g @dracula-color-white "#eee8d5"
-
 set -g @dracula-dark-mode false
-
+set -g @dracula-battery-label "󰁹"
+set -g @dracula-show-location false
+set -g @dracula-military-time false
+set -g @dracula-day-month true
+set -g @dracula-show-timezone true
+set -g @dracula-time-format "%a %b %e %I:%M %p"
+set -g @dracula-plugins "battery network time"
 set -g @theme-name "onedark"
 
 run-shell '
@@ -31,18 +33,36 @@ if [ -n "$name" ] && [ -f ~/.config/tmux/themes/$name.tmux ]; then
 fi
 '
 
+# Widget colors
 set -g @dracula-battery-colors "blue black"
 set -g @dracula-network-colors "cyan black"
 set -g @dracula-weather-colors "orange black"
-
-set -g @dracula-battery-label "󰁹"
-
-set -g @dracula-show-location false
-
-set -g @dracula-military-time false
-set -g @dracula-day-month true
-set -g @dracula-show-timezone true
-set -g @dracula-time-format "%a %b %e %I:%M %p"
 set -g @dracula-time-colors "purple black"
 
-set -g @dracula-plugins "battery network time"
+# Transparency block colors
+set -g @dracula-sep-color "blue"
+set -g @dracula-bg-base "#353b45"
+
+set -g @dracula-window-sep-color "gray"
+
+# Status bar
+set -g @dracula-status-fg "black"
+
+# Window flags
+set -g @dracula-flags-fg "dark-gray"
+set -g @dracula-current-flags-fg "black"
+
+# Pane border — only if @dracula-border-contrast is true
+set -g @dracula-pane-active-border-fg "#268bd2"  # pink (upstream: light_purple)
+
+# Left icon (powerline mode)
+set -g @dracula-left-icon-bg "blue"
+set -g @dracula-left-icon-fg "black"
+
+# Current window tab
+set -g @dracula-win-current-bg "blue"
+set -g @dracula-win-current-fg "black"
+
+# Inactive window tab
+set -g @dracula-win-fg "#abb2bf"
+set -g @dracula-win-bg "#353b45"

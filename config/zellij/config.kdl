@@ -1,0 +1,307 @@
+keybinds clear-defaults=true {
+    tmux {
+        bind "[" { SwitchToMode "Scroll"; }
+
+        // Leave tmux mode
+        bind "Ctrl g" { Write 7; SwitchToMode "Normal"; }
+
+        bind "Ctrl y" {
+            LaunchOrFocusPlugin "zellij-switcher" {
+                floating true
+            }
+            SwitchToMode "Normal"
+        }
+
+        bind "+" { ToggleFocusFullscreen; SwitchToMode "Normal"; }
+
+        // Tab creation
+        bind "c" { NewTab; SwitchToMode "Normal"; }
+        bind "t" { NewTab; SwitchToMode "Normal"; }
+
+        // Session manager
+        bind "S" {
+            LaunchOrFocusPlugin "session-manager" {
+                floating true
+                move_to_focused_tab true
+            };
+            SwitchToMode "Normal"
+        }
+
+        // Splitting panes
+        bind "|" "\\" { NewPane "Right"; SwitchToMode "Normal"; }
+        bind "-" { NewPane "Down"; SwitchToMode "Normal"; }
+
+        // Moving between tabs
+        bind "p" { GoToPreviousTab; SwitchToMode "Normal"; }
+        bind "n" { GoToNextTab; SwitchToMode "Normal"; }
+        // Direct tab selection
+        bind "1" { GoToTab 1; SwitchToMode "Normal"; }
+        bind "2" { GoToTab 2; SwitchToMode "Normal"; }
+        bind "3" { GoToTab 3; SwitchToMode "Normal"; }
+        bind "4" { GoToTab 4; SwitchToMode "Normal"; }
+        bind "5" { GoToTab 5; SwitchToMode "Normal"; }
+        bind "6" { GoToTab 6; SwitchToMode "Normal"; }
+        bind "7" { GoToTab 7; SwitchToMode "Normal"; }
+        bind "8" { GoToTab 8; SwitchToMode "Normal"; }
+        bind "9" { GoToTab 9; SwitchToMode "Normal"; }
+        // Toggle last tab
+        bind "`" { ToggleTab; SwitchToMode "Normal"; }
+        // Renaming tabs
+        bind "," { SwitchToMode "RenameTab"; TabNameInput 0; }
+
+        // Moving between panes
+        bind "Left" { MoveFocus "Left"; SwitchToMode "Normal"; }
+        bind "Right" { MoveFocus "Right"; SwitchToMode "Normal"; }
+        bind "Down" { MoveFocus "Down"; SwitchToMode "Normal"; }
+        bind "Up" { MoveFocus "Up"; SwitchToMode "Normal"; }
+        bind "Ctrl h" { MoveFocus "Left"; SwitchToMode "Normal"; }
+        bind "Ctrl l" { MoveFocus "Right"; SwitchToMode "Normal"; }
+        bind "Ctrl j" { MoveFocus "Down"; SwitchToMode "Normal"; }
+        bind "Ctrl k" { MoveFocus "Up"; SwitchToMode "Normal"; }
+        // Renaming panes
+        bind "." { SwitchToMode "RenamePane"; PaneNameInput 0; }
+        // Resizing panes
+        bind "h" { Resize "Increase Left"; }
+        bind "l" { Resize "Increase Right"; }
+        bind "k" { Resize "Increase Up"; }
+        bind "j" { Resize "Increase Down"; }
+
+        bind "d" { Detach; }
+
+        // Search
+        bind "/" { SwitchToMode "EnterSearch"; SearchInput 0; }
+
+        bind "Space" { NextSwapLayout; }
+
+        // Floating pane toggle
+        bind "f" { ToggleFloatingPanes; SwitchToMode "Normal"; }
+        // New stacked pane
+        bind "w" { NewPane "stacked"; SwitchToMode "Normal"; }
+
+        bind "x" { CloseFocus; SwitchToMode "Normal"; }
+
+        // TEMP: Plugin manager
+        bind "P" {
+            LaunchOrFocusPlugin "zellij:plugin-manager" {
+                floating true
+                move_to_focused_tab true
+            };
+            SwitchToMode "Normal"
+        }
+    }
+    scroll {
+        bind "/" { SwitchToMode "EnterSearch"; SearchInput 0; }
+
+        // Open scrollback in $EDITOR (full vim copy/paste)
+        bind "e" { EditScrollback; SwitchToMode "Normal"; }
+
+        // Navigation
+        bind "j" "Down" { ScrollDown; }
+        bind "PageDown" "J" { PageScrollDown; }
+        bind "k" "Up" { ScrollUp; }
+        bind "PageUp" "K" { PageScrollUp; }
+        bind "Ctrl d" { HalfPageScrollDown; }
+        bind "Ctrl u" { HalfPageScrollUp; }
+
+        bind "q" "Esc" { SwitchToMode "Normal"; }
+    }
+    entersearch {
+        bind "Esc" { ScrollToBottom; SwitchToMode "Scroll"; }
+        bind "Enter" { SwitchToMode "Search"; }
+    }
+    search {
+        bind "Esc" { ScrollToBottom; SwitchToMode "Scroll"; }
+
+        bind "j" "Down" { ScrollDown; }
+        bind "k" "Up" { ScrollUp; }
+        bind "Ctrl f" "PageDown" "Right" "l" { PageScrollDown; }
+        bind "Ctrl b" "PageUp" "Left" "h" { PageScrollUp; }
+        bind "d" { HalfPageScrollDown; }
+        bind "u" { HalfPageScrollUp; }
+
+        bind "n" { Search "down"; }
+        bind "p" { Search "up"; }
+
+        bind "c" { SearchToggleOption "CaseSensitivity"; }
+        bind "w" { SearchToggleOption "Wrap"; }
+        bind "o" { SearchToggleOption "WholeWord"; }
+    }
+    renametab {
+        bind "Ctrl g" { SwitchToMode "Normal"; }
+        bind "Enter" { SwitchToMode "Normal"; }
+        bind "Esc" { UndoRenameTab; SwitchToMode "Normal"; }
+    }
+    renamepane {
+        bind "Enter" { SwitchToMode "Normal"; }
+        bind "Ctrl c" { SwitchToMode "Normal"; }
+        bind "Esc" { UndoRenamePane; SwitchToMode "Pane"; }
+    }
+    shared_except "tmux" "locked" {
+        // Enter tmux mode with Ctrl+g
+        bind "Ctrl g" { SwitchToMode "Tmux"; }
+    }
+}
+
+themes {
+    one-dark {
+        text_unselected {
+            base 171 178 191
+            background 40 44 52
+            emphasis_0 209 154 102
+            emphasis_1 86 182 194
+            emphasis_2 152 195 121
+            emphasis_3 198 120 221
+        }
+        text_selected {
+            base 171 178 191
+            background 40 44 52
+            emphasis_0 209 154 102
+            emphasis_1 86 182 194
+            emphasis_2 152 195 121
+            emphasis_3 198 120 221
+        }
+        ribbon_selected {
+            base 40 44 52
+            background 152 195 121
+            emphasis_0 224 108 117
+            emphasis_1 209 154 102
+            emphasis_2 198 120 221
+            emphasis_3 97 175 239
+        }
+        ribbon_unselected {
+            base 40 44 52
+            background 171 178 191
+            emphasis_0 224 108 117
+            emphasis_1 171 178 191
+            emphasis_2 97 175 239
+            emphasis_3 198 120 221
+        }
+        table_title {
+            base 152 195 121
+            background 0
+            emphasis_0 209 154 102
+            emphasis_1 86 182 194
+            emphasis_2 152 195 121
+            emphasis_3 198 120 221
+        }
+        table_cell_selected {
+            base 171 178 191
+            background 40 44 52
+            emphasis_0 209 154 102
+            emphasis_1 86 182 194
+            emphasis_2 152 195 121
+            emphasis_3 198 120 221
+        }
+        table_cell_unselected {
+            base 171 178 191
+            background 40 44 52
+            emphasis_0 209 154 102
+            emphasis_1 86 182 194
+            emphasis_2 152 195 121
+            emphasis_3 198 120 221
+        }
+        list_selected {
+            base 171 178 191
+            background 40 44 52
+            emphasis_0 209 154 102
+            emphasis_1 86 182 194
+            emphasis_2 152 195 121
+            emphasis_3 198 120 221
+        }
+        list_unselected {
+            base 171 178 191
+            background 40 44 52
+            emphasis_0 209 154 102
+            emphasis_1 86 182 194
+            emphasis_2 152 195 121
+            emphasis_3 198 120 221
+        }
+        frame_selected {
+            base 152 195 121
+            background 0
+            emphasis_0 209 154 102
+            emphasis_1 86 182 194
+            emphasis_2 198 120 221
+            emphasis_3 0
+        }
+        frame_highlight {
+            base 209 154 102
+            background 0
+            emphasis_0 198 120 221
+            emphasis_1 0
+            emphasis_2 209 154 102
+            emphasis_3 209 154 102
+        }
+        exit_code_success {
+            base 152 195 121
+            background 0
+            emphasis_0 86 182 194
+            emphasis_1 40 44 52
+            emphasis_2 198 120 221
+            emphasis_3 97 175 239
+        }
+        exit_code_error {
+            base 224 108 117
+            background 0
+            emphasis_0 229 192 123
+            emphasis_1 0
+            emphasis_2 0
+            emphasis_3 0
+        }
+        multiplayer_user_colors {
+            player_1 198 120 221
+            player_2 97 175 239
+            player_3 0
+            player_4 229 192 123
+            player_5 86 182 194
+            player_6 0
+            player_7 224 108 117
+            player_8 0
+            player_9 0
+            player_10 0
+        }
+    }
+}
+
+// Plugin aliases
+plugins {
+    // about location="zellij:about"
+    // compact-bar location="zellij:compact-bar"
+    // configuration location="zellij:configuration"
+    // filepicker location="zellij:strider" {
+    //     cwd "/"
+    // }
+    plugin-manager location="zellij:plugin-manager"
+    session-manager location="zellij:session-manager"
+    // status-bar location="zellij:status-bar"
+    // strider location="zellij:strider"
+    // tab-bar location="zellij:tab-bar"
+    welcome-screen location="zellij:session-manager" {
+        welcome_screen true
+    }
+    zellij-switcher location="file:~/.config/zellij/plugins/zellij-switcher.wasm" {
+        header_title "Session Manager"
+        header_text_color "1"
+        shortcut_key_color "0"
+        selection_prefix " "
+        show_navigation_help "true"
+        list_padding "6"
+    }
+}
+
+
+load_plugins {
+    "zellij-switcher"
+}
+
+web_client {
+    font "monospace"
+}
+
+default_layout "onedark"
+
+theme "one-dark"
+
+mouse_mode true
+
+show_startup_tips false

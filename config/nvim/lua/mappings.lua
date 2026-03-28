@@ -153,6 +153,10 @@ local keymap_table = {
         ">gv",
         "Preserve highlight on left shift",
       },
+      ["<leader>r2"] = {
+        ":s/^\\(\\s*\\)/\\=substitute(submatch(1), '    ', '  ', 'g')/<CR>:noh<CR>gv",
+        "Reindent 4 spaces to 2",
+      },
     },
     x = {
       ["p"] = {

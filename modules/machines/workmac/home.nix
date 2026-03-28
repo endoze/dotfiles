@@ -8,11 +8,11 @@
 
   home.packages = with pkgs; [
     aria2
-    beads
     kubernetes-helm
+    lazydocker
+    playwright-test
     postgresql
     shellcheck
-    xcodes
   ];
 
   programs.mysql = {

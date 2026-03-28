@@ -1,0 +1,100 @@
+layout cwd="~/Projects" {
+  pane
+  pane size=1 borderless=true {
+    plugin location="file:~/.config/zellij/plugins/zjstatus.wasm" {
+    // -- One Dark --
+    color_rosewater "#E06C75"
+    color_flamingo "#E06C75"
+    color_pink "#C678DD"
+    color_mauve "#C678DD"
+    color_red "#E06C75"
+    color_maroon "#E06C75"
+    color_peach "#D19A66"
+    color_yellow "#E5C07B"
+    color_green "#98C379"
+    color_teal "#56B6C2"
+    color_sky "#56B6C2"
+    color_sapphire "#61AFEF"
+    color_blue "#61AFEF"
+    color_lavender "#61AFEF"
+    color_text "#ABB2BF"
+    color_subtext1 "#ABB2BF"
+    color_subtext0 "#5C6370"
+    color_overlay2 "#5C6370"
+    color_overlay1 "#5C6370"
+    color_overlay0 "#5C6370"
+    color_surface2 "#3E4452"
+    color_surface1 "#3E4452"
+    color_surface0 "#282C34"
+    color_base "#282C34"
+    color_mantle "#21252B"
+    color_crust "#1C1F26"
+
+    format_left   "#[bg=$surface0,fg=$sapphire]#[bg=$sapphire,fg=$crust,bold] {session} #[bg=$surface0] {mode}#[bg=$surface0] {tabs}"
+    format_center "{notifications}"
+    format_right  "#[bg=$surface0,fg=$peach]#[bg=$peach,fg=$crust]{command_weather} #[bg=$surface1,fg=$peach,bold] {command_weather_data}#[bg=$surface0,fg=$surface1]#[bg=$surface0,fg=$yellow]#[bg=$yellow,fg=$crust]{command_battery} #[bg=$surface1,fg=$yellow,bold] {command_battery_data}#[bg=$surface0,fg=$surface1]#[bg=$surface0,fg=$blue]#[bg=$blue,fg=$crust]󰃭 #[bg=$surface1,fg=$blue,bold] {datetime}#[bg=$surface0,fg=$surface1]"
+    format_space  "#[bg=$surface0]"
+    border_enabled  "false"
+    border_char     "─"
+    border_format   "#[bg=$surface0]{char}"
+    border_position "top"
+
+    hide_frame_for_single_pane "true"
+
+    mode_normal        "#[bg=$green,fg=$crust,bold] NORMAL#[bg=$surface0,fg=$green]"
+    mode_tmux          "#[bg=$mauve,fg=$crust,bold] TMUX#[bg=$surface0,fg=$mauve]"
+    mode_locked        "#[bg=$red,fg=$crust,bold] LOCKED#[bg=$surface0,fg=$red]"
+    mode_pane          "#[bg=$teal,fg=$crust,bold] PANE#[bg=$surface0,fg=$teal]"
+    mode_tab           "#[bg=$teal,fg=$crust,bold] TAB#[bg=$surface0,fg=$teal]"
+    mode_scroll        "#[bg=$flamingo,fg=$crust,bold] SCROLL#[bg=$surface0,fg=$flamingo]"
+    mode_enter_search  "#[bg=$flamingo,fg=$crust,bold] ENT-SEARCH#[bg=$surface0,fg=$flamingo]"
+    mode_search        "#[bg=$flamingo,fg=$crust,bold] SEARCH#[bg=$surface0,fg=$flamingo]"
+    mode_resize        "#[bg=$yellow,fg=$crust,bold] RESIZE#[bg=$surface0,fg=$yellow]"
+    mode_rename_tab    "#[bg=$yellow,fg=$crust,bold] RENAME-TAB#[bg=$surface0,fg=$yellow]"
+    mode_rename_pane   "#[bg=$yellow,fg=$crust,bold] RENAME-PANE#[bg=$surface0,fg=$yellow]"
+    mode_move          "#[bg=$yellow,fg=$crust,bold] MOVE#[bg=$surface0,fg=$yellow]"
+    mode_session       "#[bg=$pink,fg=$crust,bold] SESSION#[bg=$surface0,fg=$pink]"
+    mode_prompt        "#[bg=$pink,fg=$crust,bold] PROMPT#[bg=$surface0,fg=$pink]"
+
+    tab_normal              "#[bg=$surface0,fg=$blue]#[bg=$blue,fg=$crust,bold]{index} #[bg=$surface1,fg=$blue,bold] {name}{floating_indicator}#[bg=$surface0,fg=$surface1]"
+    tab_normal_fullscreen   "#[bg=$surface0,fg=$blue]#[bg=$blue,fg=$crust,bold]{index} #[bg=$surface1,fg=$blue,bold] {name}{fullscreen_indicator}#[bg=$surface0,fg=$surface1]"
+    tab_normal_sync         "#[bg=$surface0,fg=$blue]#[bg=$blue,fg=$crust,bold]{index} #[bg=$surface1,fg=$blue,bold] {name}{sync_indicator}#[bg=$surface0,fg=$surface1]"
+    tab_active              "#[bg=$surface0,fg=$peach]#[bg=$peach,fg=$crust,bold]{index} #[bg=$surface1,fg=$peach,bold] {name}{floating_indicator}#[bg=$surface0,fg=$surface1]"
+    tab_active_fullscreen   "#[bg=$surface0,fg=$peach]#[bg=$peach,fg=$crust,bold]{index} #[bg=$surface1,fg=$peach,bold] {name}{fullscreen_indicator}#[bg=$surface0,fg=$surface1]"
+    tab_active_sync         "#[bg=$surface0,fg=$peach]#[bg=$peach,fg=$crust,bold]{index} #[bg=$surface1,fg=$peach,bold] {name}{sync_indicator}#[bg=$surface0,fg=$surface1]"
+    tab_separator           "#[bg=$surface0] "
+
+    tab_sync_indicator       " "
+    tab_fullscreen_indicator " 󰊓"
+    tab_floating_indicator   " 󰹙"
+
+    notification_format_unread "#[bg=surface0,fg=$yellow]#[bg=$yellow,fg=$crust] #[bg=$surface1,fg=$yellow] {message}#[bg=$surface0,fg=$yellow]"
+    notification_format_no_notifications ""
+    notification_show_interval "10"
+
+    command_weather_command    "bash -c ~/.dotfiles/config/zellij/scripts/weather.sh"
+    command_weather_format    "{stdout}"
+    command_weather_interval  "300"
+    command_weather_rendermode "static"
+
+    command_weather_data_command    "bash -c \"cat ${XDG_CACHE_HOME:-$HOME/.cache}/zjstatus/weather_data\""
+    command_weather_data_format    "{stdout}"
+    command_weather_data_interval  "300"
+    command_weather_data_rendermode "static"
+
+    command_battery_command    "bash -c ~/.dotfiles/config/zellij/scripts/battery.sh"
+    command_battery_format    "{stdout}"
+    command_battery_interval  "60"
+    command_battery_rendermode "static"
+
+    command_battery_data_command    "bash -c \"cat ${XDG_CACHE_HOME:-$HOME/.cache}/zjstatus/battery_data\""
+    command_battery_data_format    "{stdout}"
+    command_battery_data_interval  "60"
+    command_battery_data_rendermode "static"
+
+    datetime          "{format}"
+    datetime_format   "%Y-%m-%d 󰅐 %I:%M"
+    datetime_timezone "America/New_York"
+    }
+  }
+}

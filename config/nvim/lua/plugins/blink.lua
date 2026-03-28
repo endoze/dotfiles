@@ -37,7 +37,7 @@ return {
           list = {
             selection = {
               -- When `true`, will automatically select the first item in the completion list
-              preselect = false,
+              preselect = true,
             },
           },
         },
