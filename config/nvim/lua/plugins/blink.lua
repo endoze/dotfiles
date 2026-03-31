@@ -6,6 +6,7 @@ return {
     "rafamadriz/friendly-snippets",
     {
       "L3MON4D3/LuaSnip",
+      build = "make install_jsregexp",
       dependencies = "rafamadriz/friendly-snippets",
       opts = { history = true, updateevents = "TextChanged,TextChangedI" },
       config = function(_, opts)

@@ -4,7 +4,7 @@
 # Build: nix build .#packages.x86_64-linux.dockerImage
 # Load: ./result | docker load
 # Run:  docker run -it dotfiles-nix:latest
-{ pkgs, lib, home-manager, userConfig, systemConfig, inputs, sourceRoot, ... }:
+{ pkgs, lib, userConfig, systemConfig, inputs, sourceRoot, ... }:
 
 let
   # User configuration
@@ -14,7 +14,7 @@ let
   gid = 100; # users group
 
   # Home-manager configuration for the container
-  homeManagerConfig = home-manager.lib.homeManagerConfiguration {
+  homeManagerConfig = inputs.home-manager.lib.homeManagerConfiguration {
     inherit pkgs;
     modules = [
       ../../home/default.nix

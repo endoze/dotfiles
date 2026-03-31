@@ -1,44 +1,34 @@
 return {
   "nvim-treesitter/nvim-treesitter",
   event = { "BufReadPost", "BufNewFile" },
-  cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
+  cmd = { "TSInstall" },
   build = ":TSUpdate",
-  opts = function()
-    local custom_config = {
-      highlight = {
-        enable = true,
-        use_languagetree = true,
-      },
+  config = function()
+    pcall(function()
+      dofile(vim.g.base46_cache .. "syntax")
+      dofile(vim.g.base46_cache .. "treesitter")
+    end)
 
-      indent = { enable = true },
-
-      ensure_installed = {
-        "c",
-        "blade",
-        "dockerfile",
-        "go",
-        "html",
-        "javascript",
-        "lua",
-        "php",
-        "ruby",
-        "rust",
-        "scss",
-        "sql",
-        "swift",
-        "typescript",
-        "vim",
-        "yaml",
-      },
-
-      auto_install = true,
-    }
-
-    local nvconf = require("nvchad.configs.treesitter")
-
-    return vim.tbl_deep_extend("force", nvconf, custom_config)
-  end,
-  config = function(_, opts)
-    require("nvim-treesitter").setup(opts)
+    require("nvim-treesitter").install({
+      "c",
+      "blade",
+      "dockerfile",
+      "go",
+      "html",
+      "javascript",
+      "lua",
+      "luadoc",
+      "php",
+      "printf",
+      "ruby",
+      "rust",
+      "scss",
+      "sql",
+      "swift",
+      "typescript",
+      "vim",
+      "vimdoc",
+      "yaml",
+    })
   end,
 }

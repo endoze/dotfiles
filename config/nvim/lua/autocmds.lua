@@ -35,6 +35,20 @@ autocmd("FileType", {
   end,
 })
 
+-- auto-install treesitter parsers when opening a new filetype
+autocmd("FileType", {
+  callback = function()
+    local ft = vim.bo.filetype
+    local lang = vim.treesitter.language.get_lang(ft)
+    if lang and not pcall(vim.treesitter.language.inspect, lang) then
+      local available = require("nvim-treesitter").get_available()
+      if vim.list_contains(available, lang) then
+        require("nvim-treesitter").install({ lang })
+      end
+    end
+  end,
+})
+
 -- prevent . from triggering treesitter indents in ruby files
 autocmd("FileType", {
   pattern = "ruby",
