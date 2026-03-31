@@ -10,10 +10,18 @@ return {
     end)
 
     require("nvim-treesitter").install({
-      "c",
       "blade",
+      "c",
+      "diff",
       "dockerfile",
+      "git_config",
+      "git_rebase",
+      "gitattributes",
+      "gitcommit",
+      "gitignore",
       "go",
+      "gotmpl",
+      "helm",
       "html",
       "javascript",
       "lua",
