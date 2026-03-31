@@ -53,16 +53,16 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, nix-darwin, mac-app-util, nur, hyprland, hyprpaper, nix-cachyos-kernel, sops-nix, monban, shirase, claude-desktop, matcha, ... }@inputs:
+  outputs = { self, ... }@inputs:
     let
       supportedSystems = [ "x86_64-linux" "aarch64-darwin" "x86_64-darwin" ];
 
-      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
+      forAllSystems = inputs.nixpkgs.lib.genAttrs supportedSystems;
 
-      nixpkgsFor = forAllSystems (system: import nixpkgs {
+      nixpkgsFor = forAllSystems (system: import inputs.nixpkgs {
         inherit system;
         config.allowUnfree = true;
-        overlays = [ nur.overlays.default ];
+        overlays = [ inputs.nur.overlays.default ];
       });
 
       # Shared user info (same for all non-docker machines)
@@ -97,17 +97,17 @@
           isDarwin = builtins.elem system [ "aarch64-darwin" "x86_64-darwin" ];
           osSpecificModules =
             if isDarwin then [
-              mac-app-util.homeManagerModules.default
+              inputs.mac-app-util.homeManagerModules.default
               ./modules/home/darwin.nix
             ] else [
               ./modules/home/linux.nix
             ];
         in
-        home-manager.lib.homeManagerConfiguration {
+        inputs.home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgsFor.${system};
           modules = osSpecificModules ++ [
-            sops-nix.homeManagerModules.sops
-            shirase.homeManagerModules.default
+            inputs.sops-nix.homeManagerModules.sops
+            inputs.shirase.homeManagerModules.default
             ./modules/home/default.nix
             ./modules/machines/${name}/home.nix
           ];
@@ -120,7 +120,7 @@
         };
 
       mkDarwinSystem = name:
-        nix-darwin.lib.darwinSystem {
+        inputs.nix-darwin.lib.darwinSystem {
           system = "aarch64-darwin";
           modules = [
             ./modules/system/darwin/default.nix
@@ -140,7 +140,7 @@
           dockerSystem = import ./modules/machines/docker/system.nix {
             pkgs = nixpkgsFor.x86_64-linux;
             userConfig = dockerUserConfig;
-            lib = nixpkgs.lib;
+            lib = inputs.nixpkgs.lib;
           };
         in
         dockerSystem.userSetupScript;
@@ -151,8 +151,8 @@
             pkgs = nixpkgsFor.x86_64-linux;
             userConfig = dockerUserConfig;
             systemConfig = mkSystemConfig "docker-nix";
-            inherit home-manager inputs;
-            lib = nixpkgs.lib;
+            inherit inputs;
+            lib = inputs.nixpkgs.lib;
             sourceRoot = self;
           };
         in
@@ -180,7 +180,7 @@
         "deadmau5" = mkHome { name = "deadmau5"; system = "x86_64-linux"; };
         "dosvec" = mkHome { name = "dosvec"; system = "x86_64-linux"; };
 
-        "docker" = home-manager.lib.homeManagerConfiguration {
+        "docker" = inputs.home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgsFor.x86_64-linux;
           modules = [
             ./modules/home/default.nix
@@ -201,18 +201,18 @@
       };
 
       nixosConfigurations = {
-        "deadmau5" = nixpkgs.lib.nixosSystem {
+        "deadmau5" = inputs.nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
-            monban.nixosModules.default
+            inputs.monban.nixosModules.default
             ./modules/system/nixos/default.nix
             ./modules/machines/deadmau5/system.nix
             ({ pkgs, ... }: {
-              nixpkgs.overlays = [ nix-cachyos-kernel.overlays.pinned ];
+              nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.pinned ];
             })
           ];
           specialArgs = {
-            inherit inputs hyprland;
+            inherit inputs;
             userConfig = mkUserConfig { system = "x86_64-linux"; };
             systemConfig = mkSystemConfig "deadmau5";
             sourceRoot = self;
@@ -220,10 +220,10 @@
         };
 
         # Headless home server with ZFS, k3s, NVIDIA GPU, and Coral TPU
-        "dosvec" = nixpkgs.lib.nixosSystem {
+        "dosvec" = inputs.nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
-            sops-nix.nixosModules.sops
+            inputs.sops-nix.nixosModules.sops
             ./modules/system/nixos/default.nix
             ./modules/machines/dosvec/system.nix
           ];
