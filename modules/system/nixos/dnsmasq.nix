@@ -18,7 +18,6 @@
   config = lib.mkIf config.services.dnsmasq-resolver.enable {
     services.resolved = {
       enable = true;
-      domains = [ "~${config.services.dnsmasq-resolver.domain}" ];
       settings = {
         Resolve = {
           DNS = "127.0.0.1";

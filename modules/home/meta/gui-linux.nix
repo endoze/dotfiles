@@ -9,7 +9,6 @@
     ../linux/gnome-keyring.nix
     ../linux/hyprland.nix
     ../linux/kitty.nix
-    ../linux/rofi.nix
     ../linux/shirase.nix
     ../linux/swayosd.nix
     ../linux/tokyonight-icon-theme.nix
@@ -28,7 +27,6 @@
     ghostty
     gimp
     libnotify
-    lyrebird
     lutris
     montserrat
     mpv
@@ -47,10 +45,20 @@
   gtk = {
     enable = true;
     gtk3.extraConfig.gtk-decoration-layout = "menu:";
+    gtk3.extraConfig.gtk-overlay-scrolling = false;
     gtk4.extraConfig.gtk-decoration-layout = "menu:";
+    gtk4.extraConfig.gtk-overlay-scrolling = false;
 
     gtk3.extraCss = ''
       scrollbar slider {
+        min-width: 10px;
+        min-height: 10px;
+      }
+    '';
+
+    gtk4.extraCss = ''
+      scrollbar > range > trough > slider,
+      scrollbar.overlay-indicator:not(.dragging):not(.hovering) > range > trough > slider {
         min-width: 10px;
         min-height: 10px;
       }

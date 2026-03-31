@@ -51,6 +51,11 @@
     matcha = {
       url = "github:floatpane/matcha";
     };
+    elephant.url = "github:abenz1267/elephant";
+    walker = {
+      url = "github:abenz1267/walker";
+      inputs.elephant.follows = "elephant";
+    };
   };
 
   outputs = { self, ... }@inputs:
@@ -179,6 +184,7 @@
         "workmac" = mkHome { name = "workmac"; system = "aarch64-darwin"; };
         "deadmau5" = mkHome { name = "deadmau5"; system = "x86_64-linux"; };
         "dosvec" = mkHome { name = "dosvec"; system = "x86_64-linux"; };
+        "archimedes" = mkHome { name = "archimedes"; system = "x86_64-linux"; };
 
         "docker" = inputs.home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgsFor.x86_64-linux;
@@ -215,6 +221,21 @@
             inherit inputs;
             userConfig = mkUserConfig { system = "x86_64-linux"; };
             systemConfig = mkSystemConfig "deadmau5";
+            sourceRoot = self;
+          };
+        };
+
+        "archimedes" = inputs.nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            inputs.sops-nix.nixosModules.sops
+            ./modules/system/nixos/default.nix
+            ./modules/machines/archimedes/system.nix
+          ];
+          specialArgs = {
+            inherit inputs;
+            userConfig = mkUserConfig { system = "x86_64-linux"; };
+            systemConfig = mkSystemConfig "archimedes";
             sourceRoot = self;
           };
         };

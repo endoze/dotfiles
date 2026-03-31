@@ -46,7 +46,7 @@
           "browser.urlbar.suggest.trending" = false;
           "browser.urlbar.suggest.engines" = false;
           "browser.urlbar.suggest.topsites" = false;
-          "browser.urlbar.suggest.history" = false;
+          "browser.urlbar.suggest.history" = true;
           "browser.urlbar.suggest.bookmark" = false;
           "browser.urlbar.suggest.openpage" = false;
           "browser.urlbar.suggest.quickactions" = false;
@@ -160,6 +160,12 @@
           "browser.tabs.groups.smart.enabled" = false;
           "browser.tabs.groups.smart.userEnabled" = false;
           "extensions.ml.enabled" = false;
+
+          # Scrollbar width (pixels) and disable hover expansion
+          "widget.non-native-theme.scrollbar.size.override" = 18;
+          "widget.non-native-theme.scrollbar.style" = 0;
+          "widget.gtk.overlay-scrollbars.enabled" = false;
+          "widget.non-native-theme.gtk.scrollbar.round-thumb" = true;
 
           # Disable password manager
           "signon.rememberSignons" = false; # Disable saving passwords

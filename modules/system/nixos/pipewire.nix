@@ -187,6 +187,26 @@
     wireplumber = {
       enable = true;
       package = pkgs.wireplumber;
+
+      extraConfig."80-default-devices" = {
+        "wireplumber.settings" = {
+          "default.audio.sink" = "main-virtual-sink";
+          "default.audio.source" = "main-virtual-source";
+        };
+      };
+
+      extraConfig."90-app-volumes" = {
+        "node.rules" = [
+          {
+            matches = [{ "application.process.binary" = ".Discord-wrapped"; }];
+            actions = {
+              update-props = {
+                "node.volume" = 1.5;
+              };
+            };
+          }
+        ];
+      };
     };
   };
 }

@@ -45,7 +45,7 @@ let
       mesa
       libGL
       libGLU
-      unixODBC
+      unixodbc
 
       # General utilities
       git

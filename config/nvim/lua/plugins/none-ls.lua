@@ -77,7 +77,7 @@ return {
       sources = sources,
 
       on_attach = function(client, bufnr)
-        if client.supports_method("textDocument/formatting") then
+        if client:supports_method("textDocument/formatting") then
           local augroup =
             vim.api.nvim_create_augroup("NullLsFormatting", { clear = false })
           vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
