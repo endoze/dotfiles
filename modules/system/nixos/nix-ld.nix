@@ -28,7 +28,7 @@
       glib
       libxml2
       libxslt
-      unixODBC
+      unixodbc
     ];
   };
 }

@@ -68,7 +68,6 @@
     extraGroups = [ "pipewire" "input" "kvm" ];
   };
 
-  virtualisation.waydroid.enable = true;
 
   # Use CachyOS LTS kernel (6.18) with BORE scheduler for better desktop/gaming performance
   # The "latest" (6.19) kernel is incompatible with nvidia open modules
@@ -136,6 +135,32 @@
     memoryPercent = 50;
     algorithm = "zstd";
     priority = 100;
+  };
+
+  # Mount Windows C: drive
+  fileSystems."/home/${userConfig.username}/Windows" = {
+    device = "/dev/disk/by-uuid/8226F72326F716BF";
+    fsType = "ntfs3";
+    options = [
+      "uid=1000"
+      "gid=100"
+      "umask=022"
+      "nofail"
+      "x-systemd.automount"
+    ];
+  };
+
+  # Mount 2TB Windows (NTFS) storage drive into home folder
+  fileSystems."/home/${userConfig.username}/Storage2" = {
+    device = "/dev/disk/by-uuid/EA200EE8200EBC17";
+    fsType = "ntfs3";
+    options = [
+      "uid=1000"
+      "gid=100"
+      "umask=022"
+      "nofail" # Boot succeeds even if drive is absent
+      "x-systemd.automount" # Mount on first access, not at boot
+    ];
   };
 
   # Periodic TRIM for NVMe longevity (lower overhead than continuous discard)

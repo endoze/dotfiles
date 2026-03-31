@@ -10,6 +10,8 @@
   imports = [
     ../../home/meta/cli.nix
     ../../home/meta/gui-linux.nix
+    ../../home/linux/walker.nix
+    inputs.walker.homeManagerModules.default
   ];
 
   home.packages = with pkgs; [

@@ -8,6 +8,8 @@ keys:
   - &deadmau5 age1gqesde5uj5jxycwl0uesknmnn70djpnjxqe3qdqmvshassf4yvjqsrdzj5
   # workmac
   - &workmac age1t8upu7yg2xd8p4yksvh6uml39asxjjr4tlcf0t3vuefrh9uq29hs7qp58l
+  # archimedes router
+  - &archimedes age1hr028x348p7k8m9f2wnnrmawqq2tfz78yh5h8cm23nag25k5jqxspcgl42
 
 creation_rules:
   # NixOS system secrets for dosvec
@@ -15,6 +17,12 @@ creation_rules:
     key_groups:
       - age:
           - *dosvec
+
+  # NixOS system secrets for archimedes
+  - path_regex: secrets/archimedes\.enc\.yaml$
+    key_groups:
+      - age:
+          - *archimedes
 
   # Shared secrets (accessible by all machines with age keys)
   - path_regex: secrets/shared\.enc\.yaml$

@@ -1,6 +1,6 @@
 function service
   if test (count $argv) -lt 1 -o (count $argv) -gt 2
-    echo "Usage: service start|stop|list|status <program-name>"
+    echo "Usage: service start|stop|restart|list|status <program-name>"
 
     return 1
   end
@@ -8,8 +8,8 @@ function service
   set action $argv[1]
   set program $argv[2]
 
-  if test $action != start -a $action != stop -a $action != status -a $action != list
-    echo "Error: First argument must be 'start|stop|status|list."
+  if test $action != start -a $action != stop -a $action != restart -a $action != status -a $action != list
+    echo "Error: First argument must be 'start|stop|restart|status|list."
 
     return 1
   end
@@ -18,6 +18,9 @@ function service
     switch $action
       case start stop
         launchctl $action org.nix-community.home.$program
+      case restart
+        launchctl stop org.nix-community.home.$program
+        launchctl start org.nix-community.home.$program
       case list
         launchctl list | awk 'NR==1 || /org.nix-community.home/'
       case status
@@ -29,6 +32,8 @@ function service
         systemctl --user start $program
       case stop
         systemctl --user stop $program
+      case restart
+        systemctl --user restart $program
       case list
         systemctl --user list-units --type=service
       case status
