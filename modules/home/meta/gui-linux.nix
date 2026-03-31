@@ -18,6 +18,7 @@
     ../linux/cliphist.nix
     ../linux/nm-applet.nix
     ../linux/blueman-applet.nix
+    ../linux/chromium.nix
     ../linux/hypridle.nix
   ];
 
