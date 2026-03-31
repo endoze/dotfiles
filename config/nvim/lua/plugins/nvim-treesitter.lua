@@ -18,6 +18,7 @@ return {
       "javascript",
       "lua",
       "luadoc",
+      "nix",
       "php",
       "printf",
       "ruby",
