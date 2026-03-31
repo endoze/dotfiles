@@ -7,6 +7,7 @@
     ../nixos/hyprland.nix
     ../nixos/steam.nix
     ../nixos/tailscale.nix
+    ../nixos/chromium.nix
     ../nixos/nix-ld.nix
   ];
 
