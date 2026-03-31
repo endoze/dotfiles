@@ -7,6 +7,12 @@
     ../../home/meta/cli.nix
   ];
 
+  services.gpg-agent = {
+    pinentry.package = lib.mkForce pkgs.pinentry-curses;
+    defaultCacheTtl = 86400;
+    maxCacheTtl = 86400;
+  };
+
   home.packages = with pkgs; [
     readline
     readline.dev

@@ -104,6 +104,7 @@
       443 # HTTPS
       6443 # k3s API (also in k3s.nix, but explicit here)
       6697 # Soju IRC
+      7000 # FRP
       8554 # Frigate RTSP
       8555 # Frigate WebRTC
       32400 # Plex
@@ -205,13 +206,6 @@
     "net.ipv4.conf.default.rp_filter" = 2; # Strict mode drops legitimate packets with br0/flannel/tailscale
   };
 
-  # Disable suspend/hibernate - server should always be on
-  systemd.sleep.extraConfig = ''
-    AllowSuspend=no
-    AllowHibernation=no
-    AllowSuspendThenHibernate=no
-    AllowHybridSleep=no
-  '';
 
   # Enable automatic upgrades (optional, can be disabled)
   # system.autoUpgrade = {
