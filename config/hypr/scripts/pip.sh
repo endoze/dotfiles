@@ -16,7 +16,14 @@ RESERVED_TOP=$(echo "$MONITOR_INFO" | jq -r '.reserved[1]')
 X=$((WIDTH - PIP_WIDTH - GAP))
 Y=$((RESERVED_TOP + GAP))
 
-hyprctl dispatch togglefloating
-hyprctl dispatch pin
-hyprctl dispatch resizeactive exact $PIP_WIDTH $PIP_HEIGHT
-hyprctl dispatch moveactive exact $X $Y
+FLOATING=$(hyprctl activewindow -j | jq -r '.floating')
+
+if [ "$FLOATING" = "true" ]; then
+  hyprctl dispatch pin
+  hyprctl dispatch togglefloating
+else
+  hyprctl dispatch togglefloating
+  hyprctl dispatch pin
+  hyprctl dispatch resizeactive exact $PIP_WIDTH $PIP_HEIGHT
+  hyprctl dispatch moveactive exact $X $Y
+fi

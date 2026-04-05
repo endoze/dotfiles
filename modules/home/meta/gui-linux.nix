@@ -41,6 +41,8 @@
     xdg-utils
     youtube-tui
     pear-desktop
+    quickemu
+    quickgui
   ];
 
   gtk = {

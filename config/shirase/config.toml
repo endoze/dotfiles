@@ -1,2 +1,28 @@
 [center]
 margin_top = 10
+margin_bottom = 10
+
+[animation]
+enabled = true
+duration = 250
+easing = "ease-out"
+
+[animation.popup-show]
+duration = 250
+easing = "ease-out"
+
+[animation.popup-dismiss]
+duration = 200
+easing = "ease-in"
+
+[animation.popup-timeout]
+duration = 300
+easing = "ease-in"
+
+[animation.center-toggle]
+duration = 250
+easing = "ease-out"
+
+[animation.center-row-dismiss]
+duration = 200
+easing = "ease-in"
