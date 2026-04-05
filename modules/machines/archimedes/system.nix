@@ -5,13 +5,14 @@
 # TODOs before going live (NIC not yet arrived):
 #   eth0/eth1/eth2/eth3 - replace with real PCIe NIC interface names
 #   192.168.1.x         - replace with dosvec's actual LAN IP (pihole)
-{ config, pkgs, lib, userConfig ? {}, systemConfig ? {}, sourceRoot, ... }:
+{ config, pkgs, lib, userConfig ? { }, systemConfig ? { }, sourceRoot, ... }:
 
 {
   imports = [
     ./hardware-configuration.nix
     ../../system/meta/cli-nixos.nix
     ../../system/nixos/tailscale.nix
+    ../../system/nixos/nix-ld.nix
   ];
 
   # ==========================================================================
@@ -50,7 +51,7 @@
   # IP forwarding and router-appropriate kernel params
   boot.kernel.sysctl = {
     "net.ipv4.ip_forward" = 1;
-    "net.ipv4.conf.all.rp_filter" = 2;      # loose — needed with multiple interfaces
+    "net.ipv4.conf.all.rp_filter" = 2; # loose — needed with multiple interfaces
     "net.ipv4.conf.default.rp_filter" = 2;
     "net.netfilter.nf_conntrack_max" = 131072;
     "net.core.default_qdisc" = "fq";
@@ -114,9 +115,9 @@
   # sshguard: whitelist management LAN and future router LAN
   services.sshguard.whitelist = lib.mkForce [
     "127.0.0.0/8"
-    "100.64.0.0/10"  # Tailscale
+    "100.64.0.0/10" # Tailscale
     "192.168.1.0/24" # management LAN (enp3s0)
-    "192.168.1.0/24"  # LAN
+    "192.168.1.0/24" # LAN
   ];
 
   # Disable desktop-oriented services pulled in by default.nix

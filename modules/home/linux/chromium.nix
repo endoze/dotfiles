@@ -3,7 +3,9 @@
 {
   programs.chromium = {
     enable = true;
-    package = pkgs.ungoogled-chromium;
+    package = pkgs.ungoogled-chromium.override {
+      enableWideVine = true;
+    };
 
     extensions = [
       {
@@ -18,27 +20,15 @@
     ];
   };
 
-  home.file.".local/share/applications/ungoogled-chromium.desktop".text = ''
+  home.file.".local/share/applications/apple-music.desktop".text = ''
     [Desktop Entry]
-    Name=Ungoogled Chromium
-    GenericName=Web Browser
-    Comment=Access the Internet
-    Exec=chromium %U
-    StartupNotify=true
+    Version=1.0
     Terminal=false
-    Icon=chromium
     Type=Application
-    Categories=Network;WebBrowser;
-    MimeType=x-scheme-handler/chromium;
+    Name=Apple Music
+    Exec=chromium --user-data-dir=${config.home.homeDirectory}/.config/chromium-apple-music --app=https://music.apple.com
+    Icon=chrome-blgdilankhbcpipclgpdndahbehalgkh-Default
     StartupWMClass=chromium-browser
-    Actions=new-window;new-private-window;
-
-    [Desktop Action new-window]
-    Name=New Window
-    Exec=chromium
-
-    [Desktop Action new-private-window]
-    Name=New Incognito Window
-    Exec=chromium --incognito
+    Categories=Audio;Music;
   '';
 }

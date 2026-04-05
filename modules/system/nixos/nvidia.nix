@@ -20,7 +20,10 @@
       extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
     };
 
-    nvidia-container-toolkit.enable = true;
+    nvidia-container-toolkit = {
+      enable = true;
+      mount-nvidia-executables = true;
+    };
 
     nvidia = {
       package = config.boot.kernelPackages.nvidiaPackages.stable;

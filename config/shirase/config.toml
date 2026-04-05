@@ -4,25 +4,34 @@ margin_bottom = 10
 
 [animation]
 enabled = true
-duration = 250
-easing = "ease-out"
+duration = 250 # default duration (ms) for any event without its own
 
+# Popup bubble appearing on screen.
+# transition: none | crossfade | slide-down | slide-up | slide-left | slide-right
 [animation.popup-show]
 duration = 250
-easing = "ease-out"
+transition = "slide-down"
 
+# Popup bubble dismissed by clicking X.
+# transition: none | crossfade | slide-down | slide-up | slide-left | slide-right
 [animation.popup-dismiss]
 duration = 200
-easing = "ease-in"
+transition = "slide-down"
 
+# Popup bubble removed after timeout expires.
+# transition: none | crossfade | slide-down | slide-up | slide-left | slide-right
 [animation.popup-timeout]
 duration = 300
-easing = "ease-in"
+transition = "slide-down"
 
+# Notification center panel sliding open/closed.
+# easing: ease-out (decelerates) | ease-in (accelerates)
 [animation.center-toggle]
 duration = 250
 easing = "ease-out"
 
+# Notification row dismissed inside the notification center.
+# transition: none | crossfade | slide-down | slide-up | slide-left | slide-right
 [animation.center-row-dismiss]
 duration = 200
-easing = "ease-in"
+transition = "slide-down"
