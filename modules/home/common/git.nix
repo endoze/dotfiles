@@ -65,7 +65,7 @@
         sla = "log --oneline --decorate --graph --all -20";
         slap = "log --oneline --decorate --graph --all";
         track = "!git branch --set-upstream-to=origin/$(git current)";
-        cleanlocal = "!zsh -c 'BRANCH=`git current`; if [[ ! $BRANCH =~ ^$(git head-branch)$ ]];then read \"?Are you sure you want to run while not in $(git head-branch) (you run the risk of deleting $(git head-branch))? (y/n) \" choice; if [[ ! $choice =~ ^[Yy]$ ]]; then echo Nothing done; exit 0; fi ; fi; for stale_branch (`git branch --merged $BRANCH | grep -v $BRANCH`) git branch -d $stale_branch'";
+        cleanlocal = "!git branch --format '%(refname:short) %(upstream:track)' | awk '$2 == \"[gone]\" { print $1 }' | xargs -r git branch -D";
         current = "symbolic-ref --short HEAD";
         upstream-name = "!git remote | egrep -o '(upstream|origin)' | tail -1";
         remote-head-branch = "!git rev-parse --abbrev-ref $(git upstream-name)/HEAD";
