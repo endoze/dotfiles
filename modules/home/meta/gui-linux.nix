@@ -12,7 +12,7 @@
     ../linux/shirase.nix
     ../linux/swayosd.nix
     ../linux/tokyonight-icon-theme.nix
-    ../linux/wallust.nix
+    ../linux/matugen.nix
     ../linux/eww.nix
     ../linux/hyprpaper.nix
     ../linux/cliphist.nix

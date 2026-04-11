@@ -2,7 +2,7 @@
 
 # Theme Switcher Script
 # Allows selecting a wallpaper from multiple directories,
-# generates theme colors using wallust, and reloads all relevant applications.
+# generates theme colors using matugen, and reloads all relevant applications.
 
 # Directories to search for wallpapers
 WALLPAPER_DIRS=(
@@ -59,10 +59,10 @@ reload_hyprpaper() {
     hyprctl hyprpaper wallpaper ", $wallpaper" &>/dev/null || true
 }
 
-# Generate theme colors using wallust (skip terminal sequences)
+# Generate theme colors using matugen
 generate_theme() {
     local wallpaper="$1"
-    wallust run --skip-sequences "$wallpaper"
+    matugen image "$wallpaper" --mode dark
 }
 
 # Format wallpapers for rofi with icon support
@@ -117,7 +117,7 @@ main() {
     # Run the rest in background so script exits quickly
     (
         # Generate theme colors (this is the slow part)
-        wallust run --skip-sequences --quiet "$selected" 2>/dev/null
+        matugen image "$selected" --mode dark --quiet 2>/dev/null
 
         # Reload apps in parallel
         wait

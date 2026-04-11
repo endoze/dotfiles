@@ -42,7 +42,7 @@ Multi-platform Nix Flakes configuration managing macOS (aarch64-darwin) and NixO
 │   ├── nvim/                  # Neovim configuration
 │   ├── rofi/                  # Application launcher config
 │   ├── tmux/                  # Tmux configuration
-│   ├── wallust/               # Color scheme generator config
+│   ├── matugen/               # Material You color scheme generator config
 │   ├── weechat/               # IRC client config
 │   └── ...                    # Other tool configs
 └── modules/                   # All Nix configuration modules

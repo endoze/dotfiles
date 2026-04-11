@@ -181,6 +181,7 @@
           darkreader
           privacy-badger
           decentraleyes
+          bitwarden
         ];
 
         # User chrome CSS customization (optional)
