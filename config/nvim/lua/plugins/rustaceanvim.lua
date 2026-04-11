@@ -1,6 +1,6 @@
 return {
   "mrcjkb/rustaceanvim",
-  version = "^6",
+  version = "^8",
   lazy = false,
   config = function()
     local ih = require("inlay-hints")
