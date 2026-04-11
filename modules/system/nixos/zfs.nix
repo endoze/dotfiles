@@ -18,6 +18,16 @@
     # Explicitly import the hermes pool during boot
     # Required since root is not on ZFS
     zfs.extraPools = [ "hermes" ];
+
+    # Disable ZFS block cloning (copy_file_range via zfs_clone_range).
+    # Loki's compactor issues copy_file_range() on /mnt/hermes/docker/loki/data;
+    # under concurrent snapshot/write load the clone path blocks in
+    # txg_wait_synced() long enough to trip the 122s hung-task watchdog and
+    # fail the pod's liveness probe. The pool predates the block-cloning
+    # feature and nothing here depends on it, so turn it off at module load.
+    extraModprobeConfig = ''
+      options zfs zfs_bclone_enabled=0
+    '';
   };
 
   services.zfs = {
