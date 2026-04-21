@@ -128,6 +128,7 @@
         inputs.nix-darwin.lib.darwinSystem {
           system = "aarch64-darwin";
           modules = [
+            inputs.sops-nix.darwinModules.sops
             ./modules/system/darwin/default.nix
             ./modules/machines/${name}/system.nix
           ];
@@ -211,6 +212,7 @@
           system = "x86_64-linux";
           modules = [
             inputs.monban.nixosModules.default
+            inputs.sops-nix.nixosModules.sops
             ./modules/system/nixos/default.nix
             ./modules/machines/deadmau5/system.nix
             ({ pkgs, ... }: {

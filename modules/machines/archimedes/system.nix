@@ -23,6 +23,9 @@
     defaultSopsFile = sourceRoot + "/secrets/archimedes.enc.yaml";
     secrets = {
       "tailscale-authkey" = { };
+      "attic-admin-key" = {
+        sopsFile = sourceRoot + "/secrets/shared.enc.yaml";
+      };
     };
   };
 

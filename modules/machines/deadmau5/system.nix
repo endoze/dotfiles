@@ -1,4 +1,4 @@
-{ config, pkgs, lib, userConfig ? { }, systemConfig ? { }, ... }:
+{ config, pkgs, lib, userConfig ? { }, systemConfig ? { }, sourceRoot, ... }:
 
 {
   imports = [
@@ -9,6 +9,12 @@
     ../../system/nixos/nvidia.nix
     ../../system/nixos/pipewire.nix
   ];
+
+  sops = {
+    age.keyFile = "/home/${userConfig.username}/.config/sops/age/keys.txt";
+    defaultSopsFile = sourceRoot + "/secrets/shared.enc.yaml";
+    secrets."attic-admin-key" = { };
+  };
 
   # Use nvidia driver for Xorg/Wayland
   services.xserver.videoDrivers = [ "nvidia" ];
@@ -72,6 +78,8 @@
   # Use CachyOS LTS kernel (6.18) with BORE scheduler for better desktop/gaming performance
   # The "latest" (6.19) kernel is incompatible with nvidia open modules
   boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-lts;
+
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
   boot.kernelParams = [
     "mitigations=off" # ~5-15% perf gain on Intel (disables Spectre/Meltdown mitigations)
