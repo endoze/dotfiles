@@ -10,6 +10,8 @@ keys:
   - &workmac age1t8upu7yg2xd8p4yksvh6uml39asxjjr4tlcf0t3vuefrh9uq29hs7qp58l
   # archimedes router
   - &archimedes age1hr028x348p7k8m9f2wnnrmawqq2tfz78yh5h8cm23nag25k5jqxspcgl42
+  # macbook
+  - &macbook age1h3mddykwfdnnnh2vrxulznwkqklvzxqhw7edvr0fq0klrumyj33s249yvg
 
 creation_rules:
   # NixOS system secrets for dosvec
@@ -30,3 +32,6 @@ creation_rules:
       - age:
           - *dosvec
           - *deadmau5
+          - *workmac
+          - *archimedes
+          - *macbook

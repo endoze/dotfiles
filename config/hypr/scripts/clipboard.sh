@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Usage: clipboard.sh copy|paste
+# Usage: clipboard.sh copy|paste|cut
 #
-# Defaults to sending XF86Copy/XF86Paste for universal app support.
+# Defaults to sending XF86Copy/XF86Paste/XF86Cut for universal app support.
 # Exceptions for apps that don't respond to XF86 keysyms on Wayland
-# and require Ctrl+C/V instead.
+# and require Ctrl+C/V/X instead.
 #
 # To find a window's class: hyprctl activewindow -j | jq '.class'
 
@@ -11,25 +11,23 @@ action="$1"
 active_class=$(hyprctl activewindow -j | jq -r '.class // empty')
 
 case "$active_class" in
-  # Firefox: XF86Copy/Paste support is X11-only, not Wayland
-  # Claude: Electron app, requires Ctrl+C/V
-  # Discord: Electron app, requires Ctrl+C/V
-  # Slack: Electron app, requires Ctrl+C/V
-  # r2modman: Electron app, requires Ctrl+C/V
-  # Steam: requires Ctrl+C/V
-  firefox|Claude|discord|Slack|r2modman|steam)
-    if [[ "$action" == "copy" ]]; then
-      hyprctl dispatch sendshortcut ctrl, c,
-    else
-      hyprctl dispatch sendshortcut ctrl, v,
-    fi
+  # firefox: XF86 keysyms are X11-only
+  # Claude, discord, Slack, r2modman: Electron apps
+  # steam: native app without XF86 support
+  # google-chrome, chromium: Chromium browser
+  firefox|Claude|discord|Slack|r2modman|steam|google-chrome|chromium)
+    case "$action" in
+      copy)  hyprctl dispatch sendshortcut ctrl, c, ;;
+      paste) hyprctl dispatch sendshortcut ctrl, v, ;;
+      cut)   hyprctl dispatch sendshortcut ctrl, x, ;;
+    esac
     ;;
-  # Default: use XF86Copy/Paste for all other apps (GTK, Qt, terminals, etc.)
+  # Default: use XF86 keysyms for all other apps (GTK, Qt, terminals, etc.)
   *)
-    if [[ "$action" == "copy" ]]; then
-      wtype -k XF86Copy
-    else
-      wtype -k XF86Paste
-    fi
+    case "$action" in
+      copy)  wtype -k XF86Copy ;;
+      paste) wtype -k XF86Paste ;;
+      cut)   wtype -k XF86Cut ;;
+    esac
     ;;
 esac

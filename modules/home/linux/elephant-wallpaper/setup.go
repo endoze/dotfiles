@@ -121,7 +121,7 @@ func Activate(_ bool, identifier, _ string, _ string, _ string, _ uint8, _ net.C
 		exec.Command("hyprctl", "hyprpaper", "unload", "all").Run()
 		exec.Command("hyprctl", "hyprpaper", "preload", identifier).Run()
 		exec.Command("hyprctl", "hyprpaper", "wallpaper", fmt.Sprintf(", %s", identifier)).Run()
-		exec.Command("wallust", "run", "--skip-sequences", "--quiet", identifier).Run()
+		exec.Command("matugen", "image", identifier, "--mode", "dark", "--quiet").Run()
 	}()
 }
 

@@ -1,5 +1,5 @@
 // One Dark palette
-$bg: rgba(50, 55, 65, 0.82);
+$bg: rgba(50, 55, 65, 1);
 $fg: #abb2bf;
 $fg-dim: #5c6370;
 $border: rgba(100, 110, 130, 0.5);
@@ -116,7 +116,6 @@ $red: #e06c75;
   transition: all 200ms ease;
 
   &:hover {
-    opacity: 0.7;
   }
 }
 
@@ -230,7 +229,7 @@ $red: #e06c75;
 }
 
 menu {
-  background-color: rgba(50, 55, 65, 0.95);
+  background-color: rgba(50, 55, 65, 1);
   color: $fg;
   border: 1px solid $border;
   border-radius: 8px;
@@ -266,7 +265,7 @@ menu separator {
 }
 
 tooltip {
-  background-color: rgba(50, 55, 65, 0.95);
+  background-color: rgba(50, 55, 65, 1);
   color: $fg;
   border: 1px solid $border;
   border-radius: 8px;
@@ -292,7 +291,6 @@ tooltip label {
   padding: 16px 24px;
 
   &.muted {
-    opacity: 0.6;
   }
 }
 

@@ -30,6 +30,9 @@
     # Secrets to decrypt (available at /run/secrets/<name>)
     secrets = {
       "tailscale-authkey" = { };
+      "attic-admin-key" = {
+        sopsFile = sourceRoot + "/secrets/shared.enc.yaml";
+      };
     };
   };
 

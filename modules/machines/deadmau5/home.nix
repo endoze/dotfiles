@@ -18,6 +18,7 @@
     file
     ollama-cuda
     vmtouch
+    rmpc
     slack
     (retroarch.withCores (cores: with cores; [
       genesis-plus-gx
@@ -94,6 +95,17 @@
       RestartSec = "5";
     };
     # No Install.WantedBy = disabled on boot
+  };
+
+  services.mpd = {
+    enable = true;
+    musicDirectory = "${config.home.homeDirectory}/Music";
+    extraConfig = ''
+      audio_output {
+        type "pipewire"
+        name "PipeWire Sound Server"
+      }
+    '';
   };
 
   xdg.userDirs = {

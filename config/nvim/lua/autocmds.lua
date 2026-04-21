@@ -12,8 +12,11 @@ autocmd({ "UIEnter", "BufReadPost", "BufNewFile" }, {
     end
 
     if file ~= "" and buftype ~= "nofile" and vim.g.ui_entered then
-      vim.api.nvim_exec_autocmds("User", { pattern = "FilePost", modeline = false })
-      vim.api.nvim_del_augroup_by_name "NvFilePost"
+      vim.api.nvim_exec_autocmds(
+        "User",
+        { pattern = "FilePost", modeline = false }
+      )
+      vim.api.nvim_del_augroup_by_name("NvFilePost")
 
       vim.schedule(function()
         vim.api.nvim_exec_autocmds("FileType", {})
@@ -41,7 +44,7 @@ autocmd("FileType", {
     local ft = vim.bo.filetype
     local lang = vim.treesitter.language.get_lang(ft)
     if lang and not pcall(vim.treesitter.language.inspect, lang) then
-      local available = require("nvim-treesitter").get_available()
+      local available = require("nvim-treesitter.config").get_available()
       if vim.list_contains(available, lang) then
         require("nvim-treesitter").install({ lang })
       end

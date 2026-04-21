@@ -53,7 +53,7 @@
 
       remotes = {
         origin = {
-          auto-track-bookmarks = "all";
+          auto-track-bookmarks = "glob:*";
         };
       };
     };

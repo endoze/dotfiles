@@ -2,6 +2,7 @@
   # Homepage
   HomepageLocation = "https://start.duckduckgo.com";
   HomepageIsNewTabPage = false;
+  NewTabPageLocation = "https://start.duckduckgo.com";
 
   # Restore tabs from last session on launch
   RestoreOnStartup = 1;
@@ -16,4 +17,9 @@
   PasswordManagerEnabled = false;
   AutofillAddressEnabled = false;
   AutofillCreditCardEnabled = false;
+
+  # Allow chromium-web-store extension to be installed
+  ExtensionInstallAllowlist = [
+    "ocaahdebbfolfmndjeplogmgcagdmblk"
+  ];
 }

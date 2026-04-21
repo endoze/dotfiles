@@ -19,6 +19,7 @@
     gvfs
     kdePackages.gwenview
     inputs.hyprpaper.packages.${pkgs.stdenv.hostPlatform.system}.hyprpaper
+    mpvpaper
     hyprshot
     kitty
     nautilus
