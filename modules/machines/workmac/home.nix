@@ -11,7 +11,6 @@
     kubernetes-helm
     lazydocker
     playwright-test
-    postgresql
     shellcheck
   ];
 
