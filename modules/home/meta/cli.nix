@@ -39,8 +39,11 @@
     htop
     imagemagick
     jq
+  ] ++ lib.optionals (!config.programs.postgres.enable) [
     postgresql
+  ] ++ lib.optionals (!config.programs.mysql.enable) [
     mariadb.client
+  ] ++ [
     sqlite
     k9s
     kubectl

@@ -7,7 +7,7 @@ function nix-system
     set rebuild_cmd "darwin-rebuild"
     # Map hostname to flake configuration
     switch $hostname_val
-      case macbook-m3
+      case macbook
         set flake_config "macbook"
       case workmac
         set flake_config "workmac"
