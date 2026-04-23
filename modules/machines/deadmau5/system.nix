@@ -9,6 +9,7 @@
     ../../system/nixos/nvidia.nix
     ../../system/nixos/pipewire.nix
     ../../system/nixos/attic-cache.nix
+    ../../system/nixos/plymouth.nix
   ];
 
   sops = {
