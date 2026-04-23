@@ -13,6 +13,7 @@
     ../../system/meta/cli-nixos.nix
     ../../system/nixos/tailscale.nix
     ../../system/nixos/nix-ld.nix
+    ../../system/nixos/attic-cache.nix
   ];
 
   # ==========================================================================

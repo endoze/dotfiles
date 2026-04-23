@@ -8,6 +8,7 @@
     # Machine-specific: nvidia GPU and custom pipewire config
     ../../system/nixos/nvidia.nix
     ../../system/nixos/pipewire.nix
+    ../../system/nixos/attic-cache.nix
   ];
 
   sops = {
