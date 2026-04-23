@@ -15,6 +15,7 @@
     ../../system/nixos/tailscale.nix # VPN as system service
     ../../system/nixos/r8125.nix # Realtek R8125 2.5GbE driver
     ../../system/nixos/nix-ld.nix # Dynamic library shim for unpatched binaries
+    ../../system/nixos/attic-cache.nix # cache.kahdu.org/main substituter + attic login
   ];
 
   # ==========================================================================
