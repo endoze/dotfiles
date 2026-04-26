@@ -7,6 +7,6 @@ alias dockercleanc 'printf "\n>>> Deleting stopped containers\n\n" && docker ps 
 alias dockercleani 'printf "\n>>> Deleting untagged images\n\n" && docker images -qf dangling=true | xargs docker rmi'
 alias dockercleanv 'printf "\n>>> Deleting dangling volumes\n\n" && docker volume ls -qf dangling=true | xargs docker volume rm'
 alias dockerkillall 'docker ps -q | xargs docker kill'
-alias dps "docker ps"
+alias dps 'docker ps --format "table {{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}"'
 alias drun 'docker run -i -t --rm'
 alias ds "docker start"
