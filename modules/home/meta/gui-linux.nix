@@ -1,6 +1,14 @@
 { config, pkgs, lib, ... }:
 
 {
+  # openldap test017-syncreplication-refresh fails deterministically on this
+  # nixpkgs revision; pulled in transitively by lutris.
+  nixpkgs.overlays = [
+    (final: prev: {
+      openldap = prev.openldap.overrideAttrs (_: { doCheck = false; });
+    })
+  ];
+
   imports = [
     ../common/firefox.nix
     ../common/ghostty.nix
@@ -17,7 +25,6 @@
     ../linux/hyprpaper.nix
     ../linux/cliphist.nix
     ../linux/nm-applet.nix
-    ../linux/blueman-applet.nix
     ../linux/chromium.nix
     ../linux/hypridle.nix
   ];

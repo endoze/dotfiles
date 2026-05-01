@@ -77,9 +77,8 @@
   };
 
 
-  # Use CachyOS LTS kernel (6.18) with BORE scheduler for better desktop/gaming performance
-  # The "latest" (6.19) kernel is incompatible with nvidia open modules
-  boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-lts;
+  # CachyOS latest kernel (7.0) with BORE scheduler for better desktop/gaming performance
+  boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest;
 
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 

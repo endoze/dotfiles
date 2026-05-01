@@ -1,9 +1,8 @@
 { config, pkgs, lib, inputs, userConfig, ... }:
 
 {
-  nixpkgs.config.permittedInsecurePackages = [
-    "ventoy-gtk3-1.1.10"
-  ];
+  nixpkgs.config.allowInsecurePredicate = pkg:
+    builtins.elem (lib.getName pkg) [ "ventoy-gtk3" ];
 
   home.stateVersion = "24.05";
 
@@ -26,7 +25,9 @@
       beetle-psx-hw
     ]))
     ventoy-full-gtk
-    inputs.claude-desktop.packages.${pkgs.stdenv.hostPlatform.system}.claude-desktop
+    (inputs.claude-desktop.packages.${pkgs.stdenv.hostPlatform.system}.claude-desktop.override {
+      nodePackages = { inherit (pkgs) asar; };
+    })
   ];
 
   # Preload application libraries into memory for faster startup

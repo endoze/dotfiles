@@ -4,6 +4,7 @@
   programs.firefox = {
     enable = true;
     package = pkgs.firefox;
+    configPath = "${config.xdg.configHome}/mozilla/firefox";
 
     # Configure Firefox profiles
     profiles = {
@@ -144,6 +145,7 @@
           "extensions.autoDisableScopes" = 0; # Don't auto-disable any extensions
 
           # Disable AI features
+          "browser.ai.control.default" = "blocked"; # Global AI kill switch (Firefox 148+)
           "browser.ml.enable" = false;
           "browser.ml.chat.enabled" = false;
           "browser.ml.chat.sidebar" = false;
@@ -211,6 +213,10 @@
         };
         "extensions.formautofill.creditCards.enabled" = {
           Value = false;
+          Status = "locked";
+        };
+        "browser.ai.control.default" = {
+          Value = "blocked";
           Status = "locked";
         };
         "browser.ml.enable" = {

@@ -30,6 +30,8 @@
     audio.enable = true;
     pulse.enable = true;
 
+    extraLadspaPackages = [ pkgs.rnnoise-plugin ];
+
     extraConfig.pipewire."08-default-rates" = {
       "context.properties" = {
         "default.clock.rate" = 48000;
@@ -157,7 +159,7 @@
                 {
                   "type" = "ladspa";
                   "name" = "rnnoise";
-                  "plugin" = "${pkgs.rnnoise-plugin}/lib/ladspa/librnnoise_ladspa.so";
+                  "plugin" = "librnnoise_ladspa";
                   "label" = "noise_suppressor_stereo";
                   "control" = {
                     # 90% caused onset clipping (first syllable cut off);
