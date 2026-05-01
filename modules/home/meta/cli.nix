@@ -29,6 +29,7 @@
   home.packages = with pkgs; [
     age
     btop
+    clickhouse
     chromedriver
     docker
     docker-buildx
