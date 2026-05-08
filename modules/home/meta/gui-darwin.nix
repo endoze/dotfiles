@@ -4,7 +4,6 @@
   imports = [
     ../common/firefox.nix
     ../common/ghostty.nix
-    ../common/databases.nix
     ../darwin/karabiner.nix
   ];
 

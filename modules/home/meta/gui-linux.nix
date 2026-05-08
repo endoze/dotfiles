@@ -12,7 +12,6 @@
   imports = [
     ../common/firefox.nix
     ../common/ghostty.nix
-    ../common/databases.nix
     ../linux/dconf.nix
     ../linux/gnome-keyring.nix
     ../linux/hyprland.nix

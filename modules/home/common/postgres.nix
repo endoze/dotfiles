@@ -26,46 +26,52 @@ in
     };
   };
 
-  config = lib.mkIf config.programs.postgres.enable {
-    home.packages = [ postgresqlWithExtensions ];
+  config = lib.mkMerge [
+    (lib.mkIf config.programs.postgres.enable {
+      home.packages = [ postgresqlWithExtensions ];
 
-    launchd.agents.postgres = lib.mkIf isDarwin {
-      enable = true;
-      config = {
-        ProgramArguments = [
-          "${postgresBin}/postgres"
-          "-D"
-          postgresDataDir
-        ];
-        RunAtLoad = config.programs.postgres.runAtLoad;
-        KeepAlive = {
-          Crashed = true;
-          SuccessfulExit = false;
+      launchd.agents.postgres = lib.mkIf isDarwin {
+        enable = true;
+        config = {
+          ProgramArguments = [
+            "${postgresBin}/postgres"
+            "-D"
+            postgresDataDir
+          ];
+          RunAtLoad = config.programs.postgres.runAtLoad;
+          KeepAlive = {
+            Crashed = true;
+            SuccessfulExit = false;
+          };
         };
       };
-    };
 
-    systemd.user.services.postgres = lib.mkIf isLinux {
-      Unit = {
-        Description = "PostgreSQL Server";
-        After = [ "network.target" ];
+      systemd.user.services.postgres = lib.mkIf isLinux {
+        Unit = {
+          Description = "PostgreSQL Server";
+          After = [ "network.target" ];
+        };
+        Service = {
+          Type = "notify";
+          ExecStart = "${postgresBin}/postgres -D ${postgresDataDir}";
+          Restart = "on-failure";
+          RestartSec = "5s";
+        };
+        Install = {
+          WantedBy = if config.programs.postgres.runAtLoad then [ "default.target" ] else [ ];
+        };
       };
-      Service = {
-        Type = "notify";
-        ExecStart = "${postgresBin}/postgres -D ${postgresDataDir}";
-        Restart = "on-failure";
-        RestartSec = "5s";
-      };
-      Install = {
-        WantedBy = if config.programs.postgres.runAtLoad then [ "default.target" ] else [ ];
-      };
-    };
 
-    home.activation.initPostgresDataDir = lib.hm.dag.entryAfter [ "writeBoundry" ] ''
-      if [[ ! -d "${postgresDataDir}" ]]; then
-        mkdir -p ${postgresDataDir}
-        ${postgresBin}/initdb -D ${postgresDataDir}
-      fi
-    '';
-  };
+      home.activation.initPostgresDataDir = lib.hm.dag.entryAfter [ "writeBoundry" ] ''
+        if [[ ! -d "${postgresDataDir}" ]]; then
+          mkdir -p ${postgresDataDir}
+          ${postgresBin}/initdb -D ${postgresDataDir}
+        fi
+      '';
+    })
+
+    (lib.mkIf (!config.programs.postgres.enable) {
+      home.packages = [ pkgs.postgresql ];
+    })
+  ];
 }
