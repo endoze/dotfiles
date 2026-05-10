@@ -17,9 +17,9 @@ case "$active_class" in
   # google-chrome, chromium: Chromium browser
   firefox|Claude|discord|Slack|r2modman|steam|google-chrome|chromium)
     case "$action" in
-      copy)  hyprctl dispatch sendshortcut ctrl, c, ;;
-      paste) hyprctl dispatch sendshortcut ctrl, v, ;;
-      cut)   hyprctl dispatch sendshortcut ctrl, x, ;;
+      copy)  hyprctl dispatch sendshortcut "ctrl, c, activewindow" ;;
+      paste) hyprctl dispatch sendshortcut "ctrl, v, activewindow" ;;
+      cut)   hyprctl dispatch sendshortcut "ctrl, x, activewindow" ;;
     esac
     ;;
   # Default: use XF86 keysyms for all other apps (GTK, Qt, terminals, etc.)
