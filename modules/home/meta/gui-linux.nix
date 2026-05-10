@@ -26,6 +26,7 @@
     ../linux/nm-applet.nix
     ../linux/chromium.nix
     ../linux/hypridle.nix
+    ../linux/fontconfig.nix
   ];
 
   home.packages = with pkgs; [
