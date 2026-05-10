@@ -4,7 +4,9 @@
   programs.firefox = {
     enable = true;
     package = pkgs.firefox;
-    configPath = "${config.xdg.configHome}/mozilla/firefox";
+    configPath = if pkgs.stdenv.isDarwin
+      then "${config.home.homeDirectory}/Library/Application Support/Firefox"
+      else "${config.xdg.configHome}/mozilla/firefox";
 
     # Configure Firefox profiles
     profiles = {

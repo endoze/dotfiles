@@ -49,7 +49,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     matcha = {
-      url = "github:floatpane/matcha";
+      url = "github:endoze/matcha/fix/scard-cgo-enabled";
     };
     elephant.url = "github:abenz1267/elephant";
     walker = {
@@ -67,7 +67,12 @@
       nixpkgsFor = forAllSystems (system: import inputs.nixpkgs {
         inherit system;
         config.allowUnfree = true;
-        overlays = [ inputs.nur.overlays.default ];
+        overlays = [
+          inputs.nur.overlays.default
+          (final: prev: {
+            direnv = prev.direnv.overrideAttrs { doCheck = false; };
+          })
+        ];
       });
 
       # Shared user info (same for all non-docker machines)

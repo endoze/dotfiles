@@ -10,6 +10,7 @@
   home.packages = with pkgs; [
     nerd-fonts.inconsolata-go
     nerd-fonts.jetbrains-mono
+    monaspace
     caffeine
   ];
 }

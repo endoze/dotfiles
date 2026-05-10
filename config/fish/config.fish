@@ -19,5 +19,4 @@ if status is-interactive && command -v starship >/dev/null 2>&1
   printf "\e[?1042l"
 
   starship init fish | source
-  direnv hook fish | source
 end

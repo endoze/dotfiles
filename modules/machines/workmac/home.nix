@@ -7,6 +7,7 @@
   ];
 
   home.packages = with pkgs; [
+    actionlint
     aria2
     kubernetes-helm
     lazydocker

@@ -21,7 +21,6 @@
     ../common/starship.nix
     ../common/tmux.nix
     ../common/weechat.nix
-    ../common/worktrunk.nix
     ../common/zellij.nix
     ../common/hn-tui.nix
     ../common/matcha.nix # disabled: upstream build broken (scard CGO mismatch)
@@ -30,6 +29,7 @@
   home.packages = with pkgs; [
     age
     btop
+    clickhouse
     chromedriver
     docker
     docker-buildx
@@ -55,6 +55,7 @@
     unrar
     unzip
     websocat
+    worktrunk
     yq
     zip
     zsh
