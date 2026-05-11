@@ -1,3 +1,6 @@
 function is_linux --description "Check if running on Linux"
-  test (uname -s) = "Linux"
+  if not set -q __os_kind
+    set -g __os_kind (uname -s)
+  end
+  test "$__os_kind" = Linux
 end

@@ -5,21 +5,31 @@ if status is-interactive && command -v direnv >/dev/null 2>&1
   function __direnv_export_eval --on-event fish_prompt
       set -l prev_status $status
       if set -q __direnv_async_file
-          if test -f $__direnv_async_file
+          if not test -f $__direnv_async_file
+              # File vanished; reset.
+              set -e __direnv_async_file __direnv_async_pid
+          else if string match -q '# __direnv_done_marker' <$__direnv_async_file
+              # Done. Sentinel is a harmless comment when sourced.
               source $__direnv_async_file 2>/dev/null
+              rm -f $__direnv_async_file
+              set -e __direnv_async_file __direnv_async_pid
+          else if set -q __direnv_async_pid
+              and kill -0 $__direnv_async_pid 2>/dev/null
+              # Background still running; recheck next prompt.
+              return $prev_status
+          else
+              # Background gone without sentinel (killed/crashed); recover.
+              rm -f $__direnv_async_file
+              set -e __direnv_async_file __direnv_async_pid
           end
-          rm -f $__direnv_async_file
-          set -e __direnv_async_file
       end
       set -g __direnv_async_file (mktemp /tmp/direnv.XXXXXXXXXX)
-      command direnv export fish >$__direnv_async_file 2>/dev/null </dev/null &
-      disown
+      begin
+          command direnv export fish 2>/dev/null </dev/null
+          echo '# __direnv_done_marker'
+      end >$__direnv_async_file &
+      set -g __direnv_async_pid $last_pid
+      disown 2>/dev/null
       return $prev_status
-  end
-
-  function __direnv_cd_hook --on-variable PWD
-      set -g __direnv_async_file (mktemp /tmp/direnv.XXXXXXXXXX)
-      command direnv export fish >$__direnv_async_file 2>/dev/null </dev/null &
-      disown
   end
 end
