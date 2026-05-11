@@ -17,6 +17,13 @@ in
   environment.systemPackages = [ pkgs.attic-client ];
 
   sops.templates."nix-netrc" = {
+    # User-readable so user-context nix commands (nix path-info --store
+    # https://..., nix copy --from, etc.) can authenticate. nix-daemon runs
+    # as root and can still read it regardless of owner. The attic admin key
+    # is already exposed to the user via ~/.config/attic/config.toml below,
+    # so this is no widening of trust.
+    owner = userConfig.username;
+    mode = "0400";
     content = ''
       machine ${cacheHost}
       login attic
@@ -42,10 +49,6 @@ in
     after = [ "network-online.target" "sops-nix.service" ];
     wants = [ "network-online.target" "sops-nix.service" ];
     wantedBy = [ "multi-user.target" ];
-    restartTriggers = [
-      config.sops.secrets."attic-admin-key".sopsFile
-      config.sops.templates."attic-config.toml".content
-    ];
     serviceConfig = {
       Type = "exec";
       ExecStart = "${pkgs.attic-client}/bin/attic watch-store --jobs 2 ${serverName}:main";
