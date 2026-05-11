@@ -3,9 +3,10 @@
 let
   substituterUrl = "https://cache.kahdu.org/main";
   publicKey = "main:ch1Il2WBscgvKTDg00wIqQCT/wSyqlA7lD0n2m2VkOg=";
-  # Must match sops.templates."nix-netrc".path in
-  # modules/system/darwin/attic-cache.nix.
-  netrcPath = "/etc/nix/netrc";
+  # Must match sops.templates."user-nix-netrc".path in
+  # modules/system/darwin/attic-cache.nix. This is the user-readable copy;
+  # the daemon uses a separate root-owned copy at /etc/nix/netrc.
+  netrcPath = "${config.home.homeDirectory}/.config/nix/netrc";
 in
 {
   # Drops ~/.config/nix/nix.conf to add the kahdu Attic cache as a substituter.

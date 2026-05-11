@@ -19,6 +19,7 @@ in
   sops.templates."nix-netrc" = {
     content = ''
       machine ${cacheHost}
+      login attic
       password ${config.sops.placeholder."attic-admin-key"}
     '';
   };
