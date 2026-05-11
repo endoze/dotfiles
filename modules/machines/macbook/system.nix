@@ -4,6 +4,7 @@
   imports = [
     ../../system/meta/cli-darwin.nix
     ../../system/meta/gui-darwin.nix
+    ../../system/darwin/attic-cache.nix
   ];
 
   sops = {

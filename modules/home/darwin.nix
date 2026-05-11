@@ -1,6 +1,10 @@
 { config, pkgs, lib, ... }:
 
 {
+  imports = [
+    ./darwin/attic-cache.nix
+  ];
+
   nixpkgs.config = {
     allowUnsupportedSystem = true;
     allowUnfree = true;
