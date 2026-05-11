@@ -35,4 +35,24 @@ in
       token = "${config.sops.placeholder."attic-admin-key"}"
     '';
   };
+
+  systemd.services.attic-watch-store = {
+    description = "Attic - watch /nix/store and push new paths to ${serverName}:main";
+    after = [ "network-online.target" "sops-nix.service" ];
+    wants = [ "network-online.target" "sops-nix.service" ];
+    wantedBy = [ "multi-user.target" ];
+    restartTriggers = [
+      config.sops.secrets."attic-admin-key".sopsFile
+      config.sops.templates."attic-config.toml".content
+    ];
+    serviceConfig = {
+      Type = "exec";
+      ExecStart = "${pkgs.attic-client}/bin/attic watch-store --jobs 2 ${serverName}:main";
+      Restart = "on-failure";
+      RestartSec = "10s";
+      User = userConfig.username;
+      Group = "users";
+      NoNewPrivileges = true;
+    };
+  };
 }
