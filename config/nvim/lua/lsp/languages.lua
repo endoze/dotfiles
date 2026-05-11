@@ -14,6 +14,7 @@ return {
   "lua_ls",
   "marksman",
   "nil_ls",
+  "ocamllsp",
   "roslyn_ls",
   -- "pylsp",
   "ruby_lsp",

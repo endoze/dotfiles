@@ -19,6 +19,8 @@ return {
         },
       }),
 
+      b.formatting.ocamlformat,
+
       b.formatting.stylua,
       b.diagnostics.selene.with({
         cwd = function(_)
