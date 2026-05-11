@@ -148,6 +148,12 @@ in
   # writer briefly closes between bursts - without this, the daemon would
   # exit after every quiet period and KeepAlive would flap. HOME=/var/root
   # makes attic find /var/root/.config/attic/config.toml for credentials.
+  #
+  # Output is captured to /var/log/attic-push.log, the conventional macOS
+  # location for daemon logs. newsyslog (Apple's built-in rotator, run hourly
+  # by /System/Library/LaunchDaemons/com.apple.newsyslog.plist) trims and
+  # gzips it per the rule installed below. Tail with:
+  #   tail -f /var/log/attic-push.log
   launchd.daemons.attic-push-stdin = {
     serviceConfig = {
       Label = "org.kahdu.attic-push-stdin";
@@ -160,8 +166,19 @@ in
       };
       KeepAlive = true;
       RunAtLoad = true;
-      StandardOutPath = "/tmp/attic-push.log";
-      StandardErrorPath = "/tmp/attic-push.log";
+      StandardOutPath = "/var/log/attic-push.log";
+      StandardErrorPath = "/var/log/attic-push.log";
     };
   };
+
+  # newsyslog rule: rotate at 1 MB, keep 5 gzip-compressed archives.
+  # Format: logfilename [owner:group] mode count size when flags
+  #   size  = KB threshold (1024 = 1 MB)
+  #   when  = '*' means size-triggered only (no time-based rotation)
+  #   flags = Z (gzip rotated logs), N (don't signal any process post-rotate;
+  #           launchd reopens the file on next write because we don't hold
+  #           it open across rotations - simple StandardOutPath redirect)
+  environment.etc."newsyslog.d/attic-push.conf".text = ''
+    /var/log/attic-push.log    root:wheel    644  5    1024  *     ZN
+  '';
 }
