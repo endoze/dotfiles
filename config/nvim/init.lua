@@ -83,6 +83,7 @@ pcall(dofile, vim.g.base46_cache .. "statusline")
 
 require("options")
 require("autocmds")
+require("lsp.commands")
 
 vim.schedule(function()
   local keymap_table = require("mappings")

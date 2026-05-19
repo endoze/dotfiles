@@ -49,7 +49,7 @@ M.on_attach = function(_, bufnr)
   end, opts "List workspace folders")
 
   map("n", "<leader>D", vim.lsp.buf.type_definition, opts "Go to type definition")
-  map("n", "<leader>ra", require "nvchad.lsp.renamer", opts "NvRenamer")
+  map("n", "<leader>ra", vim.lsp.buf.rename, opts "NvRenamer")
 end
 
 M.diagnostic_config = function()

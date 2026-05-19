@@ -1,8 +1,8 @@
 local M = {}
 
 function M.setup()
-  local base_capabilities = require("nvchad.configs.lspconfig").capabilities
   local helpers = require("lsp.helpers")
+  local base_capabilities = helpers.capabilities
 
   local roslyn_dll_handle = io.popen(
     "readlink ~/.nix-profile/bin/Microsoft.CodeAnalysis.LanguageServer 2>/dev/null | xargs dirname 2>/dev/null"

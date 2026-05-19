@@ -18,29 +18,6 @@ local options = {
         "cursor",
         "cwd",
       },
-      modules = {
-        lsp = function()
-          local stbufnr = require("nvchad.stl.utils").stbufnr
-
-          if rawget(vim, "lsp") then
-            for _, client in ipairs(vim.lsp.get_clients()) do
-              if
-                client.attached_buffers[stbufnr()]
-                and client.name ~= "null-ls"
-                and client.name ~= "copilot"
-              then
-                return "%#St_Lsp#"
-                  .. (
-                    (vim.o.columns > 100 and "   LSP ~ " .. client.name .. " ")
-                    or "   LSP "
-                  )
-              end
-            end
-          end
-
-          return ""
-        end,
-      },
     },
     tabufline = {
       enabled = true,
@@ -77,49 +54,6 @@ local options = {
           base0E = "#859900",
         },
       },
-    },
-  },
-  nvdash = {
-    load_on_startup = false, --  not vim.g.vscode,
-    header = {
-      " ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠿⠿⠿⠿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿ ",
-      " ⣿⣿⣿⣿⣿⣿⣿⣿⠟⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿ ",
-      " ⣿⣿⣿⣿⣿⣿⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢺⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿ ",
-      " ⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠆⠜⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿ ",
-      " ⣿⣿⣿⣿⠿⠿⠛⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⣿⣿⣿⣿⣿ ",
-      " ⣿⣿⡏⠁⠀⠀⠀⠀⠀⣀⣠⣤⣤⣶⣶⣶⣶⣶⣦⣤⡄⠀⠀⠀⠀⢀⣴⣿⣿⣿⣿⣿ ",
-      " ⣿⣿⣷⣄⠀⠀⠀⢠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢿⡧⠇⢀⣤⣶⣿⣿⣿⣿⣿⣿⣿ ",
-      " ⣿⣿⣿⣿⣿⣿⣾⣮⣭⣿⡻⣽⣒⠀⣤⣜⣭⠐⢐⣒⠢⢰⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿ ",
-      " ⣿⣿⣿⣿⣿⣿⣿⣏⣿⣿⣿⣿⣿⣿⡟⣾⣿⠂⢈⢿⣷⣞⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿ ",
-      " ⣿⣿⣿⣿⣿⣿⣿⣿⣽⣿⣿⣷⣶⣾⡿⠿⣿⠗⠈⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿ ",
-      " ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠻⠋⠉⠑⠀⠀⢘⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿ ",
-      " ⣿⣿⣿⣿⣿⣿⣿⡿⠟⢹⣿⣿⡇⢀⣶⣶⠴⠶⠀⠀⢽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿ ",
-      " ⣿⣿⣿⣿⣿⣿⡿⠀⠀⢸⣿⣿⠀⠀⠣⠀⠀⠀⠀⠀⡟⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿ ",
-      " ⣿⣿⣿⡿⠟⠋⠀⠀⠀⠀⠹⣿⣧⣀⠀⠀⠀⠀⡀⣴⠁⢘⡙⢿⣿⣿⣿⣿⣿⣿⣿⣿ ",
-      " ⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⢿⠗⠂⠄⠀⣴⡟⠀⠀⡃⠀⠉⠉⠟⡿⣿⣿⣿⣿ ",
-      " ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢷⠾⠛⠂⢹⠀⠀⠀⢡⠀⠀⠀⠀⠀⠙⠛⠿⢿ ",
-    },
-
-    buttons = {
-      {
-        txt = "  Find File",
-        keys = "<C-t>",
-        cmd = ":lua require('telescope.builtin').find_files({ find_command = { 'rg', '--files' } })",
-      },
-      {
-        txt = "󱔗  Recent Files",
-        keys = ", f o",
-        cmd = ":lua require('telescope.builtin').oldfiles({prompt_title='Recent Files', only_cwd=true})",
-      },
-      { txt = "󰈭  Find Word", keys = ", f a", cmd = "Telescope live_grep" },
-      { txt = "  Bookmarks", keys = ", b m", cmd = "Telescope marks" },
-      { txt = "  Themes", keys = ", t h", cmd = "Telescope themes" },
-      {
-        txt = "  Settings",
-        keys = ", e s",
-        cmd = ":e $HOME/.config/nvim/lua/chadrc.lua",
-      },
-      { txt = "  Mappings", keys = ", c h", cmd = "NvCheatsheet" },
     },
   },
 }

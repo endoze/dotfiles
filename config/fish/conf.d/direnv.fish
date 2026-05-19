@@ -24,12 +24,9 @@ if status is-interactive && command -v direnv >/dev/null 2>&1
           end
       end
       set -g __direnv_async_file (mktemp /tmp/direnv.XXXXXXXXXX)
-      begin
-          command direnv export fish 2>/dev/null </dev/null
-          echo '# __direnv_done_marker'
-      end >$__direnv_async_file &
+      sh -c "direnv export fish 2>/dev/null; printf '\n# __direnv_done_marker\n'" >$__direnv_async_file </dev/null &
       set -g __direnv_async_pid $last_pid
-      disown 2>/dev/null
+      disown $__direnv_async_pid 2>/dev/null
       return $prev_status
   end
 end
