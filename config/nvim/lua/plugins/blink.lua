@@ -11,7 +11,27 @@ return {
       opts = { history = true, updateevents = "TextChanged,TextChangedI" },
       config = function(_, opts)
         require("luasnip").config.set_config(opts)
-        require("nvchad.configs.luasnip")
+
+        require("luasnip.loaders.from_vscode").lazy_load({
+          exclude = vim.g.vscode_snippets_exclude or {},
+        })
+        require("luasnip.loaders.from_vscode").lazy_load({
+          paths = vim.g.vscode_snippets_path or "",
+        })
+
+        -- Fix luasnip #258: clear stale node references when leaving insert
+        -- without an active jump.
+        vim.api.nvim_create_autocmd("InsertLeave", {
+          callback = function()
+            local luasnip = require("luasnip")
+            if
+              luasnip.session.current_nodes[vim.api.nvim_get_current_buf()]
+              and not luasnip.session.jump_active
+            then
+              luasnip.unlink_current()
+            end
+          end,
+        })
       end,
     },
   },
@@ -57,7 +77,58 @@ return {
         documentation = {
           auto_show = false,
         },
-        menu = require("nvchad.blink").menu,
+        menu = {
+          scrollbar = false,
+          border = "single",
+          draw = {
+            padding = { 1, 1 },
+            columns = {
+              { "label" },
+              { "kind_icon" },
+              { "kind" },
+            },
+            components = {
+              kind_icon = {
+                text = function(ctx)
+                  local icons = {
+                    Namespace = "󰌗",
+                    Text = "󰉿",
+                    Method = "󰆧",
+                    Function = "󰆧",
+                    Constructor = "",
+                    Field = "󰜢",
+                    Variable = "󰀫",
+                    Class = "󰠱",
+                    Interface = "",
+                    Module = "",
+                    Property = "󰜢",
+                    Unit = "󰑭",
+                    Value = "󰎠",
+                    Enum = "",
+                    Keyword = "󰌋",
+                    Snippet = "",
+                    Color = "󱓻",
+                    File = "󰈚",
+                    Reference = "󰈇",
+                    Folder = "󰉋",
+                    EnumMember = "",
+                    Constant = "󰏿",
+                    Struct = "󰙅",
+                    Event = "",
+                    Operator = "󰆕",
+                    TypeParameter = "󰊄",
+                  }
+                  return icons[ctx.kind] or "󰈚"
+                end,
+              },
+              kind = {
+                highlight = function(ctx)
+                  return ctx.kind
+                end,
+              },
+            },
+          },
+        },
       },
       sources = {
         default = { "lazydev", "lsp", "path", "snippets", "buffer" },

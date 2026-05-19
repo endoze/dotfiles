@@ -4,7 +4,7 @@ function M.setup()
   local helpers = require("lsp.helpers")
 
   helpers.setup_lsp("ocamllsp", {
-    autoformat = false, -- let none-ls handle this via ocamlformat
+    autoformat = false, -- ocamlformat runs via conform.nvim
     cmd = { "ocamllsp" },
   })
 end

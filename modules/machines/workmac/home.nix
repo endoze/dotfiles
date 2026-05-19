@@ -9,6 +9,7 @@
   home.packages = with pkgs; [
     actionlint
     aria2
+    jira-cli-go
     kubernetes-helm
     lazydocker
     playwright-test

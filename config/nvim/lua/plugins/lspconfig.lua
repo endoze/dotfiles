@@ -1,9 +1,6 @@
 return {
   "neovim/nvim-lspconfig",
   event = "User FilePost",
-  dependencies = {
-    "nvimtools/none-ls.nvim",
-  },
   config = function()
     require("lspconfig")
 

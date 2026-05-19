@@ -1,9 +1,9 @@
 local M = {}
 
 function M.setup()
-  local base_capabilities = require("nvchad.configs.lspconfig").capabilities
-  local base_on_init = require("nvchad.configs.lspconfig").on_init
   local helpers = require("lsp.helpers")
+  local base_capabilities = helpers.capabilities
+  local base_on_init = helpers.on_init
 
   local config = require("schema-companion").setup_client(
     require("schema-companion").adapters.yamlls.setup({
