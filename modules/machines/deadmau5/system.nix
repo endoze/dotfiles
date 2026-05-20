@@ -30,6 +30,11 @@
     openFirewall = true;
   };
 
+  programs.localsend = {
+    enable = true;
+    openFirewall = true;
+  };
+
   # Allow input group to create virtual input devices (for Sunshine gamepad/keyboard/mouse)
   # Set NVMe I/O scheduler to none (NVMe has internal scheduling, software scheduler adds CPU overhead)
   services.udev.extraRules = ''
