@@ -79,7 +79,7 @@ require("lazy").setup({
 
 -- load theme
 pcall(dofile, vim.g.base46_cache .. "defaults")
-pcall(dofile, vim.g.base46_cache .. "statusline")
+pcall(dofile, vim.g.base46_cache .. "bufferline")
 
 require("options")
 require("autocmds")

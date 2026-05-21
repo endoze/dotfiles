@@ -34,20 +34,16 @@ local keymap_table = {
         "Buffer new",
       },
       ["<tab>"] = {
-        function()
-          require("nvchad.tabufline").next()
-        end,
+        "<cmd>BufferLineCycleNext<CR>",
         "Buffer goto next",
       },
       ["<S-tab>"] = {
-        function()
-          require("nvchad.tabufline").prev()
-        end,
+        "<cmd>BufferLineCyclePrev<CR>",
         "Buffer goto prev",
       },
       ["<leader>x"] = {
         function()
-          require("nvchad.tabufline").close_buffer()
+          Snacks.bufdelete()
         end,
         "Buffer close",
       },

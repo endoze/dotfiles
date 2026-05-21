@@ -14,6 +14,7 @@ function M.setup()
           "${3rd}/luv/library",
         },
       },
+      format = { enable = false },
     },
   }
 

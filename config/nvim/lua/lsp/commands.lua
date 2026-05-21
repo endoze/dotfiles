@@ -81,7 +81,7 @@ vim.api.nvim_create_user_command("LspInfo", function()
 end, { desc = "Show LSP info" })
 
 vim.api.nvim_create_user_command("LspLog", function()
-  vim.cmd("tabnew " .. vim.lsp.get_log_path())
+  vim.cmd("tabnew " .. vim.lsp.log.get_filename())
 end, { desc = "Open LSP log file" })
 
 vim.api.nvim_create_user_command("LspStart", function(info)

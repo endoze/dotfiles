@@ -8,6 +8,8 @@ return {
         path = "~/.local/share/lua_addons/love2d/library",
         words = { "love" },
       },
+      { path = "snacks.nvim", words = { "Snacks" } },
+      { path = "blink.cmp", words = { "blink" } },
     },
   },
 }

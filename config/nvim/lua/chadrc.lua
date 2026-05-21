@@ -4,26 +4,8 @@
 ---@type ChadrcConfig
 local options = {
   ui = {
-    statusline = {
-      theme = "vscode_colored",
-      order = {
-        "mode",
-        "file",
-        "git",
-        "%=",
-        "lsp_msg",
-        "%=",
-        "diagnostics",
-        "lsp",
-        "cursor",
-        "cwd",
-      },
-    },
-    tabufline = {
-      enabled = true,
-      lazyload = true,
-      overriden_modules = nil,
-    },
+    statusline = { enabled = false },
+    tabufline = { enabled = false },
     cmp = {
       style = "default",
     },
@@ -33,6 +15,7 @@ local options = {
     ---@type ThemeName | "solarized_light" | "tomorrow_night_80s"
     theme = "onedark",
     theme_toggle = { "onedark", "tokyonight" },
+    integrations = { "bufferline" },
 
     hl_add = {
       ["@string.special.symbol"] = {
