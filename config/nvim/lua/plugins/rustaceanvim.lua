@@ -1,7 +1,7 @@
 return {
   "mrcjkb/rustaceanvim",
   version = "^8",
-  lazy = false,
+  ft = { "rust" },
   config = function()
     local ih = require("inlay-hints")
     local helpers = require("lsp.helpers")

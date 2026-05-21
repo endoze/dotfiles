@@ -37,7 +37,7 @@ return {
   },
   opts_extend = { "sources.default" },
   ---@module 'blink.cmp'
-  ---@type blink.cmp.Config
+  ---@return blink.cmp.Config
   opts = function()
     dofile(vim.g.base46_cache .. "blink")
 

@@ -34,20 +34,16 @@ local keymap_table = {
         "Buffer new",
       },
       ["<tab>"] = {
-        function()
-          require("nvchad.tabufline").next()
-        end,
+        "<cmd>BufferLineCycleNext<CR>",
         "Buffer goto next",
       },
       ["<S-tab>"] = {
-        function()
-          require("nvchad.tabufline").prev()
-        end,
+        "<cmd>BufferLineCyclePrev<CR>",
         "Buffer goto prev",
       },
       ["<leader>x"] = {
         function()
-          require("nvchad.tabufline").close_buffer()
+          Snacks.bufdelete()
         end,
         "Buffer close",
       },
@@ -85,23 +81,12 @@ local keymap_table = {
       },
       ["<leader>th"] = {
         function()
-          require("nvchad.themes").open({
-            mappings = function(buf)
-              vim.keymap.set(
-                "i",
-                "<C-k>",
-                require("nvchad.themes.api").move_up,
-                { buffer = buf }
-              )
-              vim.keymap.set(
-                "i",
-                "<C-j>",
-                require("nvchad.themes.api").move_down,
-                { buffer = buf }
-              )
-            end,
-          })
+          local nvconfig = require("nvconfig")
+          local pair = nvconfig.base46.theme_toggle
+          nvconfig.base46.theme = (nvconfig.base46.theme == pair[1]) and pair[2] or pair[1]
+          require("base46").load_all_highlights()
         end,
+        "Toggle theme",
       },
       ["<leader>gb"] = {
         ":BlameToggle<cr>",
@@ -112,8 +97,8 @@ local keymap_table = {
         "",
       },
       ["<leader>es"] = {
-        ":e $HOME/.config/nvim/lua/chadrc.lua<CR>",
-        "Edit NvChad settings",
+        ":e $HOME/.config/nvim/lua/nvconfig.lua<CR>",
+        "Edit nvconfig",
       },
       ["<leader>ft"] = {
         "za",

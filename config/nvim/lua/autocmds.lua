@@ -59,3 +59,31 @@ autocmd("FileType", {
     vim.opt_local.indentkeys:remove(".")
   end,
 })
+
+-- re-apply lualine config when base46 toggles themes (re-resolves palette)
+autocmd("User", {
+  pattern = "NvThemeReload",
+  callback = function()
+    local ok, lualine = pcall(require, "lualine")
+    if ok then
+      package.loaded["themes.lualine"] = nil
+      lualine.setup(require("themes.lualine").opts())
+    end
+  end,
+})
+
+-- re-apply bufferline config when base46 toggles themes; also clear its
+-- icon hl cache so per-icon bgs are regenerated against the new palette
+autocmd("User", {
+  pattern = "NvThemeReload",
+  callback = function()
+    local ok_bl, bufferline = pcall(require, "bufferline")
+    local ok_hl, hls = pcall(require, "bufferline.highlights")
+    if not (ok_bl and ok_hl) then
+      return
+    end
+    package.loaded["themes.bufferline"] = nil
+    hls.reset_icon_hl_cache()
+    bufferline.setup(require("themes.bufferline").opts())
+  end,
+})

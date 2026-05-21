@@ -6,7 +6,7 @@ return {
 
     autopairs.setup({
       fast_wrap = {},
-      disable_filetype = { "TelescopePrompt", "vim" },
+      disable_filetype = { "vim" },
       check_ts = true,
     })
 
