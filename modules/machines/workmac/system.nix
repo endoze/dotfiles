@@ -27,7 +27,7 @@
       cleanup = "none";
     };
     casks = [
-      "google-cloud-sdk"
+      "gcloud-cli"
     ];
   };
 

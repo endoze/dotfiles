@@ -8,7 +8,7 @@
   homebrew.casks = [
     "alfred"
     "claude"
-    "eloston-chromium"
+    "ungoogled-chromium"
     "ghostty"
     "karabiner-elements"
     "orbstack"
