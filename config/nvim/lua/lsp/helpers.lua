@@ -94,7 +94,7 @@ function M.create_on_attach(opts)
       print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
     end, keymap_opts("List workspace folders"))
     map("n", "<leader>D", vim.lsp.buf.type_definition, keymap_opts("Go to type definition"))
-    map("n", "<leader>ra", require("nvchad.lsp.renamer"), keymap_opts("NvRenamer"))
+    map("n", "<leader>ra", vim.lsp.buf.rename, keymap_opts("Rename"))
     map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, keymap_opts("Code action"))
     map("n", "gr", vim.lsp.buf.references, keymap_opts("Show references"))
 

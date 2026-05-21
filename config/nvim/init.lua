@@ -1,3 +1,5 @@
+vim.loader.enable()
+
 vim.g.base46_cache = vim.fn.stdpath("data") .. "/nvchad/base46/"
 vim.g.mapleader = ","
 
@@ -20,7 +22,6 @@ vim.opt.rtp:prepend(lazypath)
 
 local lazy_config = {
   defaults = { lazy = true },
-  install = { colorscheme = { "nvchad" } },
 
   ui = {
     icons = {
@@ -68,12 +69,6 @@ local lazy_config = {
 
 -- load plugins
 require("lazy").setup({
-  {
-    "NvChad/NvChad",
-    lazy = false,
-    branch = "v2.5",
-  },
-
   { import = "plugins" },
 }, lazy_config)
 
@@ -83,9 +78,10 @@ pcall(dofile, vim.g.base46_cache .. "bufferline")
 
 require("options")
 require("autocmds")
-require("lsp.commands")
 
 vim.schedule(function()
+  require("lsp.commands")
+
   local keymap_table = require("mappings")
   require("utils").apply_keymap_table(keymap_table)
 

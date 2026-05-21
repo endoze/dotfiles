@@ -81,23 +81,12 @@ local keymap_table = {
       },
       ["<leader>th"] = {
         function()
-          require("nvchad.themes").open({
-            mappings = function(buf)
-              vim.keymap.set(
-                "i",
-                "<C-k>",
-                require("nvchad.themes.api").move_up,
-                { buffer = buf }
-              )
-              vim.keymap.set(
-                "i",
-                "<C-j>",
-                require("nvchad.themes.api").move_down,
-                { buffer = buf }
-              )
-            end,
-          })
+          local nvconfig = require("nvconfig")
+          local pair = nvconfig.base46.theme_toggle
+          nvconfig.base46.theme = (nvconfig.base46.theme == pair[1]) and pair[2] or pair[1]
+          require("base46").load_all_highlights()
         end,
+        "Toggle theme",
       },
       ["<leader>gb"] = {
         ":BlameToggle<cr>",
@@ -108,8 +97,8 @@ local keymap_table = {
         "",
       },
       ["<leader>es"] = {
-        ":e $HOME/.config/nvim/lua/chadrc.lua<CR>",
-        "Edit NvChad settings",
+        ":e $HOME/.config/nvim/lua/nvconfig.lua<CR>",
+        "Edit nvconfig",
       },
       ["<leader>ft"] = {
         "za",

@@ -63,7 +63,11 @@ vim.api.nvim_create_user_command("LspRestart", function(info)
     local fired = {}
     for _, bufs in pairs(bufs_per_name) do
       for _, buf in ipairs(bufs) do
-        if not fired[buf] and vim.api.nvim_buf_is_valid(buf) and vim.api.nvim_buf_is_loaded(buf) then
+        if
+          not fired[buf]
+          and vim.api.nvim_buf_is_valid(buf)
+          and vim.api.nvim_buf_is_loaded(buf)
+        then
           fired[buf] = true
           vim.api.nvim_exec_autocmds("FileType", { buffer = buf })
         end
@@ -99,8 +103,7 @@ vim.api.nvim_create_user_command("LspStop", function(info)
     targets[name] = true
   end
 
-  local clients = #info.fargs == 0
-    and vim.lsp.get_clients({ bufnr = 0 })
+  local clients = #info.fargs == 0 and vim.lsp.get_clients({ bufnr = 0 })
     or vim.lsp.get_clients()
 
   for _, client in ipairs(clients) do
