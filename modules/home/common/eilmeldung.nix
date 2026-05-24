@@ -10,6 +10,11 @@ in
       programs.eilmeldung = {
         enable = true;
         package = inputs.eilmeldung.packages.${pkgs.stdenv.hostPlatform.system}.eilmeldung;
+
+        settings.input_config.mappings = {
+          "j" = [ "down" "scrape" ];
+          "k" = [ "up" "scrape" ];
+        };
       };
     }
   ] ++ lib.optional hasSops {
