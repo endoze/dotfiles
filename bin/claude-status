@@ -1,0 +1,175 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/claude-status"
+
+status_file() {
+  local session="${ZELLIJ_SESSION_NAME:-unknown}"
+  local pane="${ZELLIJ_PANE_ID:-0}"
+  echo "${CACHE_DIR}/${session}_${pane}"
+}
+
+cmd_set() {
+  local status="${1:?Usage: claude-status set <waiting|working|done>}"
+  case "$status" in
+    waiting|working|done) ;;
+    *) echo "Invalid status: $status" >&2; exit 1 ;;
+  esac
+
+  mkdir -p "$CACHE_DIR"
+  local file
+  file=$(status_file)
+  local tmp="${file}.tmp.$$"
+
+  cat > "$tmp" <<EOF
+session=${ZELLIJ_SESSION_NAME:-unknown}
+pane=${ZELLIJ_PANE_ID:-0}
+pid=${PPID}
+status=${status}
+timestamp=$(date +%s)
+EOF
+  mv -f "$tmp" "$file"
+}
+
+cmd_clear() {
+  local file
+  file=$(status_file)
+  rm -f "$file"
+}
+
+cmd_clean() {
+  [ -d "$CACHE_DIR" ] || return 0
+  for f in "$CACHE_DIR"/*; do
+    [ -f "$f" ] || continue
+    local pid
+    pid=$(grep '^pid=' "$f" 2>/dev/null | cut -d= -f2)
+    if [ -n "$pid" ] && ! kill -0 "$pid" 2>/dev/null; then
+      rm -f "$f"
+    fi
+  done
+}
+
+priority_of() {
+  case "$1" in
+    waiting) echo 0 ;;
+    done)    echo 1 ;;
+    working) echo 2 ;;
+    *)       echo 3 ;;
+  esac
+}
+
+icon_of() {
+  case "$1" in
+    waiting) echo "⏳" ;;
+    working) echo "⚙"  ;;
+    done)    echo "✓"  ;;
+  esac
+}
+
+cmd_query() {
+  local max_width=80
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --width) max_width="$2"; shift 2 ;;
+      *) shift ;;
+    esac
+  done
+
+  [ -d "$CACHE_DIR" ] || return 0
+
+  # Prune stale entries
+  cmd_clean
+
+  # Read all entries: "priority session status"
+  local entries=()
+  for f in "$CACHE_DIR"/*; do
+    [ -f "$f" ] || continue
+    local session status pid
+    session=$(grep '^session=' "$f" 2>/dev/null | cut -d= -f2)
+    status=$(grep '^status=' "$f" 2>/dev/null | cut -d= -f2)
+    pid=$(grep '^pid=' "$f" 2>/dev/null | cut -d= -f2)
+    [ -n "$session" ] && [ -n "$status" ] || continue
+    local pri
+    pri=$(priority_of "$status")
+    entries+=("${pri} ${session} ${status}")
+  done
+
+  [ ${#entries[@]} -eq 0 ] && return 0
+
+  # Sort by priority (ascending = highest priority first)
+  IFS=$'\n' sorted=($(printf '%s\n' "${entries[@]}" | sort -n)); unset IFS
+
+  # Build output with truncation
+  local sep=" | "
+  local sep_len=${#sep}
+  local result=""
+  local remaining=$max_width
+  local count=0
+  local total=${#sorted[@]}
+
+  for entry in "${sorted[@]}"; do
+    local pri session status
+    read -r pri session status <<< "$entry"
+    local icon
+    icon=$(icon_of "$status")
+    # "session:icon" — icon is multi-byte but 1-2 display columns
+    local icon_display_len=1
+    local colon_len=1
+    local min_entry_len=$((3 + 1 + colon_len + icon_display_len)) # "ses…:⚙"
+
+    if [ $count -gt 0 ]; then
+      # Check if we can fit at least a minimal entry with separator
+      local needed=$((sep_len + min_entry_len))
+      if [ $remaining -lt $needed ]; then
+        break
+      fi
+      remaining=$((remaining - sep_len))
+    fi
+
+    # Calculate available width for session name
+    local overhead=$((colon_len + icon_display_len))
+    local name_budget=$((remaining - overhead))
+
+    if [ $name_budget -lt 1 ]; then
+      break
+    fi
+
+    local display_name="$session"
+    if [ ${#session} -gt $name_budget ]; then
+      if [ $name_budget -ge 4 ]; then
+        # Truncate with ellipsis
+        local trunc_len=$((name_budget - 1))
+        display_name="${session:0:$trunc_len}…"
+      elif [ $name_budget -ge 1 ]; then
+        display_name="${session:0:$name_budget}"
+      fi
+    fi
+
+    local formatted="${display_name}:${icon}"
+    if [ $count -gt 0 ]; then
+      result="${result}${sep}${formatted}"
+    else
+      result="${formatted}"
+    fi
+
+    remaining=$((remaining - ${#display_name} - overhead))
+    count=$((count + 1))
+  done
+
+  echo "$result"
+}
+
+case "${1:-}" in
+  set)   shift; cmd_set "$@" ;;
+  clear) cmd_clear ;;
+  clean) cmd_clean ;;
+  query) shift; cmd_query "$@" ;;
+  *)
+    echo "Usage: claude-status {set|clear|clean|query}" >&2
+    echo "  set <waiting|working|done>  Update status for current instance" >&2
+    echo "  clear                       Remove entry for current instance" >&2
+    echo "  clean                       Remove all stale entries" >&2
+    echo "  query [--width N]           Format status output (default width: 80)" >&2
+    exit 1
+    ;;
+esac

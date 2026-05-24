@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -11,13 +12,17 @@
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    mac-app-util = {
-      url = "github:hraban/mac-app-util";
-      # Don't follow nixpkgs - let mac-app-util use its own pinned version
-      # to avoid SBCL/CL build incompatibilities
+
+    claude-desktop = {
+      url = "github:k3d3/claude-desktop-linux-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
-    nur = {
-      url = "github:nix-community/NUR";
+    eilmeldung = {
+      url = "github:endoze/eilmeldung/fix/guard-glibc-includes-for-linux-only";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    elephant = {
+      url = "github:abenz1267/elephant";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     hyprland = {
@@ -27,33 +32,40 @@
     };
     hyprpaper = {
       url = "github:hyprwm/hyprpaper";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-cachyos-kernel = {
-      url = "github:xddxdd/nix-cachyos-kernel/release";
-      # Do not override nixpkgs input to avoid version mismatches
+    mac-app-util = {
+      url = "github:hraban/mac-app-util";
+      # Don't follow nixpkgs - let mac-app-util use its own pinned version
+      # to avoid SBCL/CL build incompatibilities
     };
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
+    matcha = {
+      url = "github:endoze/matcha/fix/scard-cgo-enabled";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     monban = {
       url = "git+ssh://git@github.com/endoze/monban";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-cachyos-kernel = {
+      url = "github:xddxdd/nix-cachyos-kernel/release";
+      # Do not override nixpkgs input to avoid version mismatches
+    };
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     shirase = {
       url = "git+ssh://git@github.com/endoze/shirase";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    claude-desktop = {
-      url = "github:k3d3/claude-desktop-linux-flake";
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    matcha = {
-      url = "github:endoze/matcha/fix/scard-cgo-enabled";
-    };
-    elephant.url = "github:abenz1267/elephant";
     walker = {
       url = "github:abenz1267/walker";
+      inputs.nixpkgs.follows = "nixpkgs";
       inputs.elephant.follows = "elephant";
     };
   };
