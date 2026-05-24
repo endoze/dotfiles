@@ -6,24 +6,25 @@
   imports = [
     ../common/bat.nix
     ../common/databases.nix
+    ../common/eilmeldung.nix
     ../common/fastfetch.nix
     ../common/fish.nix
     ../common/git.nix
+    ../common/hn-tui.nix
     ../common/jujutsu.nix
-    ../common/lua.nix
     ../common/lsd.nix
+    ../common/lua.nix
+    ../common/matcha.nix
     ../common/mise.nix
     ../common/neovim.nix
     ../common/ruby.nix
     ../common/selene.nix
-    ../common/sqruff.nix
     ../common/shell-ai.nix
+    ../common/sqruff.nix
     ../common/starship.nix
     ../common/tmux.nix
     ../common/weechat.nix
     ../common/zellij.nix
-    ../common/hn-tui.nix
-    ../common/matcha.nix # disabled: upstream build broken (scard CGO mismatch)
   ];
 
   home.packages = with pkgs; [

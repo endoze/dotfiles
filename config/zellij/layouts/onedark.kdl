@@ -32,7 +32,7 @@ layout cwd="~/Projects" {
 
     format_left   "#[bg=$surface0,fg=$sapphire]#[bg=$sapphire,fg=$crust,bold] {session} #[bg=$surface0] {mode}#[bg=$surface0] {tabs}"
     format_center "{notifications}"
-    format_right  "#[bg=$surface0,fg=$peach]#[bg=$peach,fg=$crust]{command_weather} #[bg=$surface1,fg=$peach,bold] {command_weather_data}#[bg=$surface0,fg=$surface1]#[bg=$surface0,fg=$yellow]#[bg=$yellow,fg=$crust]{command_battery} #[bg=$surface1,fg=$yellow,bold] {command_battery_data}#[bg=$surface0,fg=$surface1]#[bg=$surface0,fg=$blue]#[bg=$blue,fg=$crust]󰃭 #[bg=$surface1,fg=$blue,bold] {datetime}#[bg=$surface0,fg=$surface1]"
+    format_right  "#[bg=$surface0,fg=$green]#[bg=$green,fg=$crust]{command_claude} #[bg=$surface1,fg=$green,bold] {command_claude_data}#[bg=$surface0,fg=$surface1]#[bg=$surface0,fg=$peach]#[bg=$peach,fg=$crust]{command_weather} #[bg=$surface1,fg=$peach,bold] {command_weather_data}#[bg=$surface0,fg=$surface1]#[bg=$surface0,fg=$yellow]#[bg=$yellow,fg=$crust]{command_battery} #[bg=$surface1,fg=$yellow,bold] {command_battery_data}#[bg=$surface0,fg=$surface1]#[bg=$surface0,fg=$blue]#[bg=$blue,fg=$crust]󰃭 #[bg=$surface1,fg=$blue,bold] {datetime}#[bg=$surface0,fg=$surface1]"
     format_space  "#[bg=$surface0]"
     border_enabled  "false"
     border_char     "─"
@@ -91,6 +91,16 @@ layout cwd="~/Projects" {
     command_battery_data_format    "{stdout}"
     command_battery_data_interval  "60"
     command_battery_data_rendermode "static"
+
+    command_claude_command    "bash -c ~/.dotfiles/config/zellij/scripts/claude-status.sh"
+    command_claude_format     "{stdout}"
+    command_claude_interval   "5"
+    command_claude_rendermode "static"
+
+    command_claude_data_command    "bash -c \"cat ${XDG_CACHE_HOME:-$HOME/.cache}/zjstatus/claude_status_data\""
+    command_claude_data_format     "{stdout}"
+    command_claude_data_interval   "5"
+    command_claude_data_rendermode "static"
 
     datetime          "{format}"
     datetime_format   "%Y-%m-%d 󰅐 %I:%M"

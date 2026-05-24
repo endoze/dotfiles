@@ -14,3 +14,4 @@ alias server 'ruby -run -e httpd . -p 8080'
 alias tf 'tail -f'
 alias vim nvim
 alias whereami 'curl http://remote-ip.herokuapp.com'
+alias z 'zellij'
