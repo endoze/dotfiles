@@ -72,22 +72,8 @@
 
   outputs = { self, ... }@inputs:
     let
-      supportedSystems = [ "x86_64-linux" "aarch64-darwin" "x86_64-darwin" ];
+      lib = inputs.nixpkgs.lib;
 
-      forAllSystems = inputs.nixpkgs.lib.genAttrs supportedSystems;
-
-      nixpkgsFor = forAllSystems (system: import inputs.nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-        overlays = [
-          inputs.nur.overlays.default
-          (final: prev: {
-            direnv = prev.direnv.overrideAttrs { doCheck = false; };
-          })
-        ];
-      });
-
-      # Shared user info (same for all non-docker machines)
       userInfo = {
         username = "endoze";
         fullName = "Endoze";
@@ -95,185 +81,86 @@
         gpgKey = "10F9D3F8CE44AC75";
       };
 
-      mkSystemConfig = name: { hostName = name; computerName = name; };
+      dotfilesLib = import ./lib { inherit inputs self userInfo; };
+      inherit (dotfilesLib) mkHome mkDarwinSystem mkNixosSystem mkUserConfig mkSystemConfig nixpkgsFor checkMachines;
 
-      # Helper: build userConfig from system type
-      mkUserConfig = { system }:
-        let
-          homeBase =
-            if builtins.elem system [ "aarch64-darwin" "x86_64-darwin" ]
-            then "/Users" else "/home";
-        in
-        userInfo // {
-          homeDirectory = "${homeBase}/${userInfo.username}";
-          dotfilesPath = "${homeBase}/${userInfo.username}/.dotfiles";
+      # Machine registry. Every entry gets a home-manager config; `os` picks
+      # the system-level builder. Validated against `machineModule` in
+      # lib/default.nix - typos and bad value types fail eval clearly.
+      machines = checkMachines {
+        macbook = { system = "aarch64-darwin"; os = "darwin"; };
+        workmac = { system = "aarch64-darwin"; os = "darwin"; };
+        archimedes = { system = "x86_64-linux"; os = "nixos"; };
+        dosvec = { system = "x86_64-linux"; os = "nixos"; };
+        deadmau5 = {
+          system = "x86_64-linux";
+          os = "nixos";
+          nixosExtraModules = [
+            inputs.monban.nixosModules.default
+            ({ ... }: { nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.pinned ]; })
+          ];
         };
-
-      # Docker has no GPG keys, so override to disable commit signing
-      dockerUserConfig = (mkUserConfig { system = "x86_64-linux"; }) // {
-        gpgKey = "";
       };
 
-      mkHome = { name, system }:
-        let
-          isDarwin = builtins.elem system [ "aarch64-darwin" "x86_64-darwin" ];
-          osSpecificModules =
-            if isDarwin then [
-              inputs.mac-app-util.homeManagerModules.default
-              ./modules/home/darwin.nix
-            ] else [
-              ./modules/home/linux.nix
-            ];
-        in
-        inputs.home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgsFor.${system};
-          modules = osSpecificModules ++ [
-            inputs.sops-nix.homeManagerModules.sops
-            inputs.shirase.homeManagerModules.default
-            ./modules/home/default.nix
-            ./modules/machines/${name}/home.nix
-          ];
-          extraSpecialArgs = {
-            inherit inputs;
-            userConfig = mkUserConfig { inherit system; };
-            systemConfig = mkSystemConfig name;
-            sourceRoot = self;
-          };
-        };
+      machinesWithOs = os: lib.filterAttrs (_: m: m.os == os) machines;
 
-      mkDarwinSystem = name:
-        inputs.nix-darwin.lib.darwinSystem {
-          system = "aarch64-darwin";
-          modules = [
-            inputs.sops-nix.darwinModules.sops
-            ./modules/system/darwin/default.nix
-            ./modules/machines/${name}/system.nix
-          ];
-          specialArgs = {
-            inherit inputs;
-            userConfig = mkUserConfig { system = "aarch64-darwin"; };
-            systemConfig = mkSystemConfig name;
-            sourceRoot = self;
-          };
-        };
+      # Docker is a container image, not a host. It needs a custom userConfig
+      # (no GPG), a different system name, and a minimal home-manager build,
+      # so it lives outside the machine registry rather than special-casing it.
+      dockerUserConfig = (mkUserConfig { system = "x86_64-linux"; }) // { gpgKey = ""; };
+      dockerHome = mkHome {
+        name = "docker";
+        system = "x86_64-linux";
+        userConfig = dockerUserConfig;
+        systemName = "docker-nix";
+        minimal = true;
+      };
     in
     {
-      packages.x86_64-linux.dockerUserSetup =
-        let
-          dockerSystem = import ./modules/machines/docker/system.nix {
-            pkgs = nixpkgsFor.x86_64-linux;
-            userConfig = dockerUserConfig;
-            lib = inputs.nixpkgs.lib;
-          };
-        in
-        dockerSystem.userSetupScript;
+      homeConfigurations = (lib.mapAttrs
+        (name: m: mkHome {
+          inherit name;
+          inherit (m) system;
+          extraModules = m.homeExtraModules;
+        })
+        machines) // { docker = dockerHome; };
 
-      packages.x86_64-linux.dockerImage =
-        let
-          dockerContainer = import ./modules/machines/docker/container.nix {
-            pkgs = nixpkgsFor.x86_64-linux;
-            userConfig = dockerUserConfig;
-            systemConfig = mkSystemConfig "docker-nix";
-            inherit inputs;
-            lib = inputs.nixpkgs.lib;
-            sourceRoot = self;
-          };
-        in
-        dockerContainer.dockerImage;
+      darwinConfigurations = lib.mapAttrs
+        (name: m: mkDarwinSystem {
+          inherit name;
+          extraModules = m.darwinExtraModules;
+        })
+        (machinesWithOs "darwin");
 
-      packages.x86_64-linux.mise-compile =
-        let
-          miseFhs = import ./modules/system/nixos/mise-fhs-env.nix {
-            pkgs = nixpkgsFor.x86_64-linux;
-          };
-        in
-        miseFhs.package;
+      nixosConfigurations = lib.mapAttrs
+        (name: m: mkNixosSystem {
+          inherit name;
+          extraModules = m.nixosExtraModules;
+        })
+        (machinesWithOs "nixos");
 
-      devShells.x86_64-linux.mise-compile =
-        let
-          miseFhs = import ./modules/system/nixos/mise-fhs-env.nix {
-            pkgs = nixpkgsFor.x86_64-linux;
-          };
-        in
-        miseFhs.shell;
-
-      homeConfigurations = {
-        "macbook" = mkHome { name = "macbook"; system = "aarch64-darwin"; };
-        "workmac" = mkHome { name = "workmac"; system = "aarch64-darwin"; };
-        "deadmau5" = mkHome { name = "deadmau5"; system = "x86_64-linux"; };
-        "dosvec" = mkHome { name = "dosvec"; system = "x86_64-linux"; };
-        "archimedes" = mkHome { name = "archimedes"; system = "x86_64-linux"; };
-
-        "docker" = inputs.home-manager.lib.homeManagerConfiguration {
+      packages.x86_64-linux = {
+        dockerUserSetup = (import ./modules/machines/docker/system.nix {
           pkgs = nixpkgsFor.x86_64-linux;
-          modules = [
-            ./modules/home/default.nix
-            ./modules/machines/docker/home.nix
-          ];
-          extraSpecialArgs = {
-            inherit inputs;
-            userConfig = dockerUserConfig;
-            systemConfig = mkSystemConfig "docker-nix";
-            sourceRoot = self;
-          };
-        };
+          userConfig = dockerUserConfig;
+          inherit lib;
+        }).userSetupScript;
+
+        dockerImage = (import ./modules/machines/docker/container.nix {
+          pkgs = nixpkgsFor.x86_64-linux;
+          userConfig = dockerUserConfig;
+          systemConfig = mkSystemConfig "docker-nix";
+          sourceRoot = self;
+          inherit inputs lib;
+        }).dockerImage;
+
+        mise-compile = (import ./modules/system/nixos/mise-fhs-env.nix {
+          pkgs = nixpkgsFor.x86_64-linux;
+        }).package;
       };
 
-      darwinConfigurations = {
-        "macbook" = mkDarwinSystem "macbook";
-        "workmac" = mkDarwinSystem "workmac";
-      };
-
-      nixosConfigurations = {
-        "deadmau5" = inputs.nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          modules = [
-            inputs.monban.nixosModules.default
-            inputs.sops-nix.nixosModules.sops
-            ./modules/system/nixos/default.nix
-            ./modules/machines/deadmau5/system.nix
-            ({ pkgs, ... }: {
-              nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.pinned ];
-            })
-          ];
-          specialArgs = {
-            inherit inputs;
-            userConfig = mkUserConfig { system = "x86_64-linux"; };
-            systemConfig = mkSystemConfig "deadmau5";
-            sourceRoot = self;
-          };
-        };
-
-        "archimedes" = inputs.nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          modules = [
-            inputs.sops-nix.nixosModules.sops
-            ./modules/system/nixos/default.nix
-            ./modules/machines/archimedes/system.nix
-          ];
-          specialArgs = {
-            inherit inputs;
-            userConfig = mkUserConfig { system = "x86_64-linux"; };
-            systemConfig = mkSystemConfig "archimedes";
-            sourceRoot = self;
-          };
-        };
-
-        # Headless home server with ZFS, k3s, NVIDIA GPU, and Coral TPU
-        "dosvec" = inputs.nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          modules = [
-            inputs.sops-nix.nixosModules.sops
-            ./modules/system/nixos/default.nix
-            ./modules/machines/dosvec/system.nix
-          ];
-          specialArgs = {
-            inherit inputs;
-            userConfig = mkUserConfig { system = "x86_64-linux"; };
-            systemConfig = mkSystemConfig "dosvec";
-            sourceRoot = self;
-          };
-        };
-      };
+      devShells.x86_64-linux.mise-compile = (import ./modules/system/nixos/mise-fhs-env.nix {
+        pkgs = nixpkgsFor.x86_64-linux;
+      }).shell;
     };
 }
