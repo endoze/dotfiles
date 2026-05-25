@@ -1,6 +1,14 @@
 { config, pkgs, lib, userConfig, ... }:
 
 {
+  # Skip mise's checkPhase to avoid lengthy local rebuilds (e.g. aws-lc-sys)
+  # when cache.nixos.org doesn't yet have a substitute for the pinned version.
+  nixpkgs.overlays = [
+    (final: prev: {
+      mise = prev.mise.overrideAttrs (_: { doCheck = false; });
+    })
+  ];
+
   home.packages = with pkgs; [
     mise
   ];
