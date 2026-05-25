@@ -50,7 +50,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Extract metadata (tags, labels) for Docker
+      # Extract metadata (tags, labels, annotations) for Docker. The
+      # `annotations` output (default level = manifest) is passed to the
+      # build step below so GHCR can read the image description from the
+      # OCI manifest. We do NOT widen the level to `index`: with
+      # `load: true` the build exports as Docker image format (no index
+      # wrapper) and buildx rejects index annotations in that case.
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
         id: meta
@@ -71,10 +76,26 @@ jobs:
           load: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
           secrets: |
             "attic-netrc=${{ secrets.ATTIC_NETRC }}"
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache
           cache-to: ${{ github.event_name != 'pull_request' && format('type=registry,ref={0}/{1}:buildcache,mode=max', env.REGISTRY, env.IMAGE_NAME) || '' }}
+
+      # Resolve the actual registry manifest digest. We can't use
+      # `steps.build-and-push.outputs.digest` directly: when the build
+      # step is configured with `push: true` AND `load: true` (so the
+      # attic step further down can `docker run` the image), buildx
+      # reports the buildkit-local digest, which does NOT match the
+      # OCI manifest digest published to GHCR. Inspecting the tag via
+      # imagetools gives us the registry digest unambiguously.
+      - name: Resolve registry digest
+        if: github.event_name != 'pull_request'
+        id: registry-digest
+        run: |
+          IMAGE="$(printf '%s\n' '${{ steps.meta.outputs.tags }}' | head -n1)"
+          DIGEST=$(docker buildx imagetools inspect "$IMAGE" --format '{{.Manifest.Digest}}')
+          echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
 
       # Generate a SLSA build provenance attestation for the pushed image.
       # The attestation is signed by Sigstore/Fulcio using this workflow's
@@ -87,7 +108,7 @@ jobs:
         uses: actions/attest-build-provenance@a2bbfa25375fe432b6a289bc6b6cd05ecd0c4c32 # v4.1.0
         with:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          subject-digest: ${{ steps.build-and-push.outputs.digest }}
+          subject-digest: ${{ steps.registry-digest.outputs.digest }}
           push-to-registry: true
 
       # Push CI-built paths back to attic so they benefit other machines
