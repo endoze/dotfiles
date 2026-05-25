@@ -22,6 +22,8 @@
 
       aliases = {
         shortlog = [ "log" "-n" "10" ];
+        bc = [ "bookmark" "create" ];
+        bs = [ "bookmark" "set" ];
       };
 
       signing = lib.mkIf (userConfig.gpgKey != "") {
