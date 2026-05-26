@@ -37,10 +37,71 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
+      # Install upstream Nix on the runner. We use cachix/install-nix-action
+      # rather than DeterminateSystems' installer because the latter ships
+      # Determinate Nix, which manages its own /etc/nix/netrc for FlakeHub
+      # auth and does not honor extra-conf's `netrc-file` directive — both
+      # of which conflict with our attic auth setup.
+      - name: Install Nix
+        uses: cachix/install-nix-action@8aa03977d8d733052d78f4e008a241fd1dbf36b3 # v31.10.6
+        with:
+          extra_nix_config: |
+            extra-substituters = https://cache.kahdu.org/main
+            extra-trusted-public-keys = main:ch1Il2WBscgvKTDg00wIqQCT/wSyqlA7lD0n2m2VkOg=
+            netrc-file = /etc/nix/netrc
+
+      # Write the attic netrc so the nix daemon (root) can authenticate
+      # against cache.kahdu.org when substituting. umask 077 ensures any
+      # partial write stays mode 600; the final chmod is belt-and-braces.
+      - name: Configure attic netrc
+        env:
+          ATTIC_NETRC: ${{ secrets.ATTIC_NETRC }}
+        run: |
+          umask 077
+          printf '%s\n' "$ATTIC_NETRC" | sudo tee /etc/nix/netrc > /dev/null
+          sudo chmod 600 /etc/nix/netrc
+
+      # Build the home-manager activation closure on the runner. On a warm
+      # attic this is ~30-60s of pure substitution. On a cold attic (e.g.
+      # the first build after a flake.lock bump that introduces new
+      # derivation hashes) this pays the rebuild cost ONCE so the subsequent
+      # attic push warms the cache for the docker buildkit step and all
+      # future runs.
+      - name: Build home-manager closure
+        id: closure
+        run: |
+          out=$(nix build .#homeConfigurations.docker.activationPackage \
+            --no-link --print-out-paths)
+          echo "path=$out" >> "$GITHUB_OUTPUT"
+
+      # Push the just-built closure to attic from the runner. No docker
+      # round-trip. This warms attic for every other machine and for the
+      # buildkit step below (when present). Pushing from PRs too keeps
+      # master fast when a PR introduces a new derivation hash.
+      #
+      # `::add-mask::` registers the parsed token as a masked value so
+      # nothing downstream can accidentally surface it in logs even if a
+      # tool tries to print it. GitHub already masks the full netrc blob;
+      # this masks the token in isolation too.
+      - name: Push closure to attic
+        env:
+          ATTIC_NETRC: ${{ secrets.ATTIC_NETRC }}
+        run: |
+          ATTIC=$(nix build --no-link --print-out-paths nixpkgs#attic-client)
+          TOKEN=$(printf '%s' "$ATTIC_NETRC" | awk '/^password/ {print $2}')
+          echo "::add-mask::$TOKEN"
+          "$ATTIC/bin/attic" login main https://cache.kahdu.org/ "$TOKEN"
+          nix-store -qR "${{ steps.closure.outputs.path }}" \
+            | xargs "$ATTIC/bin/attic" push main:main
+
+      # Everything below this point only runs when publishing to GHCR
+      # (i.e. push events on master). PRs end here: the closure built and
+      # cached above is sufficient validation that the build is green.
+
       - name: Setup Docker buildx
+        if: github.event_name != 'pull_request'
         uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
 
-      # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
       - name: Log into registry ${{ env.REGISTRY }}
         if: github.event_name != 'pull_request'
@@ -54,48 +115,36 @@ jobs:
       # `annotations` output (default level = manifest) is passed to the
       # build step below so GHCR can read the image description from the
       # OCI manifest. We do NOT widen the level to `index`: with
-      # `load: true` the build exports as Docker image format (no index
-      # wrapper) and buildx rejects index annotations in that case.
+      # `push: true` (no `load: true`) the build exports as OCI image
+      # format, and buildx rejects index annotations there too.
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
+        if: github.event_name != 'pull_request'
         id: meta
         uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5.10.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      # Build and push Docker image with Buildx (don't push on PR).
-      # We always `load` the image into the local docker daemon so the
-      # post-build attic push step can `docker run` it.
+      # Build and push Docker image with Buildx. With `load: true` removed
+      # buildx exports straight to the registry — no local docker daemon
+      # round-trip, no ~1.5 GB tarball staging. The closure was already
+      # pushed to attic above, so the in-container `nix build` substitutes
+      # the full store from cache.kahdu.org in seconds.
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
+        if: github.event_name != 'pull_request'
         id: build-and-push
         uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
         with:
           context: .
-          push: ${{ github.event_name != 'pull_request' }}
-          load: true
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
           secrets: |
             "attic-netrc=${{ secrets.ATTIC_NETRC }}"
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache
-          cache-to: ${{ github.event_name != 'pull_request' && format('type=registry,ref={0}/{1}:buildcache,mode=max', env.REGISTRY, env.IMAGE_NAME) || '' }}
-
-      # Resolve the actual registry manifest digest. We can't use
-      # `steps.build-and-push.outputs.digest` directly: when the build
-      # step is configured with `push: true` AND `load: true` (so the
-      # attic step further down can `docker run` the image), buildx
-      # reports the buildkit-local digest, which does NOT match the
-      # OCI manifest digest published to GHCR. Inspecting the tag via
-      # imagetools gives us the registry digest unambiguously.
-      - name: Resolve registry digest
-        if: github.event_name != 'pull_request'
-        id: registry-digest
-        run: |
-          IMAGE="$(printf '%s\n' '${{ steps.meta.outputs.tags }}' | head -n1)"
-          DIGEST=$(docker buildx imagetools inspect "$IMAGE" --format '{{.Manifest.Digest}}')
-          echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache,mode=max
 
       # Generate a SLSA build provenance attestation for the pushed image.
       # The attestation is signed by Sigstore/Fulcio using this workflow's
@@ -103,33 +152,15 @@ jobs:
       # does NOT appear as a separate `.sig`-style version in the package
       # UI. Verifiable with:
       #   gh attestation verify oci://ghcr.io/endoze/dotfiles:<tag> --owner endoze
+      #
+      # `steps.build-and-push.outputs.digest` is the real OCI manifest
+      # digest now that `load: true` is gone (the previous workaround that
+      # re-resolved the digest via `docker buildx imagetools` is no longer
+      # needed).
       - name: Attest build provenance
         if: github.event_name != 'pull_request'
         uses: actions/attest-build-provenance@a2bbfa25375fe432b6a289bc6b6cd05ecd0c4c32 # v4.1.0
         with:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          subject-digest: ${{ steps.registry-digest.outputs.digest }}
+          subject-digest: ${{ steps.build-and-push.outputs.digest }}
           push-to-registry: true
-
-      # Push CI-built paths back to attic so they benefit other machines
-      # and future CI runs. Attic does not implement the standard nix
-      # HTTP binary cache write protocol (PUT /nar/...), so we use the
-      # attic CLI — built inside the throwaway container via nix and
-      # discarded with it. The token is passed as an env var; nothing
-      # touches disk on the runner and nothing lands in any image layer.
-      - name: Push closure back to attic
-        env:
-          ATTIC_NETRC: ${{ secrets.ATTIC_NETRC }}
-        run: |
-          IMAGE="$(printf '%s\n' '${{ steps.meta.outputs.tags }}' | head -n1)"
-          TOKEN=$(printf '%s' "$ATTIC_NETRC" | awk '/^password/ {print $2}')
-          docker run --rm --user 0 \
-            -e ATTIC_TOKEN="$TOKEN" \
-            --entrypoint sh "$IMAGE" -c '
-              set -e
-              export PATH=/root/.nix-profile/bin:$PATH
-              ATTIC=$(nix build --no-link --print-out-paths nixpkgs#attic-client)
-              export PATH="$ATTIC/bin:$PATH"
-              attic login main https://cache.kahdu.org/ "$ATTIC_TOKEN"
-              attic push main:main $(nix-store -qR /home/endoze/.hm-activation)
-            '

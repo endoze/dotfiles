@@ -11,12 +11,6 @@
     ".rustfmt.toml".source = "${sourceRoot}/config/rustfmt.toml";
   };
 
-  home.sessionVariables = {
-    EDITOR = "nvim";
-    VISUAL = "nvim";
-    PAGER = "less";
-  };
-
   programs = {
     home-manager.enable = true;
 
