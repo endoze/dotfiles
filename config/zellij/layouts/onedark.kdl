@@ -39,7 +39,9 @@ layout cwd="~/Projects" {
     border_format   "#[bg=$surface0]{char}"
     border_position "top"
 
-    hide_frame_for_single_pane "true"
+    // Disabled: triggers rapid pane-frame toggle flicker
+    // (zjstatus issue #174). Re-enable only if upstream fixes it.
+    hide_frame_for_single_pane "false"
 
     mode_normal        "#[bg=$green,fg=$crust,bold] NORMAL#[bg=$surface0,fg=$green]"
     mode_tmux          "#[bg=$mauve,fg=$crust,bold] TMUX#[bg=$surface0,fg=$mauve]"
