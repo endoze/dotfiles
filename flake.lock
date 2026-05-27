@@ -1079,11 +1079,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1777652643,
-        "narHash": "sha256-haT8n4TpyilXnO3oHqFhJB3W6xrMrQmwiLapLXnfuLU=",
+        "lastModified": 1779919879,
+        "narHash": "sha256-UqEUF4OMT8z9E9bb+0PGQYtnlfkumJJ+YmKAMaGrGYM=",
         "ref": "refs/heads/master",
-        "rev": "96d424f8ca98bc6ef0e0f96c70c9aae9ae6b803a",
-        "revCount": 4,
+        "rev": "18abce02d07281f2227c8659c6a464cb7836ce96",
+        "revCount": 5,
         "type": "git",
         "url": "ssh://git@github.com/endoze/monban"
       },
