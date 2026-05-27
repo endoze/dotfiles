@@ -6,7 +6,8 @@
       Description = "NetworkManager applet";
       Documentation = "https://gitlab.gnome.org/GNOME/network-manager-applet";
       PartOf = [ "graphical-session.target" ];
-      After = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" "eww.service" ];
+      Requires = [ "eww.service" ];
       ConditionEnvironment = "WAYLAND_DISPLAY";
     };
     Service = {

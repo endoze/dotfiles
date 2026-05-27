@@ -42,10 +42,13 @@
     ACTION=="add|change", KERNEL=="nvme[0-9]*", ATTR{queue/scheduler}="none"
   '';
 
-  # Ensure Sunshine starts after graphical session is ready
+  # Ensure Sunshine starts after graphical session and the eww systray watcher
+  # (modules/home/linux/eww.nix) is up; otherwise Sunshine can race for the SNI
+  # watcher name and break the tray.
   systemd.user.services.sunshine = {
-    after = [ "graphical-session.target" ];
+    after = [ "graphical-session.target" "eww.service" ];
     wants = [ "graphical-session.target" ];
+    requires = [ "eww.service" ];
     serviceConfig.Restart = "on-failure";
   };
 
