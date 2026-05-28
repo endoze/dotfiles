@@ -1,6 +1,13 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
+  security.wrappers.bwrap = lib.mkForce {
+    source = "${pkgs.bubblewrap}/bin/bwrap";
+    owner = "root";
+    group = "root";
+    setuid = false;
+  };
+
   programs = {
     gamemode = {
       enable = true;
