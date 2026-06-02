@@ -1,0 +1,8 @@
+/* One Dark fallback palette for walker. Seeded into ~/.cache/wallust on first
+ * run (and whenever the cache file is absent) so the inline theme CSS @import
+ * always resolves to defined colors; wallust overwrites this per wallpaper. */
+@define-color background #323741;
+@define-color foreground #abb2bf;
+@define-color fg-dim #5c6370;
+@define-color border #646e82;
+@define-color accent #61afef;

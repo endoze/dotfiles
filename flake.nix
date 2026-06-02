@@ -25,14 +25,17 @@
       url = "github:abenz1267/elephant";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Source-only (flake = false): we graft this branch onto the nixpkgs eww
+    # derivation via an overlay in lib/default.nix. PR #1441 -- survives the
+    # StatusNotifierWatcher ownership handoff at startup (fixes empty tray).
+    eww = {
+      url = "github:endoze/eww/fix/status-notification-watcher";
+      flake = false;
+    };
     hyprland = {
       url = "github:hyprwm/Hyprland";
       # Don't follow nixpkgs - let Hyprland use its own pinned version
       # inputs.nixpkgs.follows = "nixpkgs";
-    };
-    hyprpaper = {
-      url = "github:hyprwm/hyprpaper";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
     mac-app-util = {
       url = "github:hraban/mac-app-util";

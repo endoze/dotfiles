@@ -16,6 +16,17 @@ let
       (final: prev: {
         direnv = prev.direnv.overrideAttrs { doCheck = false; };
       })
+      # eww PR #1441: build endoze's StatusNotifierWatcher-handoff fix until it
+      # lands upstream. The PR touches only .rs files (no Cargo.lock/toml), so
+      # the vendored cargoDeps/cargoHash from nixpkgs stay valid -- swap src
+      # alone and reuse everything else. The new integration tests are #[ignore]'d
+      # so the doCheck=1 checkPhase still passes without a session bus.
+      (final: prev: {
+        eww = prev.eww.overrideAttrs (_: {
+          src = inputs.eww;
+          version = "0.6.0-unstable-pr1441";
+        });
+      })
     ];
   });
 

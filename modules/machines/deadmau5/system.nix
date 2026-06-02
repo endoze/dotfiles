@@ -47,8 +47,9 @@
   # watcher name and break the tray.
   systemd.user.services.sunshine = {
     after = [ "graphical-session.target" "eww.service" ];
-    wants = [ "graphical-session.target" ];
-    requires = [ "eww.service" ];
+    # wants (not requires) for eww: order after the tray without letting an eww
+    # flap cascade-stop sunshine via Requires= stop-propagation.
+    wants = [ "graphical-session.target" "eww.service" ];
     serviceConfig.Restart = "on-failure";
   };
 

@@ -18,14 +18,13 @@
     file-roller
     gvfs
     kdePackages.gwenview
-    inputs.hyprpaper.packages.${pkgs.stdenv.hostPlatform.system}.hyprpaper
+    awww
     mpvpaper
     hyprshot
     kitty
     nautilus
     nwg-look
     obs-studio
-    rofi
     slack
     sushi
     wl-clipboard
