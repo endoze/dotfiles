@@ -4,8 +4,6 @@
   nixpkgs.config.allowInsecurePredicate = pkg:
     builtins.elem (lib.getName pkg) [ "ventoy-gtk3" ];
 
-  home.stateVersion = "24.05";
-
   imports = [
     ../../home/meta/cli.nix
     ../../home/meta/gui-linux.nix
