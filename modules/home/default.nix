@@ -4,7 +4,7 @@
   home = {
     username = userConfig.username;
     homeDirectory = userConfig.homeDirectory;
-    stateVersion = "24.05";
+    stateVersion = "26.05";
   };
 
   home.file = {

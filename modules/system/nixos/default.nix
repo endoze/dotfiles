@@ -99,5 +99,10 @@
 
   programs.fish.enable = true;
 
-  system.stateVersion = "24.05";
+  # NixOS state version for all hosts (single source of truth). Determines
+  # defaults for stateful data (file locations, DB versions, daemon defaults).
+  # Bumped 24.05 -> 26.05 deliberately after auditing every gated change in
+  # the pinned nixpkgs; the only one that applied to this config was docker's
+  # live-restore default, which is pinned explicitly in docker.nix.
+  system.stateVersion = "26.05";
 }
