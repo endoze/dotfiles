@@ -22,6 +22,28 @@ $red: #e06c75;
 // $magenta: #bb9af7;
 // $red: #f7768e;
 
+// Wallust generated palette — overrides the defaults above when the cache is
+// populated (seeded empty on first run so this import never dangles).
+// `eww reload` recompiles and picks up new colors.
+@import "/home/endoze/.cache/wallust/eww-colors.scss";
+
+// wallust's check_contrast keeps the palette readable, but it only targets a
+// moderate minimum — some wallpaper accents (dark navy greens/reds) still land
+// too dim to read as tiny bar glyphs on $bg. $fg is the palette's guaranteed-
+// readable color against $bg, so icon() lifts an accent toward $fg *only when
+// it's too dark*; accents that already read keep their full saturation. Since
+// palette = "dark", lightness tracks contrast-against-$bg closely enough to gate on.
+$icon-min-lightness: 45%;
+$icon-lift: 55%; // accent share kept when a lift is needed (rest blends to $fg)
+
+@function icon($c) {
+  @if lightness($c) >= $icon-min-lightness {
+    @return $c;
+  } @else {
+    @return mix($c, $fg, $icon-lift);
+  }
+}
+
 * {
   all: unset;
   font-family: "JetBrainsMono Nerd Font", monospace;
@@ -71,13 +93,16 @@ $red: #e06c75;
 }
 
 .ws-btn.active * {
-  color: #282c34;
+  // Knockout the number in the (dark) background color over the accent fill.
+  // With check_contrast the accent is lifted to a legible mid/light tone, so a
+  // dark $bg label reads cleanly and tracks the palette instead of a hardcode.
+  color: $bg;
   text-shadow: none;
 }
 
 // Clock
 .clock-icon {
-  color: $magenta;
+  color: icon($magenta);
   margin-left: 16px;
 }
 
@@ -91,7 +116,7 @@ $red: #e06c75;
 }
 
 .date-icon {
-  color: $magenta;
+  color: icon($magenta);
 }
 
 .clock-date {
@@ -105,22 +130,21 @@ $red: #e06c75;
 }
 
 .cpu-icon {
-  color: $green;
+  color: icon($green);
 }
 
 .mem-icon {
-  color: $cyan;
+  color: icon($cyan);
 }
 
 .vol {
   transition: all 200ms ease;
 
-  &:hover {
-  }
+  &:hover {}
 }
 
 .vol-icon {
-  color: $yellow;
+  color: icon($yellow);
 }
 
 .notif-btn {
@@ -136,7 +160,7 @@ $red: #e06c75;
 }
 
 .notif-icon {
-  color: $blue;
+  color: icon($blue);
 }
 
 .power-btn {
@@ -152,7 +176,7 @@ $red: #e06c75;
 }
 
 .power-icon {
-  color: $red;
+  color: icon($red);
 }
 
 // Power menu
@@ -180,23 +204,23 @@ $red: #e06c75;
 }
 
 .pm-lock label {
-  color: $green;
+  color: icon($green);
 }
 
 .pm-suspend label {
-  color: $yellow;
+  color: icon($yellow);
 }
 
 .pm-logout label {
-  color: $magenta;
+  color: icon($magenta);
 }
 
 .pm-reboot label {
-  color: $cyan;
+  color: icon($cyan);
 }
 
 .pm-shutdown label {
-  color: $red;
+  color: icon($red);
 }
 
 .pm-lock:hover {
@@ -229,7 +253,7 @@ $red: #e06c75;
 }
 
 menu {
-  background-color: rgba(50, 55, 65, 1);
+  background-color: $bg;
   color: $fg;
   border: 1px solid $border;
   border-radius: 8px;
@@ -265,7 +289,7 @@ menu separator {
 }
 
 tooltip {
-  background-color: rgba(50, 55, 65, 1);
+  background-color: $bg;
   color: $fg;
   border: 1px solid $border;
   border-radius: 8px;
@@ -290,13 +314,12 @@ tooltip label {
   border: 1px solid $border;
   padding: 16px 24px;
 
-  &.muted {
-  }
+  &.muted {}
 }
 
 .vol-osd-icon {
   font-size: 32px;
-  color: $blue;
+  color: icon($blue);
 }
 
 .vol-osd-bar {

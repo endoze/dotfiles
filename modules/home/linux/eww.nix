@@ -18,15 +18,27 @@ let
       sleep 0.1
     done
 
-    ${pkgs.eww}/bin/eww open bar
+    # Idempotent: on a home-manager switch the daemon often persists with the
+    # bar already open, and `eww open bar` errors in that case -- which, under
+    # `set -e`, would fail this unit and (via the applets' dependency) tear the
+    # whole tray down. Only open if it isn't already mapped.
+    if ! ${pkgs.eww}/bin/eww active-windows 2>/dev/null | ${pkgs.gnugrep}/bin/grep -q '^bar:'; then
+      ${pkgs.eww}/bin/eww open bar
+    fi
 
     # Wait until eww owns both org.kde.StatusNotifierWatcher and a
     # StatusNotifierHost-* name on the same connection (== eww won the race).
+    # NB: awk must NOT `exit` on first match. busctl --user list emits a large,
+    # growing list (eww leaks a StatusNotifierHost-PID-N name per bar open), and
+    # an early awk exit closes the pipe while busctl is still writing -> busctl
+    # dies on SIGPIPE -> with `pipefail` the pipeline is non-zero -> the
+    # `var=$(...)` assignment fails -> `set -e` kills this script and fails the
+    # unit. Instead, consume all input and keep only the first match.
     for _ in $(seq 1 100); do
       watcher_pid=$(${pkgs.systemd}/bin/busctl --user list 2>/dev/null \
-        | ${pkgs.gawk}/bin/awk '$1 == "org.kde.StatusNotifierWatcher" { print $2; exit }')
+        | ${pkgs.gawk}/bin/awk '$1 == "org.kde.StatusNotifierWatcher" && !seen { print $2; seen=1 }')
       host_pid=$(${pkgs.systemd}/bin/busctl --user list 2>/dev/null \
-        | ${pkgs.gawk}/bin/awk '/^org\.freedesktop\.StatusNotifierHost-/ { print $2; exit }')
+        | ${pkgs.gawk}/bin/awk '/^org\.freedesktop\.StatusNotifierHost-/ && !seen { print $2; seen=1 }')
       if [[ -n "$watcher_pid" ]] && [[ "$watcher_pid" = "$host_pid" ]]; then
         exit 0
       fi

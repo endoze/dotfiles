@@ -1,35 +1,38 @@
 { pkgs, inputs, ... }:
 
-let
-  system = pkgs.stdenv.hostPlatform.system;
-
-  wallpaperProvider = inputs.elephant.packages.${system}.elephant-providers.overrideAttrs (_: {
-    src = pkgs.runCommand "elephant-src-with-wallpaper" { } ''
-      cp -r ${inputs.elephant}/. $out
-      chmod -R u+w $out
-      mkdir -p $out/internal/providers/wallpaper
-      cp ${./elephant-wallpaper/setup.go} $out/internal/providers/wallpaper/setup.go
-    '';
-
-    buildPhase = ''
-      runHook preBuild
-      go build -buildmode=plugin -buildvcs=false -trimpath -o wallpaper.so ./internal/providers/wallpaper
-      runHook postBuild
-    '';
-
-    installPhase = ''
-      runHook preInstall
-      mkdir -p $out/lib/elephant/providers
-      cp wallpaper.so $out/lib/elephant/providers/
-      runHook postInstall
-    '';
-  });
-in
+# Hand-rolled walker wallpaper picker replaced by waypaper (modules/home/linux/waypaper.nix).
+# Keeping the wiring below commented out for reference / easy revert.
+#
+# let
+#   system = pkgs.stdenv.hostPlatform.system;
+#
+#   wallpaperProvider = inputs.elephant.packages.${system}.elephant-providers.overrideAttrs (_: {
+#     src = pkgs.runCommand "elephant-src-with-wallpaper" { } ''
+#       cp -r ${inputs.elephant}/. $out
+#       chmod -R u+w $out
+#       mkdir -p $out/internal/providers/wallpaper
+#       cp ${./elephant-wallpaper/setup.go} $out/internal/providers/wallpaper/setup.go
+#     '';
+#
+#     buildPhase = ''
+#       runHook preBuild
+#       go build -buildmode=plugin -buildvcs=false -trimpath -o wallpaper.so ./internal/providers/wallpaper
+#       runHook postBuild
+#     '';
+#
+#     installPhase = ''
+#       runHook preInstall
+#       mkdir -p $out/lib/elephant/providers
+#       cp wallpaper.so $out/lib/elephant/providers/
+#       runHook postInstall
+#     '';
+#   });
+# in
 
 {
-  xdg.configFile."elephant/providers/wallpaper.so" = {
-    source = "${wallpaperProvider}/lib/elephant/providers/wallpaper.so";
-  };
+  # xdg.configFile."elephant/providers/wallpaper.so" = {
+  #   source = "${wallpaperProvider}/lib/elephant/providers/wallpaper.so";
+  # };
 
   programs.walker = {
     enable = true;
@@ -67,42 +70,49 @@ in
 
     themes = {
       "onedark" = {
+        # Wallpaper layout retired with the hand-rolled walker picker;
+        # waypaper handles wallpaper selection now.
         layouts = {
-          "item_wallpaper" = ''
-            <?xml version="1.0" encoding="UTF-8"?>
-            <interface>
-              <requires lib="gtk" version="4.0"></requires>
-              <object class="GtkBox" id="ItemBox">
-                <style>
-                  <class name="item-box"></class>
-                </style>
-                <property name="orientation">horizontal</property>
-                <property name="spacing">12</property>
-                <child>
-                  <object class="GtkImage" id="ItemImage">
-                    <style>
-                      <class name="item-image"></class>
-                    </style>
-                    <property name="halign">start</property>
-                    <property name="valign">center</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="ItemText">
-                    <style>
-                      <class name="item-text"></class>
-                    </style>
-                    <property name="ellipsize">end</property>
-                    <property name="xalign">0</property>
-                    <property name="valign">center</property>
-                    <property name="hexpand">true</property>
-                  </object>
-                </child>
-              </object>
-            </interface>
-          '';
+          # "item_wallpaper" = ''
+          #   <?xml version="1.0" encoding="UTF-8"?>
+          #   <interface>
+          #     <requires lib="gtk" version="4.0"></requires>
+          #     <object class="GtkBox" id="ItemBox">
+          #       <style>
+          #         <class name="item-box"></class>
+          #       </style>
+          #       <property name="orientation">horizontal</property>
+          #       <property name="spacing">12</property>
+          #       <child>
+          #         <object class="GtkImage" id="ItemImage">
+          #           <style>
+          #             <class name="item-image"></class>
+          #           </style>
+          #           <property name="halign">start</property>
+          #           <property name="valign">center</property>
+          #         </object>
+          #       </child>
+          #       <child>
+          #         <object class="GtkLabel" id="ItemText">
+          #           <style>
+          #             <class name="item-text"></class>
+          #           </style>
+          #           <property name="ellipsize">end</property>
+          #           <property name="xalign">0</property>
+          #           <property name="valign">center</property>
+          #           <property name="hexpand">true</property>
+          #         </object>
+          #       </child>
+          #     </object>
+          #   </interface>
+          # '';
         };
         style = ''
+          /* Colors come from wallust via the import below, seeded with a One Dark
+             fallback on first run and regenerated per wallpaper. walker has no CSS
+             watcher, so wallust-apply restarts the service to pick up changes. */
+          @import url("file:///home/endoze/.cache/wallust/walker-colors.css");
+
           * {
             font-family: "JetBrainsMono Nerd Font", monospace;
             font-size: 14px;
@@ -110,25 +120,25 @@ in
           }
 
           .box-wrapper {
-            background-color: rgba(50, 55, 65, 0.97);
-            border: 1px solid rgba(100, 110, 130, 0.5);
+            background-color: alpha(@background, 0.97);
+            border: 1px solid alpha(@border, 0.5);
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
             padding: 8px;
           }
 
           .search-container {
-            background-color: rgba(40, 44, 52, 0.98);
-            border: 1px solid rgba(100, 110, 130, 0.5);
+            background-color: alpha(@background, 0.98);
+            border: 1px solid alpha(@border, 0.5);
             border-radius: 24px;
             padding: 4px 16px;
             margin-bottom: 8px;
           }
 
           .input {
-            color: #abb2bf;
+            color: @foreground;
             background: transparent;
-            caret-color: #61afef;
+            caret-color: @accent;
             border-radius: 24px;
             outline: none;
             box-shadow: none;
@@ -141,7 +151,7 @@ in
           }
 
           .search-container:focus-within {
-            border-color: #61afef;
+            border-color: @accent;
           }
 
           .list {
@@ -152,31 +162,34 @@ in
             border-radius: 8px;
             padding: 6px 12px;
             transition: all 200ms ease;
-            color: #abb2bf;
+            color: @foreground;
           }
 
           .item-box:hover {
-            background-color: rgba(97, 175, 239, 0.15);
+            background-color: alpha(@accent, 0.15);
           }
 
           .item-box.current {
-            background-color: rgba(97, 175, 239, 0.2);
-            border-left: 2px solid #61afef;
+            background-color: alpha(@accent, 0.2);
+            border-left: 2px solid @accent;
           }
 
           .item-text {
-            color: #abb2bf;
+            color: @foreground;
             font-size: 14px;
           }
 
           .item-subtext {
-            color: #5c6370;
+            color: @fg-dim;
             font-size: 12px;
           }
 
           .placeholder {
-            color: #5c6370;
+            color: @fg-dim;
           }
+
+          /* Wallpaper picker styles retired with the hand-rolled walker provider;
+             waypaper handles its own UI now.
 
           .wallpaper .item-image {
             -gtk-icon-size: 240px;
@@ -191,6 +204,7 @@ in
           .wallpaper .item-text {
             font-size: 13px;
           }
+          */
         '';
       };
     };

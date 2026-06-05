@@ -7,7 +7,9 @@
       Documentation = "https://gitlab.gnome.org/GNOME/network-manager-applet";
       PartOf = [ "graphical-session.target" ];
       After = [ "graphical-session.target" "eww.service" ];
-      Requires = [ "eww.service" ];
+      # Wants (not Requires): order after the tray, but don't let an eww
+      # restart/flap (e.g. during a home-manager switch) cascade-stop the applet.
+      Wants = [ "eww.service" ];
       ConditionEnvironment = "WAYLAND_DISPLAY";
     };
     Service = {

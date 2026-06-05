@@ -1,0 +1,35 @@
+# wallust v3 Configuration
+
+# Backend for image color parsing
+# Options: fastresize, kmeans, wal, thumb, resized, full
+backend = "kmeans"
+
+# Color space for color selection
+# Options: lab, labmixed, lch, lchmixed
+color_space = "lch"
+
+# Color palette style
+# Options: dark, dark16, darkcomp, darkcomp16, light, light16, harddark, harddark16, softdark, softdark16, softlight, softlight16
+palette = "dark"
+
+# Ensure generated colors keep a readable contrast against the background.
+# Verified empirically: this ADJUSTS (lightens/darkens) low-contrast colors to
+# meet a minimum, it does not merely validate — e.g. a near-black accent gets
+# lifted to a legible mid-tone. Colors that already pass are left untouched.
+check_contrast = true
+
+# Optional: Threshold for color difference (0-100)
+threshold = 10
+
+# Optional: Alpha value for templating (0-100)
+#alpha = 100
+
+[templates]
+# Every target lives under ~/.cache/wallust/ — generated colors are transient
+# (they change with each wallpaper) and must never land in the dotfiles repo.
+# Consumers source/include/@import these cache files and override their own
+# committed One Dark defaults when the cache is populated.
+hyprland = { template = "hyprland.conf",      target = "~/.cache/wallust/hyprland.conf" }
+eww      = { template = "eww-colors.scss",    target = "~/.cache/wallust/eww-colors.scss" }
+shirase  = { template = "shirase-colors.css", target = "~/.cache/wallust/shirase-colors.css" }
+walker   = { template = "walker-colors.css",  target = "~/.cache/wallust/walker-colors.css" }

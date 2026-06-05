@@ -19,9 +19,10 @@
     ../linux/shirase.nix
     ../linux/swayosd.nix
     ../linux/tokyonight-icon-theme.nix
-    ../linux/matugen.nix
+    ../linux/wallust.nix
     ../linux/eww.nix
-    ../linux/hyprpaper.nix
+    ../linux/awww.nix
+    ../linux/wallpaper-picker.nix
     ../linux/cliphist.nix
     ../linux/nm-applet.nix
     ../linux/chromium.nix

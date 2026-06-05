@@ -1,4 +1,8 @@
-/* Shirase — One Dark Theme (matching eww) */
+/* Shirase styling. Colors come from wallust via the import below, which is
+ * seeded with a One Dark fallback on first run and regenerated per wallpaper.
+ * Shirase reloads CSS when this file (its watched config dir) changes, so
+ * wallust-apply nudges it after regenerating the palette. */
+@import url("file:///home/endoze/.cache/wallust/shirase-colors.css");
 
 window {
   background: none;
@@ -14,37 +18,37 @@ window {
 
 /* Individual notification bubble */
 .notification-bubble {
-  background-color: rgba(50, 55, 65, 1);
-  border: 1px solid rgba(100, 110, 130, 0.5);
+  background-color: @background;
+  border: 1px solid alpha(@border, 0.5);
   border-radius: 12px;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.4);
   padding: 12px;
   margin: 4px;
   min-width: 300px;
   font-family: "JetBrainsMono Nerd Font", monospace;
-  color: #abb2bf;
+  color: @foreground;
 }
 
 .notification-bubble.notification-urgent {
-  border-color: #e06c75;
+  border-color: @red;
   border-width: 2px;
 }
 
 .notification-app-name {
   font-size: 0.8em;
   font-weight: bold;
-  color: #5c6370;
+  color: @fg-dim;
 }
 
 .notification-summary {
   font-weight: bold;
   font-size: 1em;
-  color: #abb2bf;
+  color: @foreground;
 }
 
 .notification-body {
   font-size: 0.9em;
-  color: #abb2bf;
+  color: @foreground;
   opacity: 0.9;
 }
 
@@ -55,7 +59,7 @@ window {
   padding: 0;
   border-radius: 6px;
   background-color: transparent;
-  color: #5c6370;
+  color: @fg-dim;
   font-size: 20px;
 }
 
@@ -67,8 +71,8 @@ window {
 
 .notification-close-btn:hover,
 .notification-dismiss-btn:hover {
-  background-color: rgba(97, 175, 239, 0.15);
-  color: #abb2bf;
+  background-color: alpha(@blue, 0.15);
+  color: @foreground;
 }
 
 .notification-actions {
@@ -79,46 +83,53 @@ window {
   padding: 4px 12px;
   border-radius: 6px;
   font-size: 0.9em;
-  background-color: rgba(92, 99, 112, 0.3);
-  color: #abb2bf;
-  border: 1px solid rgba(100, 110, 130, 0.5);
+  background-color: alpha(@fg-dim, 0.3);
+  color: @foreground;
+  border: 1px solid alpha(@border, 0.5);
 }
 
 .notification-action-btn:hover {
-  background-color: rgba(97, 175, 239, 0.2);
+  background-color: alpha(@blue, 0.2);
 }
 
 /* Notification center panel */
 .notification-center {
-  background-color: rgba(50, 55, 65, 1);
-  border: 1px solid rgba(100, 110, 130, 0.5);
+  background-color: @background;
+  border: 1px solid alpha(@border, 0.5);
   padding: 12px;
   font-family: "JetBrainsMono Nerd Font", monospace;
-  color: #abb2bf;
+  color: @foreground;
 }
 
 .notification-center-header {
   padding: 8px 4px;
-  border-bottom: 1px solid rgba(100, 110, 130, 0.5);
+  border-bottom: 1px solid alpha(@border, 0.5);
   margin-bottom: 8px;
 }
 
 .notification-center-title {
   font-size: 1.1em;
   font-weight: bold;
-  color: #61afef;
+  color: @blue;
 }
 
 .notification-center-clear {
   padding: 4px 12px;
   border-radius: 6px;
-  color: #e06c75;
-  background-color: transparent;
+  /* @red is the darkest accent, so on the near-black center it can be illegible.
+     GTK CSS has no conditionals, so lift it toward @foreground (the palette's
+     guaranteed-readable color against the background). The lifted red is reused
+     as a faint fill + outline so the button is distinguishable from the center
+     background instead of reading as bare text. A bare @red tint here is dark
+     and near-invisible, so the fill is an alpha of the *lifted* color. */
+  color: color-mix(in srgb, @red 55%, @foreground 45%);
+  background-color: alpha(color-mix(in srgb, @red 55%, @foreground 45%), 0.12);
+  border: 1px solid color-mix(in srgb, @red 55%, @foreground 45%);
   font-size: 0.85em;
 }
 
 .notification-center-clear:hover {
-  background-color: rgba(224, 108, 117, 0.15);
+  background-color: alpha(color-mix(in srgb, @red 55%, @foreground 45%), 0.28);
 }
 
 .notification-center-content {
@@ -146,7 +157,7 @@ window {
 }
 
 .notification-center-empty {
-  color: #5c6370;
+  color: @fg-dim;
   font-size: 1em;
 }
 
@@ -162,11 +173,11 @@ window {
 
 .notification-group-header {
   padding: 6px 8px;
-  background-color: rgba(92, 99, 112, 0.15);
+  background-color: alpha(@fg-dim, 0.15);
   border-radius: 8px;
   font-weight: bold;
   font-size: 0.85em;
-  color: #abb2bf;
+  color: @foreground;
 }
 
 .notification-group-toggle {
@@ -174,21 +185,21 @@ window {
   min-height: 24px;
   padding: 0;
   background-color: transparent;
-  color: #5c6370;
+  color: @fg-dim;
 }
 
 /* Notification row in center */
 .notification-row {
   padding: 8px;
-  border-bottom: 1px solid rgba(100, 110, 130, 0.2);
+  border-bottom: 1px solid alpha(@border, 0.2);
 }
 
 .notification-row.notification-urgent {
-  border-left: 3px solid #e06c75;
+  border-left: 3px solid @red;
   padding-left: 5px;
 }
 
 .notification-timestamp {
   font-size: 0.8em;
-  color: #5c6370;
+  color: @fg-dim;
 }

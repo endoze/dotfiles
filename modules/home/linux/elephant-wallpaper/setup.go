@@ -118,10 +118,12 @@ func Activate(_ bool, identifier, _ string, _ string, _ string, _ uint8, _ net.C
 	}
 
 	go func() {
-		exec.Command("hyprctl", "hyprpaper", "unload", "all").Run()
-		exec.Command("hyprctl", "hyprpaper", "preload", identifier).Run()
-		exec.Command("hyprctl", "hyprpaper", "wallpaper", fmt.Sprintf(", %s", identifier)).Run()
-		exec.Command("matugen", "image", identifier, "--mode", "dark", "--quiet").Run()
+		exec.Command("awww", "img", identifier,
+			"--transition-type", "random",
+			"--transition-fps", "60",
+			"--transition-duration", "1",
+		).Run()
+		exec.Command("wallust-apply", identifier).Run()
 	}()
 }
 

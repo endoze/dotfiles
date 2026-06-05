@@ -23,69 +23,42 @@ Multi-platform Nix Flakes configuration managing macOS (aarch64-darwin) and NixO
 
 ```
 .
-├── flake.nix                  # Main flake configuration
-├── flake.lock                 # Locked flake dependencies
-├── Dockerfile                 # Nix-based Docker image definition
-├── .sops.yaml                 # Secret encryption configuration (age keys)
-├── bin/                       # Custom scripts
-├── secrets/                   # Encrypted secret files (sops-nix)
-├── wallpapers/                # Wallpaper files
-├── config/                    # Actual configuration files
-│   ├── bat/                   # Syntax highlighter config
-│   ├── fish/                  # Fish shell (aliases, functions, completions)
-│   ├── ghostty/               # Ghostty terminal config
-│   ├── hypr/                  # Hyprland compositor config
-│   ├── karabiner/             # macOS keyboard remapping
-│   ├── kitty/                 # Kitty terminal config
-│   ├── lsd/                   # lsd (ls alternative) config
-│   ├── mise/                  # Runtime version manager config
-│   ├── nvim/                  # Neovim configuration
-│   ├── rofi/                  # Application launcher config
-│   ├── tmux/                  # Tmux configuration
-│   ├── matugen/               # Material You color scheme generator config
-│   ├── weechat/               # IRC client config
-│   └── ...                    # Other tool configs
-└── modules/                   # All Nix configuration modules
-    ├── home/                  # Home-manager configurations
-    │   ├── default.nix        # Common home configuration
-    │   ├── darwin.nix         # macOS-specific home config
-    │   ├── linux.nix          # Linux-specific home config
-    │   ├── common/            # Shared tool modules
-    │   │   ├── bat.nix        # bat (cat alternative)
-    │   │   ├── databases.nix  # Database service configs
-    │   │   ├── fish.nix       # Fish shell
-    │   │   ├── ghostty.nix    # Ghostty terminal
-    │   │   ├── git.nix        # Git configuration
-    │   │   ├── jujutsu.nix    # Jujutsu VCS
-    │   │   ├── mise.nix       # Runtime version manager
-    │   │   ├── neovim.nix     # Neovim (LSPs, formatters, tools)
-    │   │   ├── ruby.nix       # Ruby environment
-    │   │   ├── starship.nix   # Starship prompt
-    │   │   ├── tmux.nix       # Tmux multiplexer
-    │   │   └── ...            # More tool modules
-    │   ├── darwin/            # macOS-only modules
-    │   │   ├── alerter.nix    # System notifications
-    │   │   └── karabiner.nix  # Keyboard remapping
-    │   ├── linux/             # Linux-only modules
-    │   │   ├── hyprland.nix   # Wayland compositor
-    │   │   ├── rofi.nix       # App launcher
-    │   │   ├── shirase.nix    # Notification daemon
-    │   │   └── ...            # More linux modules
-    │   └── meta/              # Meta-modules (bundles of tools)
-    │       ├── cli.nix        # Common CLI tools bundle
-    │       ├── gui-darwin.nix # macOS GUI applications bundle
-    │       └── gui-linux.nix  # Linux GUI applications bundle
-    ├── machines/              # Machine-specific configurations
-    │   ├── macbook/           # Personal MacBook
-    │   ├── workmac/           # Work MacBook
-    │   ├── deadmau5/          # Linux desktop
-    │   ├── dosvec/            # Headless server
-    │   └── docker/            # Docker container
-    ├── system/                # System-level configurations
-    │   ├── darwin/            # macOS system config (dnsmasq, php)
-    │   ├── nixos/             # NixOS system config (docker, k3s, nvidia, zfs, etc.)
-    │   └── meta/              # System-level package bundles
+├── flake.nix       # Entry point: inputs, machine registry, output builders
+├── flake.lock      # Locked flake dependencies
+├── Dockerfile      # Nix-based Docker image definition
+├── .sops.yaml      # Secret encryption config (age keys)
+├── bin/            # Custom scripts
+├── secrets/        # Encrypted secret files (sops-nix)
+├── wallpapers/     # Wallpaper files
+├── lib/            # Flake helpers: machine registry + system/home builders
+├── config/         # Raw, non-Nix config files, one dir per tool (e.g. nvim/, hypr/)
+│                   #   symlinked into place by a module under modules/
+└── modules/        # All Nix configuration
+    ├── home/       # Home-manager (per-user)
+    │   ├── common/ #   cross-platform, one .nix per tool
+    │   ├── darwin/ #   macOS-only
+    │   ├── linux/  #   Linux-only
+    │   └── meta/   #   bundles that import many tool modules (cli, gui-*)
+    ├── system/     # System-level (nix-darwin / NixOS)
+    │   ├── darwin/ #   macOS system services
+    │   ├── nixos/  #   NixOS system services
+    │   └── meta/   #   system package/service bundles
+    └── machines/   # Per-machine entry points (one dir per host) that
+                    #   compose the meta bundles + machine-specific tweaks
 ```
+
+**Where things live / where to add stuff:**
+
+- **A tool's raw config** (dotfiles it reads at runtime) → `config/<tool>/`. A
+  module symlinks it into place; nothing reads `config/` directly.
+- **A new tool/program** → a `.nix` under `modules/home/{common,linux,darwin}/`
+  (user-level) or `modules/system/{nixos,darwin}/` (system-level), then add it to
+  the relevant `meta/` bundle so machines pick it up.
+- **A new machine** → register it in the `machines` set in `flake.nix` and add a
+  `modules/machines/<host>/`; it composes the `meta/` bundles plus host specifics.
+- **Platform split**: `common/` is cross-platform; `linux/`+`darwin/` hold the
+  OS-specific pieces; `meta/` decides which combination a machine gets.
+
 
 ## Initial Setup
 

@@ -1,6 +1,0 @@
-[config]
-scheme = "scheme-vibrant"
-
-[templates.hyprland]
-input_path = "~/.config/matugen/templates/hyprland.conf"
-output_path = "~/.cache/matugen/hyprland.conf"
