@@ -168,11 +168,11 @@
     "eww": {
       "flake": false,
       "locked": {
-        "lastModified": 1779906133,
-        "narHash": "sha256-LopSuRHZG7LxuNOuc0dQMbm3LbIxkjpogW0qCq9Idn4=",
+        "lastModified": 1780336074,
+        "narHash": "sha256-8bz3oZlO2RL9jAjdMpn5Ip7HLzlfDOVbdWXMeVpM6P4=",
         "owner": "endoze",
         "repo": "eww",
-        "rev": "2553ec8a84fe8f1d502f13114cf7fc2ec374913c",
+        "rev": "fcab3c81e157e30c8c1459b2d7fd4bfec3bd7350",
         "type": "github"
       },
       "original": {
