@@ -1,0 +1,116 @@
+*jjblame.txt*	a scroll-bound jj `file annotate` blame panel
+
+==============================================================================
+CONTENTS						*jjblame-contents*
+
+	1. Introduction ................ |jjblame-introduction|
+	2. Requirements ................ |jjblame-requirements|
+	3. Setup ....................... |jjblame-setup|
+	4. Configuration ............... |jjblame-configuration|
+	5. Usage ....................... |jjblame-usage|
+	6. Mappings .................... |jjblame-mappings|
+	7. API ......................... |jjblame-api|
+
+==============================================================================
+1. Introduction					*jjblame-introduction*
+
+jjblame opens a left, scroll-bound panel beside the current file showing each
+line's `jj file annotate` output (change id, author, date). Commit diffs open
+in splits, never a new tab.
+
+Consecutive lines that share a change-id are condensed into a single run: the
+change-id/author/date label is shown once on the run's first line, each run is
+wrapped by a bracket glyph (`╭ │ ╰`, or `╶` for a single line), and the bracket
+plus change-id are tinted by a stable per-change-id color so the same commit is
+the same color everywhere. One panel row per source line is preserved, keeping
+the panel scroll-aligned with the buffer.
+
+The annotation snapshots the working copy (no `--ignore-working-copy`) so the
+blame lines up exactly with the buffer's content.
+
+==============================================================================
+2. Requirements					*jjblame-requirements*
+
+	- `jj` (Jujutsu) on your PATH
+	- Neovim >= 0.10 (for `vim.system`)
+
+==============================================================================
+3. Setup						*jjblame-setup*
+
+`setup({opts})` merges {opts} over the defaults (see |jjblame-configuration|)
+and is otherwise optional; jjblame is driven through |jjblame.toggle()|. A
+typical lazy.nvim spec maps it lazily: >lua
+
+	{
+	  "you/jjblame.nvim",
+	  keys = {
+	    { "<leader>gb", function() require("jjblame").toggle() end, desc = "JJ blame" },
+	  },
+	}
+<
+==============================================================================
+4. Configuration				*jjblame-configuration*
+
+`setup()` accepts overrides for the bracket glyphs and the color palette: >lua
+
+	require("jjblame").setup({
+	  glyphs = {
+	    top = "╭",
+	    mid = "│",
+	    bot = "╰",
+	    single = "╶",
+	  },
+	  palette = {
+	    "blue",
+	    "green",
+	    "purple",
+	    "cyan",
+	    "yellow",
+	    "orange",
+	    "teal",
+	    "red",
+	    "pink",
+	    "nord_blue",
+	  },
+	})
+<
+`palette` entries are either base46 `base_30` key names (resolved live from the
+active theme, so colors track theme toggles) or literal "#rrggbb" values. When
+base46 isn't installed, key names fall back to bundled onedark hexes.
+
+A change-id is hashed to a stable palette slot, so the same commit keeps its
+color throughout the file. If two touching runs would land on the same color,
+the second is nudged to the next slot. Only the bracket glyph and the change-id
+are colored; the author and date columns stay neutral.
+
+==============================================================================
+5. Usage						*jjblame-usage*
+
+Call |jjblame.toggle()| from a file buffer to open the blame panel, and again
+(from either the source or the blame buffer) to close it.
+
+==============================================================================
+6. Mappings					*jjblame-mappings*
+
+Inside the blame panel:
+
+	<CR>	Open the line's commit diff in a vertical split.
+	<C-x>	Open the line's commit diff in a horizontal split.
+	q	Close the blame panel.
+
+Inside an opened commit diff:
+
+	q	Close the diff split.
+
+==============================================================================
+7. API						*jjblame-api*
+
+							*jjblame.toggle()*
+require("jjblame").toggle()
+		Toggle the blame panel for the current buffer.
+
+							*jjblame.close()*
+require("jjblame").close({src})
+		Close the blame panel for source buffer {src}.
+
+ vim:tw=78:ts=8:noet:ft=help:norl:

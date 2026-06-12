@@ -24,6 +24,7 @@
     templ
     terraform-ls
     vscode-langservers-extracted
+    wgsl-analyzer
     yaml-language-server
 
     # Formatters

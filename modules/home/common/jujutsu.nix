@@ -49,10 +49,8 @@
       };
 
       git = {
-        auto-local-branch = true;
         fetch = [ "origin" ];
         push = "origin";
-        auto-track-bookmarks = true;
       };
 
       remotes = {
