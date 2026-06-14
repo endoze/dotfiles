@@ -853,15 +853,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1780413241,
-        "narHash": "sha256-mv/IvS7wLbqrzZyqkJjXlYPMYAVNyGaIIHvVwwBrDww=",
-        "ref": "refs/heads/master",
-        "rev": "d0ebee1fe71bf072e3b93fc31455744345b40d1c",
-        "revCount": 9,
+        "lastModified": 1781407362,
+        "narHash": "sha256-+cbuxgCRS3/4HBZGtUtPK8aQy1y4Cx82OfczpkEsy10=",
+        "ref": "target-endoze-gtk-layer-shell-fork-for-use-after-free-fix",
+        "rev": "0b9b841da6dfb26a38db82c1e06289a55f1e50db",
+        "revCount": 10,
         "type": "git",
         "url": "ssh://git@github.com/endoze/monban"
       },
       "original": {
+        "ref": "target-endoze-gtk-layer-shell-fork-for-use-after-free-fix",
         "type": "git",
         "url": "ssh://git@github.com/endoze/monban"
       }

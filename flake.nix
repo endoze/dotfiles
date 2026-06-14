@@ -47,7 +47,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     monban = {
-      url = "git+ssh://git@github.com/endoze/monban";
+      url = "git+ssh://git@github.com/endoze/monban?ref=target-endoze-gtk-layer-shell-fork-for-use-after-free-fix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-cachyos-kernel = {
