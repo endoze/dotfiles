@@ -31,7 +31,6 @@
     age
     btop
     clickhouse
-    chromedriver
     docker
     docker-buildx
     docker-compose

@@ -24,6 +24,7 @@ return {
       python = { "yapf" },
       php = { "php_cs_fixer" },
       sql = { "sqruff" },
+      wgsl = { "wgslfmt" },
     },
     formatters = {
       sqruff = {
@@ -31,6 +32,11 @@ return {
           "--config",
           vim.fn.expand("~/.config/sqruff/config.cfg"),
         },
+      },
+      wgslfmt = {
+        command = "wgslfmt",
+        args = { "-" },
+        stdin = true,
       },
     },
     format_on_save = {

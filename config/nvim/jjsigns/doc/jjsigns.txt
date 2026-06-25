@@ -1,0 +1,88 @@
+*jjsigns.txt*	gitsigns-style diff signs for Jujutsu, snapshot-free
+
+==============================================================================
+CONTENTS						*jjsigns-contents*
+
+	1. Introduction ................ |jjsigns-introduction|
+	2. Requirements ................ |jjsigns-requirements|
+	3. Setup ....................... |jjsigns-setup|
+	4. Configuration ............... |jjsigns-configuration|
+	5. Commands .................... |jjsigns-commands|
+	6. Statusline integration ...... |jjsigns-statusline|
+
+==============================================================================
+1. Introduction					*jjsigns-introduction*
+
+jjsigns places gitsigns-style add/change/delete signs in the sign column based
+on a buffer's diff against Jujutsu's `@-` revision.
+
+The base content is read with `--ignore-working-copy`, so jj never snapshots
+the working copy and there is zero oplog churn. The live buffer is diffed
+against that base in-memory with |vim.diff()|, so signs update as you type and
+the plugin never shells out per keystroke.
+
+==============================================================================
+2. Requirements					*jjsigns-requirements*
+
+	- `jj` (Jujutsu) on your PATH
+	- Neovim >= 0.10 (for `vim.uv` and `vim.system`)
+
+==============================================================================
+3. Setup						*jjsigns-setup*
+
+Call the setup function once: >lua
+
+	require("jjsigns").setup({})
+<
+With lazy.nvim, loading on the `User FilePost` event works well: >lua
+
+	{
+	  "you/jjsigns.nvim",
+	  event = "User FilePost",
+	  config = function()
+	    require("jjsigns").setup({})
+	  end,
+	}
+<
+==============================================================================
+4. Configuration				*jjsigns-configuration*
+
+`setup()` accepts a table merged over the defaults: >lua
+
+	require("jjsigns").setup({
+	  signs = {
+	    add = { text = "┃" },
+	    change = { text = "┃" },
+	    delete = { text = "󰍵" },
+	    topdelete = { text = "▔" },
+	    changedelete = { text = "󱕖" },
+	  },
+	  base = "@-",      -- revision diffed against
+	  debounce = 100,   -- ms between edit and recompute
+	  priority = 6,     -- sign priority
+	})
+<
+Highlight groups `JJSignsAdd`, `JJSignsChange`, and `JJSignsDelete` are derived
+from the colorscheme (preferring `Added`/`Changed`/`Removed`, then the diff-mode
+groups) and refreshed on `ColorScheme`.
+
+==============================================================================
+5. Commands					*jjsigns-commands*
+
+							*:JJSignsRefresh*
+:JJSignsRefresh		Re-fetch the base for every attached buffer.
+
+							*:JJSignsToggle*
+:JJSignsToggle		Toggle signs on/off across all buffers.
+
+==============================================================================
+6. Statusline integration			*jjsigns-statusline*
+
+							*jjsigns.status_dict()*
+require("jjsigns").status_dict({bufnr})
+
+Returns `{ added, modified, removed }` line counts for {bufnr} (defaults to the
+current buffer), or nil when the buffer isn't attached. The counts are computed
+during the same in-memory diff that places the signs, so reading them is free.
+
+ vim:tw=78:ts=8:noet:ft=help:norl:

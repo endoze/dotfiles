@@ -25,5 +25,6 @@ return {
   -- "ts_ls",
   "tsgo",
   "ty",
+  "wgsl_analyzer",
   "yamlls",
 }

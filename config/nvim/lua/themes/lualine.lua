@@ -88,14 +88,18 @@ local mode_text = {
 function M.opts()
   local p = require("base46").get_theme_tb("base_30")
 
+  require("jj_statusline").setup()
+
   local mode = {
     function()
       local m = vim.api.nvim_get_mode().mode
+
       return " " .. icons.vim_logo .. " " .. (mode_text[m] or m:upper()) .. " "
     end,
     color = function()
       local m = vim.api.nvim_get_mode().mode
       local key = mode_color_names[m] or "blue"
+
       return { fg = p[key], bg = p.one_bg3, gui = "bold" }
     end,
     padding = 0,
@@ -106,17 +110,21 @@ function M.opts()
       local path = vim.api.nvim_buf_get_name(0)
       local name = (path == "" and "Empty") or path:match("([^/\\]+)[/\\]*$")
       local icon = icons.file_default
+
       if name ~= "Empty" then
         local ok, devicons = pcall(require, "nvim-web-devicons")
+
         if ok then
           local ft_icon = devicons.get_icon(name)
           icon = ft_icon ~= nil and ft_icon or icon
         end
       end
+
       local mod = vim.bo.modified and (" " .. icons.modified) or ""
       local ro = (vim.bo.readonly or not vim.bo.modifiable) and not vim.bo.modified
           and (" " .. icons.readonly)
         or ""
+
       return icon .. " " .. name .. mod .. ro
     end,
     color = { fg = p.light_grey, bg = p.statusline_bg },
@@ -124,30 +132,43 @@ function M.opts()
   }
 
   local branch = {
-    "branch",
+    function()
+      return require("jj_statusline").branch()
+    end,
     icon = icons.branch,
     color = { fg = p.light_grey, bg = p.statusline_bg },
   }
 
-  local diff = {
-    "diff",
-    symbols = {
-      added = " " .. icons.diff_added .. " ",
-      modified = " " .. icons.diff_modified .. " ",
-      removed = " " .. icons.diff_removed .. " ",
-    },
-    diff_color = {
-      added = { fg = p.green, bg = p.statusline_bg },
-      modified = { fg = p.yellow, bg = p.statusline_bg },
-      removed = { fg = p.red, bg = p.statusline_bg },
-    },
-  }
+  -- One component per diff kind so colors come from lualine's own per-component
+  -- highlighting (driven by the theme palette `p`) instead of custom global
+  -- highlight groups.
+  local function diff_part(key, color)
+    return {
+      function()
+        local c = require("jj_statusline").diff_counts()
+        local n = c and c[key] or 0
+
+        if n == 0 then
+          return ""
+        end
+
+        return icons["diff_" .. key] .. " " .. n
+      end,
+      color = { fg = color, bg = p.statusline_bg },
+      padding = { left = 0, right = 1 },
+    }
+  end
+
+  local diff_added = diff_part("added", p.green)
+  local diff_modified = diff_part("modified", p.yellow)
+  local diff_removed = diff_part("removed", p.red)
 
   local lsp_msg = {
     function()
       if vim.o.columns < 120 then
         return ""
       end
+
       return vim.lsp.status()
     end,
     color = { fg = p.red, bg = p.statusline_bg },
@@ -173,16 +194,21 @@ function M.opts()
   local lsp = {
     function()
       local clients = vim.lsp.get_clients({ bufnr = 0 })
+
       if #clients == 0 then
         return ""
       end
+
       local names = {}
+
       for _, c in ipairs(clients) do
         table.insert(names, c.name)
       end
+
       if vim.o.columns > 100 then
         return " " .. icons.lsp .. " LSP ~ " .. table.concat(names, ",")
       end
+
       return " " .. icons.lsp .. " LSP"
     end,
     color = { fg = p.green, bg = p.statusline_bg },
@@ -207,6 +233,7 @@ function M.opts()
       if vim.o.columns <= 85 then
         return ""
       end
+
       return icons.cwd_folder .. " " .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
     end,
     color = { fg = p.red, bg = p.one_bg3 },
@@ -237,7 +264,7 @@ function M.opts()
     sections = {
       lualine_a = { mode },
       lualine_b = { file },
-      lualine_c = { branch, diff },
+      lualine_c = { branch, diff_added, diff_modified, diff_removed },
       lualine_x = { lsp_msg, diagnostics, lsp },
       lualine_y = { cursor, progress },
       lualine_z = { cwd },

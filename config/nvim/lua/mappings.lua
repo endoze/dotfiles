@@ -88,10 +88,6 @@ local keymap_table = {
         end,
         "Toggle theme",
       },
-      ["<leader>gb"] = {
-        ":BlameToggle<cr>",
-        "Toggle Git Blame",
-      },
       ["q:"] = {
         "",
         "",
