@@ -10,6 +10,7 @@
     ../common/fastfetch.nix
     ../common/fish.nix
     ../common/git.nix
+    ../common/herdr.nix
     ../common/hn-tui.nix
     ../common/jujutsu.nix
     ../common/lsd.nix
