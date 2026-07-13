@@ -33,5 +33,14 @@ function nix-system
   end
 
   echo "Using configuration: $flake_config"
-  sudo $rebuild_cmd switch --flake ~/.dotfiles#$flake_config
+
+  if is_linux
+    # Evaluate/fetch as the invoking user so private flake inputs (e.g.
+    # monban over git+ssh) authenticate with our SSH agent, then elevate
+    # only for activation. Wrapping the whole rebuild in sudo fetches as
+    # root -- which has no SSH agent -> "Permission denied (publickey)".
+    $rebuild_cmd switch --flake ~/.dotfiles#$flake_config --sudo
+  else
+    sudo $rebuild_cmd switch --flake ~/.dotfiles#$flake_config
+  end
 end
