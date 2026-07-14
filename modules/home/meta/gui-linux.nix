@@ -25,6 +25,7 @@
     ../linux/wallpaper-picker.nix
     ../linux/cliphist.nix
     ../linux/nm-applet.nix
+    ../linux/photogimp.nix
     ../linux/chromium.nix
     ../linux/hypridle.nix
     ../linux/fontconfig.nix

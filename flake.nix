@@ -32,6 +32,10 @@
       url = "github:endoze/eww/fix/status-notification-watcher";
       flake = false;
     };
+    herdr = {
+      url = "github:ogulcancelik/herdr";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     hyprland = {
       url = "github:hyprwm/Hyprland";
       # Don't follow nixpkgs - let Hyprland use its own pinned version
@@ -47,7 +51,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     monban = {
-      url = "git+ssh://git@github.com/endoze/monban";
+      url = "git+ssh://git@github.com/endoze/monban?ref=target-endoze-gtk-layer-shell-fork-for-use-after-free-fix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-cachyos-kernel = {

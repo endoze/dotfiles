@@ -5,7 +5,9 @@
     initrd = {
       kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_drm" ];
     };
-    extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
+    # Kernel module is provided automatically by hardware.nvidia (derived from
+    # hardware.nvidia.package + open); don't add it manually here or you pin a
+    # stale/mismatched module (e.g. the kernel set default 595.84) alongside it.
   };
 
   hardware = {
@@ -26,7 +28,7 @@
     };
 
     nvidia = {
-      package = config.boot.kernelPackages.nvidiaPackages.stable;
+      package = config.boot.kernelPackages.nvidiaPackages.latest;
 
       modesetting.enable = true;
       # Power management is required to get nvidia GPUs to behave on

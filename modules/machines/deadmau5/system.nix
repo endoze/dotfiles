@@ -168,16 +168,14 @@
     ];
   };
 
-  # Mount 2TB Windows (NTFS) storage drive into home folder
+  # 2TB ext4 storage drive into home folder (migrated off NTFS 2026-07-13)
   fileSystems."/home/${userConfig.username}/Storage2" = {
-    device = "/dev/disk/by-uuid/EA200EE8200EBC17";
-    fsType = "ntfs3";
+    device = "/dev/disk/by-uuid/b58c9f46-64a8-435c-8252-bf038b82dcc6";
+    fsType = "ext4";
     options = [
-      "uid=1000"
-      "gid=100"
-      "umask=022"
       "nofail" # Boot succeeds even if drive is absent
       "x-systemd.automount" # Mount on first access, not at boot
+      "noatime"
     ];
   };
 
