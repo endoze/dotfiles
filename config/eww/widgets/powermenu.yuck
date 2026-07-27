@@ -12,7 +12,7 @@
       (label :text "󰒲")
     )
     (button :class "pm-btn pm-logout"
-      :onclick "eww close powermenu && hyprctl dispatch exit"
+      :onclick "eww close powermenu && uwsm stop"
       :tooltip "Logout"
       (label :text "󰍃")
     )

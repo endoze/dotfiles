@@ -10,7 +10,7 @@
       (button
         :class {ws.active ? "ws-btn active" :
                 ws.occupied ? "ws-btn occupied" : "ws-btn"}
-        :onclick "hyprctl dispatch workspace ${ws.id}"
+        :onclick "hyprctl dispatch 'hl.dsp.focus({ workspace = ${ws.id} })'"
         "${ws.id}"
       )
     )

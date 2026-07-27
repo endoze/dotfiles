@@ -19,11 +19,11 @@ Y=$((RESERVED_TOP + GAP))
 FLOATING=$(hyprctl activewindow -j | jq -r '.floating')
 
 if [ "$FLOATING" = "true" ]; then
-  hyprctl dispatch pin
-  hyprctl dispatch togglefloating
+  hyprctl dispatch 'hl.dsp.window.pin()'
+  hyprctl dispatch 'hl.dsp.window.float({ action = "toggle" })'
 else
-  hyprctl dispatch togglefloating
-  hyprctl dispatch pin
-  hyprctl dispatch resizeactive exact $PIP_WIDTH $PIP_HEIGHT
-  hyprctl dispatch moveactive exact $X $Y
+  hyprctl dispatch 'hl.dsp.window.float({ action = "toggle" })'
+  hyprctl dispatch 'hl.dsp.window.pin()'
+  hyprctl dispatch "hl.dsp.window.resize({ x = $PIP_WIDTH, y = $PIP_HEIGHT, relative = false })"
+  hyprctl dispatch "hl.dsp.window.move({ x = $X, y = $Y, relative = false })"
 fi
