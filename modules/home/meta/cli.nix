@@ -38,6 +38,7 @@
     doctl
     frp
     gh-dash
+    gh-stack
     htop
     imagemagick
     jq

@@ -23,7 +23,7 @@ return {
   "templ",
   "terraformls",
   -- "ts_ls",
-  "tsgo",
+  "tsc",
   "ty",
   "wgsl_analyzer",
   "yamlls",
