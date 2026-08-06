@@ -5,6 +5,10 @@
     ../darwin/chromium.nix
   ];
 
+  homebrew.brews = [
+    "libvips"
+  ];
+
   homebrew.casks = [
     "alfred"
     "chromedriver"

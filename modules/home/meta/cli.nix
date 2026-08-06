@@ -6,7 +6,6 @@
   imports = [
     ../common/bat.nix
     ../common/databases.nix
-    ../common/eilmeldung.nix
     ../common/fastfetch.nix
     ../common/fish.nix
     ../common/git.nix

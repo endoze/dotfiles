@@ -14,6 +14,9 @@
     lazydocker
     playwright-test
     shellcheck
+    zed-editor
+    nixd
+    xcodegen
   ];
 
   programs.mysql = {

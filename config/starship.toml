@@ -4,6 +4,14 @@
 palette = 'solarized'
 command_timeout = 500
 
+# Starship's default format is "$all", which renders custom modules after every
+# language module. That would leave the jj/git segment drifting to the far end
+# of the prompt in project repos. This is the default "$all" expansion with
+# "$custom" dropped and "${custom.jj}" moved up beside "$directory", so VCS info
+# stays where git_branch used to sit. Re-derive with `starship print-config`
+# if a starship upgrade adds new modules.
+format = "$username$hostname$localip$shlvl$singularity$kubernetes$nats$directory${custom.jj}$vcsh$fossil_branch$fossil_metrics$git_branch$git_commit$git_state$git_metrics$git_status$hg_branch$hg_state$pijul_channel$docker_context$package$bun$c$cmake$cobol$cpp$daml$dart$deno$dotnet$elixir$elm$erlang$fennel$fortran$gleam$golang$gradle$haskell$haxe$helm$java$julia$kotlin$lua$maven$mojo$nim$nodejs$ocaml$odin$opa$perl$php$pulumi$purescript$python$quarto$raku$rlang$red$ruby$rust$scala$solidity$swift$terraform$typst$vlang$vagrant$xmake$zig$buf$guix_shell$nix_shell$conda$pixi$meson$spack$memory_usage$aws$gcloud$openstack$azure$direnv$env_var$mise$crystal$sudo$cmd_duration$line_break$jobs$battery$time$status$container$netns$os$shell$character"
+
 [palettes.solarized]
 base03 = '#002b36'
 base02 = '#073642'
@@ -57,6 +65,23 @@ format = '\[[$symbol$environment]($style)\]'
 [crystal]
 format = '\[[$symbol($version)]($style)\]'
 
+[custom.jj]
+# jj has no "current branch", so this shows the nearest ancestor bookmark plus
+# how far @ has drifted from it, and the change id, which is the only identity
+# stable across rebase/squash/amend. jj-starship is a native binary that reads
+# the jj store directly, so it costs ~0ms; shelling out to the jj CLI instead
+# measured ~80ms per prompt. It renders git repos too, which is why
+# git_branch and git_commit are disabled below.
+when = "jj-starship detect"
+# --no-*-prefix drops the leading "on <symbol>"; note it takes the symbol with
+# it, since jj-starship treats them as one unit
+# --bookmarks-display-limit 1 keeps only the nearest ancestor bookmark. It lists
+# every ancestor bookmark by default, which is unreadable on a 5-deep stack. Do
+# not use --ancestor-bookmark-depth for this: it caps how far up it *searches*,
+# so a small value shows no bookmark at all once @ is several commits above one.
+shell = ["jj-starship", "--no-jj-prefix", "--no-git-prefix", "--bookmarks-display-limit", "1"]
+format = "$output "
+
 [daml]
 format = '\[[$symbol($version)]($style)\]'
 
@@ -106,6 +131,13 @@ format = '\[[$symbol$account(@$domain)(\($region\))]($style)\]'
 symbol = " "
 format = '\[[$symbol$branch]($style)\]'
 style = 'yellow'
+# superseded by custom.jj, which renders git branches too and is correct in
+# colocated jj repos (where git HEAD is detached and this shows a bare "HEAD")
+disabled = true
+
+[git_commit]
+# custom.jj already shows the change id (jj) or commit hash (git)
+disabled = true
 
 [git_status]
 format = '([\[$all_status$ahead_behind\]]($style))'
