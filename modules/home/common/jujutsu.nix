@@ -24,7 +24,7 @@
         shortlog = [ "log" "-n" "10" ];
         bc = [ "bookmark" "create" ];
         bs = [ "bookmark" "set" ];
-        some = [ "util" "exec" "--" "sh" "-c" "jj git fetch && jj new master" ];
+        some = [ "util" "exec" "--" "sh" "-c" "jj git fetch && jj new 'trunk()'" ];
       };
 
       signing = lib.mkIf (userConfig.gpgKey != "") {

@@ -2,7 +2,7 @@
   description = "Endoze's dotfiles - Multi-platform Nix configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -15,10 +15,6 @@
 
     claude-desktop = {
       url = "github:k3d3/claude-desktop-linux-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    eilmeldung = {
-      url = "github:endoze/eilmeldung/fix/guard-glibc-includes-for-linux-only";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     elephant = {
