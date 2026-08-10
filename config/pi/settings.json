@@ -1,0 +1,28 @@
+{
+  "lastChangelogVersion": "999.0.0",
+  "defaultProvider": "cursor",
+  "defaultModel": "claude-opus-5-1m",
+  "theme": "onedark",
+  "editorPaddingX": 0,
+  "packages": [
+    "./local/pi-cursor"
+  ],
+  "defaultThinkingLevel": "high",
+  "enabledModels": [
+    "anthropic/claude-opus-5",
+    "anthropic/claude-opus-4-8",
+    "anthropic/claude-sonnet-5",
+    "anthropic/claude-fable-5",
+    "cursor/claude-opus-5-1m",
+    "cursor/claude-opus-4-8-1m",
+    "cursor/claude-sonnet-5-1m",
+    "cursor/claude-fable-5-1m",
+    "cursor/gpt-5.6-sol-1m",
+    "cursor/gpt-5.6-luna-1m",
+    "cursor/gpt-5.6-terra-1m",
+    "cursor/gemini-3.6-flash",
+    "cursor/grok-4.5",
+    "cursor/kimi-k3",
+    "cursor/glm-5.2"
+  ]
+}

@@ -17,6 +17,7 @@
     ../common/matcha.nix
     ../common/mise.nix
     ../common/neovim.nix
+    ../common/pi.nix
     ../common/ruby.nix
     ../common/selene.nix
     ../common/shell-ai.nix

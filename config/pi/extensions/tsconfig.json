@@ -1,0 +1,37 @@
+{
+  "//": [
+    "Editor-only config for pi extensions. Nothing here compiles: pi loads these",
+    ".ts files through jiti, which strips types without checking them, so noEmit",
+    "is the point and tsc is purely for LSP feedback.",
+    "",
+    "nixpkgs installs pi in a directory named 'pi-monorepo' even though its",
+    "package.json declares name '@earendil-works/pi-coding-agent', so ordinary",
+    "node resolution cannot find it by name. The paths entries below map the",
+    "package names onto that directory.",
+    "",
+    "The relative hop lands on $HOME/.nix-profile, since this file sits at",
+    "$HOME/.dotfiles/config/pi/extensions/. Going through .nix-profile rather",
+    "than a /nix/store path means it survives pi version bumps, and it resolves",
+    "on both Darwin and Linux because dotfilesPath is always $HOME/.dotfiles."
+  ],
+  "compilerOptions": {
+    "target": "esnext",
+    "lib": ["esnext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@earendil-works/pi-coding-agent": [
+        "../../../../.nix-profile/lib/node_modules/pi-monorepo"
+      ],
+      "@earendil-works/*": [
+        "../../../../.nix-profile/lib/node_modules/pi-monorepo/node_modules/@earendil-works/*"
+      ],
+      "typebox": [
+        "../../../../.nix-profile/lib/node_modules/pi-monorepo/node_modules/typebox"
+      ]
+    }
+  }
+}

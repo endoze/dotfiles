@@ -998,6 +998,23 @@
         "type": "github"
       }
     },
+    "pi-cursor": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1785695071,
+        "narHash": "sha256-ywYYP8aEQFs841Xn0jMtRku6GUec2vRn3dZGWTueGZE=",
+        "owner": "Rahularya01",
+        "repo": "pi-cursor",
+        "rev": "51966ec4a392dfcca57552ab4ede5487b513095a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Rahularya01",
+        "repo": "pi-cursor",
+        "rev": "51966ec4a392dfcca57552ab4ede5487b513095a",
+        "type": "github"
+      }
+    },
     "pre-commit-hooks": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -1035,6 +1052,7 @@
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs_7",
         "nur": "nur",
+        "pi-cursor": "pi-cursor",
         "shirase": "shirase",
         "sops-nix": "sops-nix",
         "walker": "walker"

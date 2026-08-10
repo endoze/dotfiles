@@ -1,0 +1,535 @@
+diff -ruN --exclude=.git orig/.gitignore pristine/.gitignore
+--- orig/.gitignore	2026-08-02 14:24:31
++++ pristine/.gitignore	2026-08-10 17:01:26
+@@ -9,3 +9,4 @@
+ scripts/probe-tier-results.json
+ scripts/smoke-all-models-results.json
+ *.tgz
++.pi/
+diff -ruN --exclude=.git orig/CHANGELOG.md pristine/CHANGELOG.md
+--- orig/CHANGELOG.md	2026-08-02 14:24:31
++++ pristine/CHANGELOG.md	2026-08-10 17:01:26
+@@ -69,6 +69,19 @@
+ - Stream silence watchdog defaults: `PI_CURSOR_STREAM_IDLE_TIMEOUT_MS` / `PI_CURSOR_RESUME_IDLE_TIMEOUT_MS` → **180000 (3 min)**; `PI_CURSOR_STREAM_IDLE_MAX_RETRIES` → **5**.
+ - Docs (README, AGENTS, protocol) aligned with the real runtime defaults.
+ 
++## [Unreleased]
++
++### Fixed
++
++- **GOAWAY after a finished turn no longer fails/retries the stream (#3).** Cursor often closes the HTTP/2 connection with `GOAWAY (errorCode=0)` immediately after `interaction_update:turnEnded`. The provider used to surface that as a Connect error, retry the turn, and duplicate assistant output. Finished turns now complete cleanly; mid-turn GOAWAY (no `turnEnded`, or during a tool pause) still retries/errors as before.
++- Recognizes already-schema'd lifecycle updates (`turnEnded`, `stepStarted`/`stepCompleted`, `thinkingCompleted`, `heartbeat`, tool-call lifecycle, `shellOutputDelta`, `userMessageAppended`, summaries) as progress instead of recording them as `wireDrift`.
++- Normalizes `PI_CURSOR_CLIENT_VERSION` (trim / reject whitespace-only) on the HTTP/2 bridge and spawn diagnostics paths, matching `getCursorClientVersion()`.
++- **Stale-checkpoint discard no longer wipes mid-pause recovery state.** Discarding an undecodable/mismatched upstream checkpoint used to clear `midPausePendingToolCalls` and the blob store, so the documented full-history rebuild fallback could never run and tool resume failed with `skipReason=stale_checkpoint`. Checkpoint bytes are still dropped; mid-pause metadata and blobs are preserved for rebuild.
++
++### Changed
++
++- Default `x-cursor-client-version` is now `cli-2026.07.23-e383d2b` (was `cli-2026.05.01-eea359f`). Override with `PI_CURSOR_CLIENT_VERSION` as before. This does not replace a protobuf schema refresh for remaining unknown fields.
++
+ ## [1.4.0] - 2026-07-29
+ 
+ ### Fixed
+diff -ruN --exclude=.git orig/README.md pristine/README.md
+--- orig/README.md	2026-08-02 14:24:31
++++ pristine/README.md	2026-08-10 17:01:26
+@@ -214,6 +214,7 @@
+ - **`No API provider registered for api: cursor-native`:** Update to the latest `pi-cursor` (`pi update npm:@rahularya01/pi-cursor`) and restart Pi (or `/reload`). This means the Agent tried to stream via Pi's global `streamSimple` dispatcher before the Cursor transport was registered there. Current builds register `cursor-native` on that registry during extension load.
+ - **Not logged in / 401:** Ensure Cursor CLI or app is logged in, or run `/login cursor` again. Check `/cursor.doctor` to verify your `tokenSource`. Tokens from CLI/IDE are re-resolved when near expiry; idle stream retries also force-refresh credentials.
+ - **Empty / hung stream:** Cursor may have updated wire headers; verify network connectivity or bump `PI_CURSOR_CLIENT_VERSION`. `/cursor.doctor` prints the active `clientVersion`.
++- **GOAWAY right after a finished reply:** Cursor often closes with `GOAWAY (errorCode=0)` after `turnEnded`. Current builds treat that as a completed turn (no retry / no duplicate). If you still see retries, update `pi-cursor` and check `/cursor.doctor` for `lastStreamEvent=goaway_treated_as_complete`. Mid-turn GOAWAY or tool-pause GOAWAY is different — see wire-protocol drift below.
+ - **Wire-protocol drift:** Cursor can change `agent.v1` at any time. Unrecognized server messages and unknown protobuf fields are no longer skipped silently — they are counted, written to the lifecycle log as `wire_drift`, appended to the failing turn's error message, and listed by `/cursor.doctor` under `wireDrift`. `wireDriftStranding=yes` means an unanswered message could have parked the turn, which is the difference between "our schema is a bit behind" and "this is why it hung". Run `CURSOR_ACCESS_TOKEN=... npm run smoke:wire` to check the handshake and schema against the live endpoint without starting a chat turn, then see [`proto/README.md`](proto/README.md) to resync the schema.
+ - **Stuck / dies after a few minutes of work:** v1.2.2 answers all Cursor `InteractionQuery` permission prompts (web search / ask-question / etc.) that previously parked the stream. Inspect `$TMPDIR/pi-cursor-lifecycle.jsonl` for `interaction_query` / `bridge_close` events, and `/cursor.doctor` for `lastStreamEvent`. Full debug: `PI_CURSOR_PROVIDER_DEBUG=1`.
+ - **Tool continuation lost:** The provider now prefers full-history rebuild when checkpoints are stale/mismatched. If recovery still skips, `/cursor.doctor` shows `lastRecoverySkipReason`. Retry the turn or start a new chat.
+diff -ruN --exclude=.git orig/package-lock.json pristine/package-lock.json
+--- orig/package-lock.json	2026-08-02 14:24:31
++++ pristine/package-lock.json	2026-08-10 17:03:17
+@@ -1250,6 +1250,7 @@
+     "node_modules/@earendil-works/pi-coding-agent/node_modules/@earendil-works/pi-agent-core": {
+       "version": "0.81.1",
+       "resolved": "https://registry.npmjs.org/@earendil-works/pi-agent-core/-/pi-agent-core-0.81.1.tgz",
++      "integrity": "sha512-yqbh68CyhqxMov/jUogFJfMqlu2Gd37GAki+tr59YCmAPHfomiCA5ESzusXtpGzABeiZFC/OrRdQ4GwCCOMIHA==",
+       "license": "MIT",
+       "peer": true,
+       "dependencies": {
+@@ -1265,6 +1266,7 @@
+     "node_modules/@earendil-works/pi-coding-agent/node_modules/@earendil-works/pi-ai": {
+       "version": "0.81.1",
+       "resolved": "https://registry.npmjs.org/@earendil-works/pi-ai/-/pi-ai-0.81.1.tgz",
++      "integrity": "sha512-hzHE7Z8l5mgJk+ke67Lge0rwS2+wbKJrFKl9o5M1R1rh33+cCT7D1AHz1OAtX5wFs90E1/BTGhyJRTUHaMxGvQ==",
+       "license": "MIT",
+       "peer": true,
+       "dependencies": {
+@@ -1290,6 +1292,7 @@
+     "node_modules/@earendil-works/pi-coding-agent/node_modules/@earendil-works/pi-tui": {
+       "version": "0.81.1",
+       "resolved": "https://registry.npmjs.org/@earendil-works/pi-tui/-/pi-tui-0.81.1.tgz",
++      "integrity": "sha512-OMEe+Zt8oQYi/rCq3upxsTlIScWL0FPhXwQus34TbQb3EmTx88S7Uzx32JxvQiEeWOw8eDCdJf2PBUBE9r6wIg==",
+       "license": "MIT",
+       "peer": true,
+       "dependencies": {
+diff -ruN --exclude=.git orig/src/client/bridge.ts pristine/src/client/bridge.ts
+--- orig/src/client/bridge.ts	2026-08-02 14:24:31
++++ pristine/src/client/bridge.ts	2026-08-10 17:01:26
+@@ -1,6 +1,7 @@
+ import { spawn, type ChildProcess } from "node:child_process";
+ import { resolve as pathResolve, dirname } from "node:path";
+ import { fileURLToPath } from "node:url";
++import { getCursorClientVersion } from "../stream/config.js";
+ 
+ const CURSOR_API_URL = "https://api2.cursor.sh";
+ const CONNECT_END_STREAM_FLAG = 0b00000010;
+@@ -63,7 +64,7 @@
+     rpcPath: options.rpcPath,
+     url: options.url ?? CURSOR_API_URL,
+     unary: options.unary ?? false,
+-    cursorClientVersion: process.env.PI_CURSOR_CLIENT_VERSION || "cli-2026.05.01-eea359f",
++    cursorClientVersion: getCursorClientVersion(),
+   });
+   const proc = spawn(process.execPath, [BRIDGE_PATH], {
+     // Capture stderr so bridge deaths (HTTP/2 errors, panics) are diagnosable.
+diff -ruN --exclude=.git orig/src/client/h2-bridge.mjs pristine/src/client/h2-bridge.mjs
+--- orig/src/client/h2-bridge.mjs	2026-08-02 14:24:31
++++ pristine/src/client/h2-bridge.mjs	2026-08-10 17:01:26
+@@ -23,7 +23,8 @@
+ import http2 from "node:http2";
+ import crypto from "node:crypto";
+ 
+-const CURSOR_CLIENT_VERSION = process.env.PI_CURSOR_CLIENT_VERSION || "cli-2026.05.01-eea359f";
++const CURSOR_CLIENT_VERSION =
++  process.env.PI_CURSOR_CLIENT_VERSION?.trim() || "cli-2026.07.23-e383d2b";
+ 
+ /** Write one length-prefixed message to stdout. */
+ function writeMessage(data) {
+diff -ruN --exclude=.git orig/src/stream/config.ts pristine/src/stream/config.ts
+--- orig/src/stream/config.ts	2026-08-02 14:24:31
++++ pristine/src/stream/config.ts	2026-08-10 17:01:26
+@@ -7,7 +7,7 @@
+ import { assertSafeCursorBaseUrl } from "../utils/security.js";
+ 
+ export const DEFAULT_CURSOR_AGENT_URL = "https://agentn.us.api5.cursor.sh";
+-export const DEFAULT_CURSOR_CLIENT_VERSION = "cli-2026.05.01-eea359f";
++export const DEFAULT_CURSOR_CLIENT_VERSION = "cli-2026.07.23-e383d2b";
+ 
+ let cachedCursorAgentUrl: string | undefined;
+ 
+diff -ruN --exclude=.git orig/src/stream/index.ts pristine/src/stream/index.ts
+--- orig/src/stream/index.ts	2026-08-02 14:24:31
++++ pristine/src/stream/index.ts	2026-08-10 17:01:26
+@@ -41,6 +41,7 @@
+   enhanceCursorStreamError,
+   isAuthErrorMessage,
+   isProtocolMismatchMessage,
++  isRetriableGoawayMessage,
+ } from "./protocol.js";
+ export {
+   formatDriftSummary,
+diff -ruN --exclude=.git orig/src/stream/native-core.ts pristine/src/stream/native-core.ts
+--- orig/src/stream/native-core.ts	2026-08-02 14:24:31
++++ pristine/src/stream/native-core.ts	2026-08-10 17:02:40
+@@ -128,6 +128,7 @@
+ export { setBridgeFactoryForTests } from "./bridge-session.js";
+ import {
+   canBlindIdleRestart,
++  canCompleteAfterGoaway,
+   canRecoverAfterTransportLoss,
+   createStreamIdleWatchdog,
+   interactionUpdateCountsAsProgress,
+@@ -140,6 +141,7 @@
+ } from "./tuning.js";
+ export {
+   canBlindIdleRestart,
++  canCompleteAfterGoaway,
+   canRecoverAfterTransportLoss,
+   interactionUpdateCountsAsProgress,
+   resolveActiveBridgeTtlMs,
+@@ -190,8 +192,12 @@
+   type PlanRecoveryInput as ExtractedPlanRecoveryInput,
+   type LostToolContinuationDiagnosticInput as ExtractedLostToolContinuationDiagnosticInput,
+ } from "./recovery.js";
+-import { enhanceCursorStreamError, isAuthErrorMessage } from "./protocol.js";
+ import {
++  enhanceCursorStreamError,
++  isAuthErrorMessage,
++  isRetriableGoawayMessage,
++} from "./protocol.js";
++import {
+   setLastIdleTimeout,
+   setLastRecoverySkipReason,
+   setLastRequestSize,
+@@ -244,6 +250,7 @@
+   conversationStates,
+   createStreamIdleWatchdog,
+   canBlindIdleRestart,
++  canCompleteAfterGoaway,
+   canRecoverAfterTransportLoss,
+   clearStoredMidPauseMetadata,
+   collectToolResultImages,
+@@ -978,6 +985,8 @@
+   let cancelled = false;
+   let streamError: Error | null = null;
+   let emittedUserVisibleContent = false;
++  let sawTurnEnded = false;
++  let goawayAfterComplete = false;
+   // Only execs the client was actually told about may be recorded as pending: recovery matches the
+   // snapshot against the tool results the client sends back, and it can only send back what it saw.
+   const emittedExecs: PendingExec[] = [];
+@@ -1251,6 +1260,9 @@
+             checkpointRef.current = checkpointBytes;
+             debugLog("native.stream.checkpoint_buffered", { requestId, convKey, checkpointBytes });
+           },
++          () => {
++            sawTurnEnded = true;
++          },
+         );
+         if (madeProgress) {
+           idleWatchdog.reset();
+@@ -1264,6 +1276,27 @@
+     (endStreamBytes) => {
+       const endError = parseConnectEndStream(endStreamBytes);
+       if (endError) {
++        const completeAfterGoaway =
++          isRetriableGoawayMessage(endError.message) &&
++          canCompleteAfterGoaway({ sawTurnEnded, mcpExecReceived });
++        if (completeAfterGoaway) {
++          goawayAfterComplete = true;
++          setLastStreamEvent("goaway_after_turn_ended");
++          debugLog("native.stream.goaway_after_turn_ended", {
++            requestId,
++            modelId,
++            message: endError.message,
++            sawTurnEnded,
++            emittedUserVisibleContent,
++          });
++          lifecycleLog("goaway_after_turn_ended", {
++            requestId,
++            bridgeKey: bridgeKeyPrefix(bridgeKey),
++            convKey,
++            message: endError.message.slice(0, 200),
++          });
++          return;
++        }
+         streamError = endError;
+         const enhanced = enhanceCursorStreamError(endError.message);
+         debugLog("native.stream.cursor_error", {
+@@ -1314,6 +1347,8 @@
+       cancelled,
+       mcpExecReceived,
+       emittedUserVisibleContent,
++      sawTurnEnded,
++      goawayAfterComplete,
+       hasCheckpoint: !!checkpointRef.current,
+     });
+     idleWatchdog.clear();
+@@ -1322,6 +1357,25 @@
+ 
+     if (cancelled) return;
+     const stored = conversationStates.get(convKey);
++    const finalizeSuccessfulTurn = () => {
++      emitFlushed();
++      if (stored) {
++        if (checkpointRef.current) {
++          commitStoredCheckpoint(
++            stored,
++            checkpointRef.current,
++            blobStore,
++            completedTurns,
++            currentTurn,
++            convKey,
++          );
++          debugLog("native.stream.checkpoint_committed", { requestId, convKey, stored });
++        } else {
++          mergeBlobStore(stored, blobStore);
++        }
++      }
++      if (!writer.closed) writer.done("stop", state);
++    };
+     if (streamError) {
+       if (mcpExecReceived) {
+         const midPauseResult = handleBridgeCloseMidPause({
+@@ -1349,6 +1403,24 @@
+       return;
+     }
+ 
++    const completeAfterGoaway =
++      goawayAfterComplete ||
++      (code === 2 && canCompleteAfterGoaway({ sawTurnEnded, mcpExecReceived }));
++    if (completeAfterGoaway) {
++      debugLog("native.stream.goaway_treated_as_complete", {
++        requestId,
++        bridgeKey,
++        convKey,
++        code,
++        sawTurnEnded,
++        goawayAfterComplete,
++      });
++      setLastStreamEvent("goaway_treated_as_complete");
++      if (!mcpExecReceived) finalizeSuccessfulTurn();
++      removeActiveBridge(bridgeKey);
++      return;
++    }
++
+     if (code !== 0) {
+       const failure = classifyBridgeExit({
+         exitCode: code,
+@@ -1430,23 +1502,7 @@
+     }
+ 
+     if (!mcpExecReceived) {
+-      emitFlushed();
+-      if (stored) {
+-        if (checkpointRef.current) {
+-          commitStoredCheckpoint(
+-            stored,
+-            checkpointRef.current,
+-            blobStore,
+-            completedTurns,
+-            currentTurn,
+-            convKey,
+-          );
+-          debugLog("native.stream.checkpoint_committed", { requestId, convKey, stored });
+-        } else {
+-          mergeBlobStore(stored, blobStore);
+-        }
+-      }
+-      writer.done("stop", state);
++      finalizeSuccessfulTurn();
+     } else {
+       const midPauseResult = handleBridgeCloseMidPause({
+         stored,
+diff -ruN --exclude=.git orig/src/stream/protocol.ts pristine/src/stream/protocol.ts
+--- orig/src/stream/protocol.ts	2026-08-02 14:24:31
++++ pristine/src/stream/protocol.ts	2026-08-10 17:01:26
+@@ -18,6 +18,11 @@
+   return PROTOCOL_ERROR_RE.test(message);
+ }
+ 
++/** Connect end-stream / bridge errors that are Cursor's graceful HTTP/2 GOAWAY. */
++export function isRetriableGoawayMessage(message: string): boolean {
++  return /\bGOAWAY\b/i.test(message) && /\bretriable\b/i.test(message);
++}
++
+ export function formatProtocolMismatchHint(message: string): string {
+   const version = getCursorClientVersion();
+   return (
+diff -ruN --exclude=.git orig/src/stream/recovery.ts pristine/src/stream/recovery.ts
+--- orig/src/stream/recovery.ts	2026-08-02 14:24:31
++++ pristine/src/stream/recovery.ts	2026-08-10 17:01:26
+@@ -429,7 +429,9 @@
+     // Prefer rebuild over hard fail when mid-pause metadata is still trustworthy.
+     const rebuilt = tryRebuild("stale_checkpoint");
+     if (rebuilt.kind !== "skip") return rebuilt;
+-    return skipRecovery("stale_checkpoint", hadStoredCheckpointPreDiscard);
++    // Surface the rebuild skip reason (e.g. midpause mismatch) instead of always
++    // blaming the discarded checkpoint — callers already know it was stale.
++    return skipRecovery(rebuilt.reason, hadStoredCheckpointPreDiscard);
+   }
+ 
+   const expected = (input.stored.midPausePendingToolCalls ?? [])
+diff -ruN --exclude=.git orig/src/stream/server-messages.ts pristine/src/stream/server-messages.ts
+--- orig/src/stream/server-messages.ts	2026-08-02 14:24:31
++++ pristine/src/stream/server-messages.ts	2026-08-10 17:01:26
+@@ -91,6 +91,7 @@
+   onText: (text: string, isThinking?: boolean) => void,
+   onMcpExec: (exec: PendingExec) => void,
+   onCheckpoint?: (checkpointBytes: Uint8Array) => void,
++  onTurnEnded?: () => void,
+ ): boolean {
+   const msgCase = msg.message.case;
+   debugLog("server_message", { msgCase, msg });
+@@ -141,6 +142,27 @@
+           errorUnknown: value?.$unknown,
+         });
+       }
++      return interactionUpdateCountsAsProgress(updateCase);
++    }
++    if (
++      updateCase === "thinkingCompleted" ||
++      updateCase === "heartbeat" ||
++      updateCase === "toolCallStarted" ||
++      updateCase === "partialToolCall" ||
++      updateCase === "toolCallDelta" ||
++      updateCase === "stepStarted" ||
++      updateCase === "stepCompleted" ||
++      updateCase === "summary" ||
++      updateCase === "summaryStarted" ||
++      updateCase === "summaryCompleted" ||
++      updateCase === "shellOutputDelta" ||
++      updateCase === "userMessageAppended"
++    ) {
++      return interactionUpdateCountsAsProgress(updateCase, true);
++    }
++    if (updateCase === "turnEnded") {
++      onTurnEnded?.();
++      setLastStreamEvent("interaction_update:turnEnded");
+       return interactionUpdateCountsAsProgress(updateCase);
+     }
+     // Unrecognized update cases are informational rather than stranding — the
+diff -ruN --exclude=.git orig/src/stream/session-state.ts pristine/src/stream/session-state.ts
+--- orig/src/stream/session-state.ts	2026-08-02 14:24:31
++++ pristine/src/stream/session-state.ts	2026-08-10 17:01:26
+@@ -98,6 +98,25 @@
+ }
+ 
+ /**
++ * Drop only the unusable upstream checkpoint bytes/metadata.
++ *
++ * Mid-pause snapshots must survive: `planRecovery` falls back to full-history
++ * rebuild when the checkpoint is stale, and that path needs
++ * `midPausePendingToolCalls` + fingerprints + the blob store. Wiping them here
++ * was turning every stale checkpoint into a hard `skipReason=stale_checkpoint`.
++ */
++export function clearStoredCheckpointOnly(
++  stored: StoredConversation,
++  options: { clearBlobStore?: boolean } = {},
++): void {
++  stored.checkpoint = null;
++  delete stored.checkpointSource;
++  delete stored.checkpointTurnCount;
++  delete stored.checkpointHistoryFingerprint;
++  if (options.clearBlobStore) stored.blobStore.clear();
++}
++
++/**
+  * Checkpoint bytes are replayed straight into `fromBinary` when a request is built. A truncated or
+  * otherwise undecodable checkpoint would throw there and fail the turn — and, because nothing
+  * clears it, every later turn in the conversation too. Decoding once here turns that permanent
+@@ -160,8 +179,9 @@
+     hasMidPauseForThisTurn,
+     storedCheckpointHistoryFingerprint,
+     currentHistoryFingerprint,
++    preservedMidPause: !!stored.midPausePendingToolCalls?.length,
+   });
+-  clearStoredCheckpoint(stored, true);
++  clearStoredCheckpointOnly(stored);
+ }
+ 
+ export function trimBlobStore(
+diff -ruN --exclude=.git orig/src/stream/tuning.ts pristine/src/stream/tuning.ts
+--- orig/src/stream/tuning.ts	2026-08-02 14:24:31
++++ pristine/src/stream/tuning.ts	2026-08-10 17:01:26
+@@ -112,6 +112,9 @@
+   if (updateCase === "toolCallDelta") return true;
+   if (updateCase === "thinkingCompleted") return true;
+   if (updateCase === "heartbeat") return true;
++  if (updateCase === "turnEnded") return true;
++  if (updateCase === "stepStarted" || updateCase === "stepCompleted") return true;
++  if (updateCase === "shellOutputDelta" || updateCase === "userMessageAppended") return true;
+   if (
+     updateCase === "summary" ||
+     updateCase === "summaryStarted" ||
+@@ -138,6 +141,18 @@
+ }): boolean {
+   if (!input.emittedUserVisibleContent) return true;
+   return input.hasCheckpoint;
++}
++
++/**
++ * Cursor often GOAWAYs the HTTP/2 connection right after a finished turn.
++ * Once `turnEnded` has arrived and we are not mid tool-call pause, treat that
++ * close as successful completion instead of retrying/duplicating output.
++ */
++export function canCompleteAfterGoaway(options: {
++  sawTurnEnded: boolean;
++  mcpExecReceived: boolean;
++}): boolean {
++  return options.sawTurnEnded && !options.mcpExecReceived;
+ }
+ 
+ export function resolveMidPauseRebuildMaxAgeMs(envValue?: string): number {
+diff -ruN --exclude=.git orig/tests/durability.test.ts pristine/tests/durability.test.ts
+--- orig/tests/durability.test.ts	2026-08-02 14:24:31
++++ pristine/tests/durability.test.ts	2026-08-10 17:01:26
+@@ -75,11 +75,19 @@
+       checkpoint: new Uint8Array([0xff, 0xff, 0xff, 0xff]),
+       checkpointTurnCount: 0,
+       checkpointHistoryFingerprint: "whatever",
++      midPausePendingToolCalls: [{ toolCallId: "t1", toolName: "read" }],
++      midPauseTurnCount: 0,
++      midPauseHistoryFingerprint: "fp",
++      midPauseRecordedAtMs: Date.now(),
++      blobStore: new Map([["b1", new Uint8Array([1])]]),
+     });
+ 
+     discardStaleCheckpointIfNeeded(stored, [], "r1", "c1");
+ 
+     expect(stored.checkpoint).toBeNull();
++    // Rebuild fallback needs these; wiping them caused skipReason=stale_checkpoint.
++    expect(stored.midPausePendingToolCalls).toEqual([{ toolCallId: "t1", toolName: "read" }]);
++    expect(stored.blobStore.has("b1")).toBe(true);
+   });
+ 
+   it("preserves a valid checkpoint when mid-pause metadata covers the tool-continuation off-by-one", () => {
+diff -ruN --exclude=.git orig/tests/goaway-complete.test.ts pristine/tests/goaway-complete.test.ts
+--- orig/tests/goaway-complete.test.ts	1969-12-31 19:00:00
++++ pristine/tests/goaway-complete.test.ts	2026-08-10 17:01:26
+@@ -0,0 +1,29 @@
++import { describe, expect, it } from "vitest";
++import { canCompleteAfterGoaway, interactionUpdateCountsAsProgress } from "../src/stream/tuning.js";
++import { isRetriableGoawayMessage } from "../src/stream/protocol.js";
++
++describe("GOAWAY after turnEnded", () => {
++  it("treats turnEnded and related lifecycle updates as idle-watchdog progress", () => {
++    expect(interactionUpdateCountsAsProgress("turnEnded")).toBe(true);
++    expect(interactionUpdateCountsAsProgress("stepCompleted")).toBe(true);
++    expect(interactionUpdateCountsAsProgress("stepStarted")).toBe(true);
++    expect(interactionUpdateCountsAsProgress("shellOutputDelta")).toBe(true);
++    expect(interactionUpdateCountsAsProgress("userMessageAppended")).toBe(true);
++  });
++
++  it("recognizes Cursor's retriable GOAWAY connect error", () => {
++    expect(
++      isRetriableGoawayMessage(
++        "Connect error unavailable: Cursor GOAWAY (errorCode=0): upstream connection closed, retriable",
++      ),
++    ).toBe(true);
++    expect(isRetriableGoawayMessage("Connect error unavailable: boom")).toBe(false);
++    expect(isRetriableGoawayMessage("Bridge connection lost")).toBe(false);
++  });
++
++  it("completes only after turnEnded and outside a tool pause", () => {
++    expect(canCompleteAfterGoaway({ sawTurnEnded: true, mcpExecReceived: false })).toBe(true);
++    expect(canCompleteAfterGoaway({ sawTurnEnded: true, mcpExecReceived: true })).toBe(false);
++    expect(canCompleteAfterGoaway({ sawTurnEnded: false, mcpExecReceived: false })).toBe(false);
++  });
++});
+diff -ruN --exclude=.git orig/tests/recovery.test.ts pristine/tests/recovery.test.ts
+--- orig/tests/recovery.test.ts	2026-08-02 14:24:31
++++ pristine/tests/recovery.test.ts	2026-08-10 17:01:26
+@@ -198,6 +198,37 @@
+     }
+   });
+ 
++  it("rebuilds after real discardStaleCheckpointIfNeeded without wiping mid-pause", async () => {
++    const { discardStaleCheckpointIfNeeded } = await import("../src/stream/session-state.js");
++    const completedTurns: ParsedTurn[] = [{ userText: "earlier", steps: [] }];
++    const blob = new Uint8Array([7, 7, 7]);
++    const stored = storedBase({
++      // Undecodable upstream checkpoint — previously also wiped mid-pause + blobs.
++      checkpoint: new Uint8Array([0xff, 0xff, 0xff, 0xff]),
++      checkpointTurnCount: completedTurns.length,
++      checkpointHistoryFingerprint: fingerprintCompletedTurns(completedTurns),
++      blobStore: new Map([["keep-me", blob]]),
++      midPauseTurnCount: completedTurns.length,
++      midPauseHistoryFingerprint: fingerprintCompletedTurns(completedTurns),
++    });
++    const decision = planRecovery({
++      stored,
++      toolResults: [{ toolCallId: "t1", content: "ok" }],
++      completedTurns,
++      inFlightTurn: toolTurn(["t1"]),
++      requestId: "r1",
++      convKey: "c1",
++      discardStaleCheckpoint: discardStaleCheckpointIfNeeded,
++    });
++    expect(stored.checkpoint).toBeNull();
++    expect(stored.midPausePendingToolCalls?.map((c) => c.toolCallId)).toEqual(["t1"]);
++    expect(stored.blobStore.get("keep-me")).toEqual(blob);
++    expect(decision.kind).toBe("rebuild_full_history");
++    if (decision.kind === "rebuild_full_history") {
++      expect(decision.rebuildReason).toBe("stale_checkpoint");
++    }
++  });
++
+   it("falls back to rebuild when checkpoint tool ids mismatch but mid-pause is valid", () => {
+     const completedTurns: ParsedTurn[] = [{ userText: "earlier", steps: [] }];
+     const stored = storedBase({

@@ -1,0 +1,94 @@
+{
+  "$schema": "https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/src/modes/interactive/theme/theme-schema.json",
+  "name": "onedark",
+  "vars": {
+    "bgDeep": "#1e222a",
+    "bg": "#282c34",
+    "bgLift": "#2c313a",
+    "bgLiftMore": "#31353f",
+    "bgSuccess": "#2b3328",
+    "bgError": "#372a2d",
+    "selection": "#3e4452",
+    "gutter": "#4c5263",
+    "comment": "#5c6370",
+    "fgDim": "#828997",
+    "fg": "#abb2bf",
+    "fgBright": "#dcdfe4",
+    "red": "#e06c75",
+    "green": "#98c379",
+    "yellow": "#e5c07b",
+    "orange": "#d19a66",
+    "blue": "#61afef",
+    "purple": "#c678dd",
+    "cyan": "#56b6c2"
+  },
+  "colors": {
+    "accent": "blue",
+    "border": "gutter",
+    "borderAccent": "blue",
+    "borderMuted": "selection",
+
+    "success": "green",
+    "error": "red",
+    "warning": "yellow",
+
+    "text": "",
+    "muted": "fgDim",
+    "dim": "comment",
+
+    "thinkingText": "fgDim",
+
+    "selectedBg": "selection",
+    "userMessageBg": "bgLift",
+    "userMessageText": "",
+    "customMessageBg": "bgLiftMore",
+    "customMessageText": "",
+    "customMessageLabel": "purple",
+
+    "toolPendingBg": "bgLift",
+    "toolSuccessBg": "bgSuccess",
+    "toolErrorBg": "bgError",
+    "toolTitle": "",
+    "toolOutput": "fgDim",
+
+    "mdHeading": "yellow",
+    "mdLink": "blue",
+    "mdLinkUrl": "comment",
+    "mdCode": "cyan",
+    "mdCodeBlock": "green",
+    "mdCodeBlockBorder": "gutter",
+    "mdQuote": "fgDim",
+    "mdQuoteBorder": "gutter",
+    "mdHr": "gutter",
+    "mdListBullet": "blue",
+
+    "toolDiffAdded": "green",
+    "toolDiffRemoved": "red",
+    "toolDiffContext": "comment",
+
+    "syntaxComment": "comment",
+    "syntaxKeyword": "purple",
+    "syntaxFunction": "blue",
+    "syntaxVariable": "red",
+    "syntaxString": "green",
+    "syntaxNumber": "orange",
+    "syntaxType": "yellow",
+    "syntaxOperator": "cyan",
+    "syntaxPunctuation": "fg",
+
+    "thinkingOff": "gutter",
+    "thinkingMinimal": "comment",
+    "thinkingLow": "cyan",
+    "thinkingMedium": "blue",
+    "thinkingHigh": "purple",
+    "thinkingXhigh": "red",
+    "thinkingMax": "yellow",
+
+    "bashMode": "orange"
+  },
+  "export": {
+    "pageBg": "bgDeep",
+    "cardBg": "bg",
+    "infoBg": "bgLift"
+  }
+}

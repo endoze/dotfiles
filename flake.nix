@@ -58,6 +58,14 @@
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Source-only (flake = false): built by modules/home/common/pi.nix with a
+    # local patch applied, so the plugin's dist/ never lands in this repo. The
+    # patch teaches it to honor Cursor's `turnEnded`; without it a normal
+    # post-turn GOAWAY reads as transport loss and the turn is re-run 3x.
+    pi-cursor = {
+      url = "github:Rahularya01/pi-cursor/51966ec4a392dfcca57552ab4ede5487b513095a";
+      flake = false;
+    };
     shirase = {
       url = "git+ssh://git@github.com/endoze/shirase";
       inputs.nixpkgs.follows = "nixpkgs";
