@@ -12,6 +12,10 @@
 
   services.gpg-agent.enable = lib.mkForce false;
 
+  # The container has no use for a coding agent, and its settings.json symlink
+  # would dangle since the dotfiles checkout isn't present at runtime.
+  programs.pi-coding-agent.enable = lib.mkForce false;
+
   xdg = {
     enable = true;
     userDirs = {

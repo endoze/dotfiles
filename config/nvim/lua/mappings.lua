@@ -83,7 +83,8 @@ local keymap_table = {
         function()
           local nvconfig = require("nvconfig")
           local pair = nvconfig.base46.theme_toggle
-          nvconfig.base46.theme = (nvconfig.base46.theme == pair[1]) and pair[2] or pair[1]
+          nvconfig.base46.theme = (nvconfig.base46.theme == pair[1]) and pair[2]
+            or pair[1]
           require("base46").load_all_highlights()
         end,
         "Toggle theme",
@@ -119,12 +120,7 @@ local keymap_table = {
       --   "Toggle fold",
       -- },
     },
-    i = {
-      ["jj"] = {
-        "<ESC>",
-        "Escape insert mode",
-      },
-    },
+    i = {},
     v = {
       ["<"] = {
         "<gv",
