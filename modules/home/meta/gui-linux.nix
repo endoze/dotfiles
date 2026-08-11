@@ -18,6 +18,7 @@
     ../linux/kitty.nix
     ../linux/shirase.nix
     ../linux/swayosd.nix
+    ../linux/tokyonight-gtk-theme.nix
     ../linux/tokyonight-icon-theme.nix
     ../linux/wallust.nix
     ../linux/eww.nix

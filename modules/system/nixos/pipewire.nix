@@ -90,7 +90,11 @@
                 ];
                 actions = {
                   create-stream = {
-                    "combine.audio.position" = [ "FL" "FR" ];
+                    # Speakers are physically cross-wired on the motherboard line
+                    # out (cable routing), so swap channels on this leg only:
+                    # combine FR -> stream FL -> jack's left, and vice versa.
+                    # Other legs (Arctis) stay untouched.
+                    "combine.audio.position" = [ "FR" "FL" ];
                     "audio.position" = [ "FL" "FR" ];
                   };
                 };
@@ -115,14 +119,20 @@
       ];
     };
 
-    extraConfig.pipewire."10-main-virtual-source" = {
+    # Fan-in mirror of 09-main-virtual-sink: every physical mic becomes a leg of
+    # one combine source, which then feeds the single voice chain in 11-. Mics
+    # are matched by explicit node.name so that non-mic capture devices (Elgato
+    # capture card, motherboard line-in) never get summed into the voice bus.
+    # A leg whose device is absent simply never matches, so unplugging a mic
+    # removes it from the mix instead of breaking the graph.
+    extraConfig.pipewire."10-mic-combine" = {
       "context.modules" = [
         {
           name = "libpipewire-module-combine-stream";
           args = {
             "combine.mode" = "source";
-            "node.name" = "main-virtual-source";
-            "node.description" = "Main Virtual Source";
+            "node.name" = "mic-combine";
+            "node.description" = "Mic Combine";
             "combine.latency-compensate" = false;
             "combine.props" = {
               "audio.position" = [ "MONO" ];
@@ -130,14 +140,20 @@
             "stream.props" = { };
             "stream.rules" = [
               {
+                # Any one of these property sets matching creates a leg.
                 matches = [
                   {
                     "media.class" = "Audio/Source";
-                    "node.name" = "rnnoise_source";
+                    "node.name" = "alsa_input.usb-SteelSeries_Arctis_Pro_Wireless-00.mono-chat";
+                  }
+                  {
+                    "media.class" = "Audio/Source";
+                    "node.name" = "alsa_input.usb-Blue_Microphones_Yeti_Stereo_Microphone_RqV8-00.analog-stereo";
                   }
                 ];
                 actions = {
                   create-stream = {
+                    # Voice bus is mono; stereo mics get downmixed on their leg.
                     "combine.audio.position" = [ "MONO" ];
                     "audio.position" = [ "MONO" ];
                   };
@@ -154,8 +170,8 @@
         {
           "name" = "libpipewire-module-filter-chain";
           "args" = {
-            "node.description" = "Radio Voice Source";
-            "media.name" = "radio-voice-source";
+            "node.description" = "Main Virtual Source";
+            "media.name" = "main-virtual-source";
             # Mono broadcast voice chain. Signal flows:
             #   rnnoise -> hp -> warmth_shelf -> mud_cut -> presence -> air
             #     -> deess -> comp -> tube -> limit -> (playback)
@@ -275,13 +291,19 @@
             };
             "audio.position" = [ "MONO" ];
             "capture.props" = {
-              "node.name" = "capture.rnnoise_source";
+              "node.name" = "capture.main-virtual-source";
               "node.passive" = true;
-              "node.target" = "alsa_input.usb-Blue_Microphones_Yeti_Stereo_Microphone_RqV8-00.analog-stereo";
-
+              # Pull from the combine source, not a single physical mic, so all
+              # mics share this one chain. target.object is the current key;
+              # node.target is deprecated.
+              "target.object" = "mic-combine";
+              # Without this, a target that fails to resolve makes the session
+              # manager fall back to whatever it considers the default source
+              # (previously the Elgato capture card). Fail silent, not wrong.
+              "node.dont-fallback" = true;
             };
             "playback.props" = {
-              "node.name" = "rnnoise_source";
+              "node.name" = "main-virtual-source";
               "media.class" = "Audio/Source";
               "node.target" = "";
             };

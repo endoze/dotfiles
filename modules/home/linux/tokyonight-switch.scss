@@ -1,0 +1,49 @@
+switch {
+	transition: all $duration $ease-out;
+	margin: $space-size 0;
+	padding: 0;
+	border: none;
+	border-radius: $circular-radius;
+	background-color: $text-disabled;
+	background-clip: border-box;
+	font-size: 0;
+	color: transparent;
+
+	&:checked {
+		background-color: $assets-color;
+	}
+
+	&:disabled {
+		opacity: 0.5;
+	}
+
+	> image {
+		color: transparent;
+	}
+
+	> slider {
+		transition: box-shadow $duration $ease-out;
+		min-width: $small-size - $space-size;
+		min-height: $small-size - $space-size;
+		margin: $space-size / 2;
+		border-radius: $circular-radius;
+		outline: none;
+		box-shadow:
+			0 0 0 0 transparent,
+			$shadow-z3;
+		background-color: $white;
+		border: none;
+	}
+
+	// No hover/focus halo. Its 6px spread shadow rasterises with seams through
+	// the centre of the round knob at fractional scale, which shows up as a
+	// crosshair over the switch whenever the pointer is in the window. Keeping
+	// the resting shadow means hover is a no-op rather than a visible pop.
+	&:focus slider,
+	&:hover slider,
+	&:focus:hover slider {
+		box-shadow:
+			0 0 0 0 transparent,
+			$shadow-z3;
+	}
+}

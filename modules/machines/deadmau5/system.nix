@@ -23,6 +23,26 @@
 
   services.dnsmasq-resolver.enable = true;
 
+  # dnsmasq is resolved's global DNS, so it fields every name that isn't .test
+  # or *.ts.net. Point it at explicit upstreams rather than letting it follow
+  # /etc/dnsmasq-resolv.conf, which just mirrors whatever DHCP handed out.
+  # no-resolv overrides the resolv-file= the nixpkgs module always emits.
+  services.dnsmasq.settings = {
+    no-resolv = true;
+    server = [ "1.1.1.1" "1.0.0.1" ];
+  };
+
+  # Route every name to the global DNS (dnsmasq) rather than letting enp3s0's
+  # DHCP servers win on their plain default route. In resolved an explicit
+  # route-domain match outranks a default route, so tailscale0's "~ts.net"
+  # still takes *.ts.net. Subsumes the "~test" that dnsmasq.nix sets, since
+  # dnsmasq answers .test from address=/.test/ either way.
+  #
+  # Not networking.networkmanager.connectionConfig."ipv4.ignore-auto-dns":
+  # ignore-auto-dns is not one of the properties NM accepts as a [connection]
+  # default (see NetworkManager.conf(5)), so NM silently discards it.
+  services.resolved.settings.Resolve.Domains = lib.mkForce "~.";
+
   services.sunshine = {
     enable = true;
     autoStart = true;
@@ -53,18 +73,28 @@
     serviceConfig.Restart = "on-failure";
   };
 
-  # Tailscale as exit node and route advertiser for remote LAN access
+  # Tailscale as exit node and route advertiser for remote LAN access.
+  # extraSetFlags, not extraUpFlags: extraUpFlags needs authKeyFile, which this host lacks.
   services.tailscale = {
     useRoutingFeatures = "server";
-    extraUpFlags = [
+    extraSetFlags = [
       "--exit-node="
       "--accept-routes=false"
       "--advertise-exit-node"
-      "--advertise-routes=192.168.1.0/24"
+      "--advertise-routes=10.0.0.0/24" # this host's LAN; 192.168.1.0/24 is dosvec's
     ];
   };
 
   networking.hostName = systemConfig.hostName or "deadmau5";
+
+  # Wifi-only host: wait-online blocks graphical.target for up to 60s on slow association
+  systemd.services.NetworkManager-wait-online.enable = false;
+
+  # Without wait-online, attic starts pre-association and fails on DNS until wifi is up
+  systemd.services.attic-watch-store = {
+    unitConfig.StartLimitIntervalSec = 0;
+    serviceConfig.RestartSec = lib.mkForce "30s";
+  };
 
   time.timeZone = "America/New_York";
 

@@ -29,7 +29,7 @@ threshold = 10
 # (they change with each wallpaper) and must never land in the dotfiles repo.
 # Consumers source/include/@import these cache files and override their own
 # committed One Dark defaults when the cache is populated.
-hyprland = { template = "hyprland.conf",      target = "~/.cache/wallust/hyprland.conf" }
+hyprland = { template = "hyprland.lua",       target = "~/.cache/wallust/hyprland.lua" }
 eww      = { template = "eww-colors.scss",    target = "~/.cache/wallust/eww-colors.scss" }
 shirase  = { template = "shirase-colors.css", target = "~/.cache/wallust/shirase-colors.css" }
 walker   = { template = "walker-colors.css",  target = "~/.cache/wallust/walker-colors.css" }
