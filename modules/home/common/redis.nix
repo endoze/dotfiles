@@ -1,8 +1,8 @@
 { pkgs, config, lib, ... }:
 
 let
-  isDarwin = pkgs.stdenv.isDarwin;
-  isLinux = pkgs.stdenv.isLinux;
+  isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
+  isLinux = pkgs.stdenv.hostPlatform.isLinux;
 
   redisBin = "${pkgs.redis}/bin";
   redisDataDir = "${config.home.homeDirectory}/.local/share/redis";

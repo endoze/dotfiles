@@ -18,9 +18,7 @@
     nil
     bash-language-server
     typescript-language-server
-    # TypeScript 7 ships the native compiler as `tsc`, which also hosts the
-    # language server via `tsc --lsp --stdio` (see config/nvim/lua/lsp/tsc.lua).
-    typescript-go
+    typescript
     roslyn-ls
     pyright
     taplo

@@ -61,9 +61,11 @@
     yq
     zip
     zsh
-  ] ++ lib.optionals pkgs.stdenv.isDarwin [
+  ] ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
+    swiftformat
+    swiftlint
     trash-cli
-  ] ++ lib.optionals pkgs.stdenv.isLinux [
+  ] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
     clang-tools
     cmake
     dnsutils

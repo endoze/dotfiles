@@ -11,7 +11,6 @@
 
   homebrew.casks = [
     "alfred"
-    "chromedriver"
     "claude"
     "ungoogled-chromium"
     "ghostty"

@@ -3,7 +3,7 @@
 
 [tools]
 bun = "latest"
-dotnet = "latest"
+dotnet = "9"
 elixir = "latest"
 erlang = "latest"
 go = "1.25"

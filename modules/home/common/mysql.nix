@@ -1,8 +1,8 @@
 { pkgs, config, lib, ... }:
 
 let
-  isDarwin = pkgs.stdenv.isDarwin;
-  isLinux = pkgs.stdenv.isLinux;
+  isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
+  isLinux = pkgs.stdenv.hostPlatform.isLinux;
 
   mysqlBaseDir = "${config.home.homeDirectory}/.local/share/mysql";
   mysqlDataDir = "${mysqlBaseDir}/data";

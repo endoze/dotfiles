@@ -1,8 +1,8 @@
 { pkgs, config, lib, ... }:
 
 let
-  isDarwin = pkgs.stdenv.isDarwin;
-  isLinux = pkgs.stdenv.isLinux;
+  isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
+  isLinux = pkgs.stdenv.hostPlatform.isLinux;
 
   postgresqlWithExtensions = pkgs.postgresql.withPackages (p: [
     p.pgvector

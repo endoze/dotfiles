@@ -4,7 +4,7 @@
   programs.firefox = {
     enable = true;
     package = pkgs.firefox;
-    configPath = if pkgs.stdenv.isDarwin
+    configPath = if pkgs.stdenv.hostPlatform.isDarwin
       then "${config.home.homeDirectory}/Library/Application Support/Firefox"
       else "${config.xdg.configHome}/mozilla/firefox";
 
@@ -83,7 +83,7 @@
           "font.size.variable.x-western" = 18;
 
           # Scaling settings for HiDPI displays
-          "layout.css.devPixelsPerPx" = if pkgs.stdenv.isLinux then "1.75" else "-1.0";
+          "layout.css.devPixelsPerPx" = if pkgs.stdenv.hostPlatform.isLinux then "1.75" else "-1.0";
 
           # Dark mode settings
           "browser.theme.content-theme" = 0; # 0=dark, 1=light, 2=system
