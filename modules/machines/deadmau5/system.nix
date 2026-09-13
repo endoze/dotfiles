@@ -43,6 +43,17 @@
   # default (see NetworkManager.conf(5)), so NM silently discards it.
   services.resolved.settings.Resolve.Domains = lib.mkForce "~.";
 
+  # A buggy client flooded sshd here: MaxStartups throttled at the 10:30:100
+  # default and dropped hundreds of connections, and the sessions it did accept
+  # sat ESTABLISHED for hours because nothing probed them. ClientAlive* makes
+  # sshd reap a silent peer after 90s (30s x 3 probes); the wider MaxStartups
+  # gives a burst room to land before random early drop kicks in.
+  services.openssh.settings = {
+    ClientAliveInterval = 30;
+    ClientAliveCountMax = 3;
+    MaxStartups = "30:50:200";
+  };
+
   services.sunshine = {
     enable = true;
     autoStart = true;

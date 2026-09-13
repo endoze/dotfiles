@@ -780,10 +780,10 @@
         ]
       },
       "locked": {
-        "lastModified": 1781407362,
-        "narHash": "sha256-+cbuxgCRS3/4HBZGtUtPK8aQy1y4Cx82OfczpkEsy10=",
+        "lastModified": 1788633215,
+        "narHash": "sha256-xDwMsUxjzK5oTi9jipew7C6N6GmqAGEzbps86QAmwy8=",
         "ref": "target-endoze-gtk-layer-shell-fork-for-use-after-free-fix",
-        "rev": "0b9b841da6dfb26a38db82c1e06289a55f1e50db",
+        "rev": "d7dd9e5722449e2d351044e56724902b2656e558",
         "revCount": 10,
         "type": "git",
         "url": "ssh://git@github.com/endoze/monban"
