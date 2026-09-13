@@ -12,7 +12,7 @@
   ];
 
   environment.systemPackages = with pkgs; [
-    (pkgs.wrapFirefox (pkgs.firefox-unwrapped.override { pipewireSupport = true; }) { })
+    (pkgs.wrapFirefox (pkgs.firefox-unwrapped.override { withPipewire = true; }) { })
     cliphist
     adwaita-icon-theme
     file-roller

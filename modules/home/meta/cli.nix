@@ -32,6 +32,7 @@
     age
     btop
     clickhouse
+    cliamp
     docker
     docker-buildx
     docker-compose
@@ -59,6 +60,7 @@
     websocat
     worktrunk
     yq
+    yt-dlp
     zip
     zsh
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
@@ -69,7 +71,7 @@
     clang-tools
     cmake
     dnsutils
-    elixir
+    beamPackages.elixir
     elixir-ls
     fastfetch
     gcc

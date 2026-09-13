@@ -39,6 +39,30 @@ hl.window_rule({
   workspace = "special:discord silent",
 })
 
+-- cliamp (ghostty music player) - float, centered, on its own special workspace.
+-- No `silent` here: the first keypress should launch *and* reveal it.
+hl.window_rule({
+  match     = { class = "^(com\\.endoze\\.cliamp)$" },
+  float     = true,
+  center    = true,
+  size      = { 1100, 700 },
+  workspace = "special:cliamp",
+})
+
+-- Waydroid (Android) - float, centered, on its own special workspace.
+-- Like cliamp, no `silent`: launching it should also reveal it.
+--
+-- persist.waydroid.width/height are deliberately unset in waydroid.cfg, so the
+-- Android guest renders at whatever size this rule gives the window. Change
+-- `size` alone and the guest follows; there is no second number to keep in sync.
+hl.window_rule({
+  match     = { class = "^(Waydroid)$" },
+  float     = true,
+  center    = true,
+  size      = { 1280, 800 },
+  workspace = "special:waydroid",
+})
+
 -- qs-wallpaper-picker (Quickshell) - borderless, floating, centered
 hl.window_rule({
   match       = { title = "^(wallpaper-picker)$" },
