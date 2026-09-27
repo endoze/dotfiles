@@ -31,6 +31,7 @@
     herdr = {
       url = "github:ogulcancelik/herdr";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.rust-overlay.follows = "rust-overlay";
     };
     hyprland = {
       url = "github:hyprwm/Hyprland";
@@ -39,8 +40,9 @@
     };
     mac-app-util = {
       url = "github:hraban/mac-app-util";
-      # Don't follow nixpkgs - let mac-app-util use its own pinned version
-      # to avoid SBCL/CL build incompatibilities
+      # Follows nixpkgs because SBCL < 2.6.6 cannot start on macOS 27
+      # (fixed-address mmap at 0x300100000 is refused).
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     matcha = {
       url = "github:endoze/matcha/fix/scard-cgo-enabled";
@@ -58,13 +60,9 @@
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Source-only (flake = false): built by modules/home/common/pi.nix with a
-    # local patch applied, so the plugin's dist/ never lands in this repo. The
-    # patch teaches it to honor Cursor's `turnEnded`; without it a normal
-    # post-turn GOAWAY reads as transport loss and the turn is re-run 3x.
-    pi-cursor = {
-      url = "github:Rahularya01/pi-cursor/51966ec4a392dfcca57552ab4ede5487b513095a";
-      flake = false;
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     shirase = {
       url = "git+ssh://git@github.com/endoze/shirase";

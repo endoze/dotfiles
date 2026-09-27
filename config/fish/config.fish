@@ -6,6 +6,11 @@ export STARSHIP_LOG=error
 export XDG_CONFIG_HOME=$HOME/.config
 export RUBY_YJIT_ENABLE=1
 
+# Android SDK, for the Gonkulator Skip Fuse build. The NDK is not here: the
+# Swift Android SDK bundles its own under ~/Library/org.swift.swiftpm/swift-sdks.
+set -gx ANDROID_HOME $HOME/Library/Android/sdk
+fish_add_path $ANDROID_HOME/platform-tools
+
 for f in $HOME/.config/fish/aliases/*fish
   source $f
 end

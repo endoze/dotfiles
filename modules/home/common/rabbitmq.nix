@@ -1,8 +1,8 @@
 { pkgs, config, lib, systemConfig, ... }:
 
 let
-  isDarwin = pkgs.stdenv.isDarwin;
-  isLinux = pkgs.stdenv.isLinux;
+  isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
+  isLinux = pkgs.stdenv.hostPlatform.isLinux;
 
   rabbitmqBin = "${pkgs.rabbitmq-server}/bin";
   rabbitmqDataDir = "${config.home.homeDirectory}/.local/share/rabbitmq";

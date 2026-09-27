@@ -1,18 +1,30 @@
 {
   "lastChangelogVersion": "999.0.0",
-  "defaultProvider": "cursor",
-  "defaultModel": "claude-opus-5-1m",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.6-sol",
   "theme": "onedark",
+  "quietStartup": true,
   "editorPaddingX": 0,
   "packages": [
-    "./local/pi-cursor"
+    "npm:@rahularya01/pi-cursor@1.4.34",
+    "git:github.com/nil0ft/pi-extension-claude-code",
+    "git:github.com/obra/superpowers",
+    "npm:pi-smart-fetch",
+    "npm:@tintinweb/pi-subagents",
+    "npm:pi-hashline-edit-pro"
   ],
   "defaultThinkingLevel": "high",
   "enabledModels": [
+    "openai-codex/gpt-5.6-sol",
+    "openai-codex/gpt-6-astra",
+    "anthropic/claude-opus-5-5",
     "anthropic/claude-opus-5",
     "anthropic/claude-opus-4-8",
     "anthropic/claude-sonnet-5",
     "anthropic/claude-fable-5",
+    "openai-codex/gpt-5.6-luna",
+    "openai-codex/gpt-5.6-terra",
+    "openai-codex/gpt-5.5",
     "cursor/claude-opus-5-1m",
     "cursor/claude-opus-4-8-1m",
     "cursor/claude-sonnet-5-1m",
@@ -24,5 +36,9 @@
     "cursor/grok-4.5",
     "cursor/kimi-k3",
     "cursor/glm-5.2"
-  ]
+  ],
+  "enableInstallTelemetry": false,
+  "warnings": {
+    "anthropicExtraUsage": false
+  }
 }

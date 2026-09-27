@@ -18,6 +18,14 @@ import type { EditorTheme, TUI } from "@earendil-works/pi-tui";
 const FOCUS_REPORTING_ON = "\x1b[?1004h";
 const FOCUS_REPORTING_OFF = "\x1b[?1004l";
 
+// Arming once is not enough under a multiplexer. herdr keeps its own vt state
+// per pane and gates focus reports on its copy of mode 1004, so anything that
+// resets that state (a detach/reattach, a pane reset) silently stops the
+// reports without pi noticing: the session keeps running, the editor keeps
+// rendering, and the block cursor never goes away again. Re-sending is
+// idempotent and writes nothing visible, so just do it on a slow interval.
+const REARM_INTERVAL_MS = 10_000;
+
 // CSI I on focus gained, CSI O on focus lost. Under tmux these only arrive with
 // `set -g focus-events on`, which is off by default.
 const FOCUS_REPORT = /\x1b\[(I|O)/g;
@@ -35,6 +43,7 @@ const BLOCK_CURSOR = /\x1b\[7m(.*?)\x1b\[0m/;
 export default function (pi: ExtensionAPI) {
   let focused = true;
   let armed = false;
+  let rearm: ReturnType<typeof setInterval> | undefined;
   let activeTui: TUI | undefined;
 
   pi.on("session_start", (_event, ctx) => {
@@ -46,6 +55,13 @@ export default function (pi: ExtensionAPI) {
 
     process.stdout.write(FOCUS_REPORTING_ON);
     armed = true;
+
+    // Fires between frames on the event loop, so it cannot land in the middle
+    // of the renderer's own synchronous write.
+    rearm = setInterval(() => {
+      process.stdout.write(FOCUS_REPORTING_ON);
+    }, REARM_INTERVAL_MS);
+    rearm.unref?.();
 
     ctx.ui.onTerminalInput((data) => {
       let last: string | undefined;
@@ -133,6 +149,11 @@ export default function (pi: ExtensionAPI) {
   });
 
   pi.on("session_shutdown", () => {
+    if (rearm) {
+      clearInterval(rearm);
+      rearm = undefined;
+    }
+
     if (armed) {
       process.stdout.write(FOCUS_REPORTING_OFF);
       armed = false;

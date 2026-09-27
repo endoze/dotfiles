@@ -2,7 +2,15 @@
 # when direnv takes longer than the sync window (typically a cold nix eval).
 # See: https://github.com/nix-community/nix-direnv/issues/292
 
+# Temporarily off: flip this back to 1 to re-enable the hybrid hook. With it
+# at 0 every shell uses direnv's stock synchronous fish hook, so nix-direnv
+# flake devShells load the way upstream direnv loads them.
+set -l __direnv_use_hybrid 0
+
 if status is-interactive && command -v direnv >/dev/null 2>&1
+  and test $__direnv_use_hybrid -eq 0
+  direnv hook fish | source
+else if status is-interactive && command -v direnv >/dev/null 2>&1
   # Max time we'll block waiting for direnv before falling back to async.
   # 12 iterations × 50ms ≈ 600ms. Warm nix-direnv flakes typically finish
   # within ~350ms; cold nix evals exceed this and run fully async.

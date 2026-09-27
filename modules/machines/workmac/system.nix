@@ -28,6 +28,7 @@
     };
     casks = [
       "gcloud-cli"
+      "unity-hub"
     ];
   };
 

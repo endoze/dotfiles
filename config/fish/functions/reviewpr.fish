@@ -22,6 +22,10 @@ function reviewpr -d "Fetch a PR branch and start a Claude /review session for i
 
   echo "Reviewing PR #$pr ($branch)"
 
+  if not jj workspace update-stale
+    return 1
+  end
+
   if not jj git fetch
     return 1
   end

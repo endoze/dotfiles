@@ -1,0 +1,31 @@
+# Overrides herdr's remote pi manifest, which has no blocked rule at all, so an
+# unanswered question from the ask tool in config/pi/extensions/choices.ts reads
+# as idle. An override replaces a manifest rather than merging with it, so
+# working_literal below is upstream's rule carried forward verbatim: drop it and
+# pi loses working detection. Remote updates for pi stop applying while this
+# file exists.
+#
+# Reload after editing: herdr server reload-agent-manifests
+
+id = "pi"
+version = "2026.09.01.1"
+min_engine_version = 1
+aliases = ["herdr:pi"]
+
+# The title is set by the ask tool and read by herdr from OSC 0. Unlike screen
+# text it does not depend on scroll position or viewport size.
+[[rules]]
+id = "osc_title_blocked"
+state = "blocked"
+priority = 1100
+region = "osc_title"
+visible_blocker = true
+contains = ["Action Required"]
+
+[[rules]]
+id = "working_literal"
+state = "working"
+priority = 100
+region = "whole_recent"
+visible_working = true
+contains = ["Working..."]

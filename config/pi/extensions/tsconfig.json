@@ -21,6 +21,9 @@
     "moduleResolution": "bundler",
     "strict": true,
     "noEmit": true,
+    // Imports here carry explicit .ts extensions, which is what jiti and
+    // `node --test` both resolve. Without this, tsc rejects every one of them.
+    "allowImportingTsExtensions": true,
     "skipLibCheck": true,
     "paths": {
       "@earendil-works/pi-coding-agent": [

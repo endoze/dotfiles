@@ -12,11 +12,12 @@
     jira-cli-go
     kubernetes-helm
     lazydocker
+    nixd
     playwright-test
     shellcheck
-    zed-editor
-    nixd
+    sonarqube-cli
     xcodegen
+    zed-editor
   ];
 
   programs.mysql = {
