@@ -77,6 +77,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.elephant.follows = "elephant";
     };
+    # GPU-accelerated Waydroid on NVIDIA (deadmau5 only). Deliberately does not
+    # follow nixpkgs: virglrenderer-nvidia and the guest Vulkan/gralloc stack
+    # are built from source against the nixpkgs this flake pins and tests
+    # against, same reasoning as hyprland / nix-cachyos-kernel above.
+    waydroid-nvidia-nix = {
+      url = "github:yigexuanmu/waydroid-nvidia-nix";
+    };
   };
 
   outputs = { self, ... }@inputs:
@@ -107,6 +114,7 @@
           nixosExtraModules = [
             inputs.monban.nixosModules.default
             ({ ... }: { nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.pinned ]; })
+            inputs.waydroid-nvidia-nix.nixosModules.waydroid-nvidia
           ];
         };
       };

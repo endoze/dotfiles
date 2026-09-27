@@ -3,7 +3,7 @@
 {
   environment.systemPackages = with pkgs; [
     hypridle
-    gcr
+    gcr_4
   ];
 
   security.pam.services.monban.enableGnomeKeyring = true;

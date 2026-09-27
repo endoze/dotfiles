@@ -22,6 +22,16 @@ case "$active_class" in
       cut)   hyprctl dispatch 'hl.dsp.send_shortcut({ mods = "CTRL", key = "x", window = "activewindow" })' ;;
     esac
     ;;
+  # ghostty: terminals copy/paste with CTRL+SHIFT. Must use send_shortcut
+  # rather than wtype: hyprland swallows wtype's virtual-keyboard events
+  # while the SUPER from this bind is still physically held.
+  com.mitchellh.ghostty)
+    case "$action" in
+      copy)  hyprctl dispatch 'hl.dsp.send_shortcut({ mods = "CTRL SHIFT", key = "c", window = "activewindow" })' ;;
+      paste) hyprctl dispatch 'hl.dsp.send_shortcut({ mods = "CTRL SHIFT", key = "v", window = "activewindow" })' ;;
+      cut)   : ;; # terminals have no cut
+    esac
+    ;;
   # Default: use XF86 keysyms for all other apps (GTK, Qt, terminals, etc.)
   *)
     case "$action" in

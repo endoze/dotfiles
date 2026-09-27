@@ -14,7 +14,8 @@ local ewwScript  = home .. "/.config/eww/scripts"
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 hl.bind(mainMod .. " + T", hl.dsp.exec_cmd(terminal))
 hl.bind(mainMod .. " + F", hl.dsp.exec_cmd(browser))
-hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("loginctl lock-session"))
+hl.bind(mainMod .. " + M", hl.dsp.exec_cmd(hyprScript .. "/cliamp.sh"))
+hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(hyprScript .. "/waydroid.sh"))
 -- Quickshell image-carousel wallpaper picker (replaced waypaper / walker -m wallpaper):
 hl.bind(mainMod .. " + P", hl.dsp.exec_cmd("wallpaper-picker"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
@@ -33,6 +34,7 @@ hl.bind(mainMod .. " + CONTROL + 5", hl.dsp.exec_cmd(hyprScript .. "/screenrecor
 hl.bind(mainMod .. " + CONTROL + 6", hl.dsp.exec_cmd(hyprScript .. "/screenrecord.sh slurp"))
 hl.bind(mainMod .. " + CONTROL + 7", hl.dsp.exec_cmd(hyprScript .. "/wallpaper-video.sh"))
 
+hl.bind(mainMod .. " + SHIFT + M", hl.dsp.exec_cmd("loginctl lock-session"))
 hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + SHIFT + I", hl.dsp.exec_cmd(hyprScript .. "/pip.sh"))
 hl.bind(mainMod .. " + CONTROL + H", hl.dsp.exec_cmd(hyprScript .. "/hdr-toggle.sh"))

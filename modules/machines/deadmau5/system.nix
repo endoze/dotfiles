@@ -10,6 +10,7 @@
     ../../system/nixos/pipewire.nix
     ../../system/nixos/attic-cache.nix
     ../../system/nixos/plymouth.nix
+    ../../system/nixos/waydroid-nvidia.nix
   ];
 
   sops = {
@@ -65,6 +66,25 @@
     enable = true;
     openFirewall = true;
   };
+
+  # chiaki-ng (PlayStation Remote Play) LAN console discovery.
+  #
+  # chiaki binds its discovery socket to the first free port in 9303-9319
+  # (lib/include/chiaki/discovery.h) and probes for consoles by sending to the
+  # subnet broadcast address and 255.255.255.255 on UDP 9302 (PS5) / 987 (PS4).
+  # The console answers *unicast* from its own address, which does not match the
+  # conntrack reply tuple created for the broadcast, so the reply arrives as
+  # NEW. There is no conntrack helper for port 9302 (this is the same problem
+  # nf_conntrack_netbios_ns exists to solve for NetBIOS), so without this rule
+  # nixos-fw drops the reply and the console never appears in chiaki's list.
+  #
+  # The port-accept rules in nixos-fw carry no ctstate match, so this accepts
+  # the NEW-state reply on its own merits. Streaming itself is all outbound
+  # (9295 TCP/UDP, 9296-9297 UDP to the console) and needs no rule, which is
+  # why registering a console by IP works without this.
+  networking.firewall.allowedUDPPortRanges = [
+    { from = 9303; to = 9319; }
+  ];
 
   # Allow input group to create virtual input devices (for Sunshine gamepad/keyboard/mouse)
   # Set NVMe I/O scheduler to none (NVMe has internal scheduling, software scheduler adds CPU overhead)
@@ -217,6 +237,20 @@
       "nofail" # Boot succeeds even if drive is absent
       "x-systemd.automount" # Mount on first access, not at boot
       "noatime"
+    ];
+  };
+
+  # Code lives on Storage2 but keeps its ~/Projects path. A bind mount (rather
+  # than a symlink) means realpath stays /home/<user>/Projects, so direnv allow
+  # hashes, nix gcroots and jj workspace paths are unaffected.
+  fileSystems."/home/${userConfig.username}/Projects" = {
+    device = "/home/${userConfig.username}/Storage2/Projects";
+    fsType = "none";
+    options = [
+      "bind"
+      "nofail"
+      "x-systemd.automount"
+      "x-systemd.requires-mounts-for=/home/${userConfig.username}/Storage2"
     ];
   };
 

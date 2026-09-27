@@ -17,6 +17,10 @@
     vmtouch
     rmpc
     slack
+    # PlayStation Remote Play. chiaki-ng is the maintained fork; pkgs.chiaki is
+    # the dormant original and lacks PSN remote connection. Needs the UDP
+    # 9303-9319 firewall rule in system.nix to discover consoles on the LAN.
+    chiaki-ng
     (retroarch.withCores (cores: with cores; [
       genesis-plus-gx
       snes9x

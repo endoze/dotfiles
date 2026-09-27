@@ -965,6 +965,22 @@
         "type": "github"
       }
     },
+    "nixpkgs_7": {
+      "locked": {
+        "lastModified": 1784796856,
+        "narHash": "sha256-wWFrV5/Qbm+lyt5x20E/bSbfJiGKMo4RCxZV8cl/WZI=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "e2587caef70cea85dd97d7daab492899902dbf5d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nur": {
       "inputs": {
         "flake-parts": "flake-parts_3",
@@ -1026,7 +1042,8 @@
         "rust-overlay": "rust-overlay",
         "shirase": "shirase",
         "sops-nix": "sops-nix",
-        "walker": "walker"
+        "walker": "walker",
+        "waydroid-nvidia-nix": "waydroid-nvidia-nix"
       }
     },
     "rust-overlay": {
@@ -1320,6 +1337,42 @@
       "original": {
         "owner": "abenz1267",
         "repo": "walker",
+        "type": "github"
+      }
+    },
+    "waydroid-nvidia-nix": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_7",
+        "wnv-src": "wnv-src"
+      },
+      "locked": {
+        "lastModified": 1784900959,
+        "narHash": "sha256-wh11g5RcmQR/vSPBG1q08wA9F9ZmS5IkJ97+OUVo9RU=",
+        "owner": "yigexuanmu",
+        "repo": "waydroid-nvidia-nix",
+        "rev": "180697edb1ea2c53fed49d6a07d20a39af563083",
+        "type": "github"
+      },
+      "original": {
+        "owner": "yigexuanmu",
+        "repo": "waydroid-nvidia-nix",
+        "type": "github"
+      }
+    },
+    "wnv-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1784896711,
+        "narHash": "sha256-D1qG0+t9+6bdIEGZw6LaiIsU3yzASwY/VF0U2PM1Pcw=",
+        "owner": "Shiro836",
+        "repo": "waydroid-nvidia",
+        "rev": "4239f9055d9ecee765cf6890227cf4d1d9f7b13e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Shiro836",
+        "ref": "v0.1.2",
+        "repo": "waydroid-nvidia",
         "type": "github"
       }
     },
