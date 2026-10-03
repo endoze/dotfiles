@@ -1,349 +1,142 @@
-// One Dark palette
-$bg: rgba(50, 55, 65, 1);
-$fg: #abb2bf;
-$fg-dim: #5c6370;
-$border: rgba(100, 110, 130, 0.5);
-$blue: #61afef;
-$green: #98c379;
-$cyan: #56b6c2;
-$yellow: #e5c07b;
-$magenta: #c678dd;
-$red: #e06c75;
-
-// // Tokyo Night Dark palette
-// $bg: rgba(26, 27, 38, 0.93);
-// $fg: #c0caf5;
-// $fg-dim: #565f89;
-// $border: rgba(41, 46, 66, 0.6);
-// $blue: #7aa2f7;
-// $green: #9ece6a;
-// $cyan: #7dcfff;
-// $yellow: #e0af68;
-// $magenta: #bb9af7;
-// $red: #f7768e;
-
-// Wallust generated palette — overrides the defaults above when the cache is
-// populated (seeded empty on first run so this import never dangles).
-// `eww reload` recompiles and picks up new colors.
-@import "/home/endoze/.cache/wallust/eww-colors.scss";
-
-// wallust's check_contrast keeps the palette readable, but it only targets a
-// moderate minimum — some wallpaper accents (dark navy greens/reds) still land
-// too dim to read as tiny bar glyphs on $bg. $fg is the palette's guaranteed-
-// readable color against $bg, so icon() lifts an accent toward $fg *only when
-// it's too dark*; accents that already read keep their full saturation. Since
-// palette = "dark", lightness tracks contrast-against-$bg closely enough to gate on.
-$icon-min-lightness: 45%;
-$icon-lift: 55%; // accent share kept when a lift is needed (rest blends to $fg)
-
-@function icon($c) {
-  @if lightness($c) >= $icon-min-lightness {
-    @return $c;
-  } @else {
-    @return mix($c, $fg, $icon-lift);
-  }
-}
+// Transparent menu bar with frosted glass menus. Fixed palette; no wallust
+// import so it stays monochrome.
+$fg: rgba(255, 255, 255, 0.92);
+$fg-dim: rgba(255, 255, 255, 0.45);
+$fg-faint: rgba(255, 255, 255, 0.22);
+$hover: rgba(255, 255, 255, 0.14);
+$accent: #0a84ff;
+$red: #ff453a;
 
 * {
   all: unset;
-  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-family: "Inter", "JetBrainsMono Nerd Font", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: $fg;
+}
+
+// The bar has no background: items sit on the wallpaper in pure
+// white bold, with a soft shadow so they stay legible on light wallpapers.
+.menubar {
+  padding: 0 14px;
+}
+
+.menubar * {
+  color: #ffffff;
+  font-weight: 700;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  -gtk-icon-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+.menubar-left,
+.menubar-right {
+  padding: 0;
+}
+
+.logo label {
+  min-width: 24px;
+  font-family: "JetBrainsMono Nerd Font Propo";
+  font-size: 22px;
+  padding: 0;
+}
+
+.logo {
+  border-radius: 9px;
+  padding: 2px 6px;
+  &:hover { background: rgba(255, 255, 255, 0.13); }
+}
+
+.appname {
+  min-width: 90px;
+  font-weight: 800;
+}
+
+// Workspaces as menu titles
+.workspaces { padding: 0; margin-left: -6px; }
+.ws-item { padding: 4px 11px; border-radius: 5px; transition: all 120ms ease; }
+.menubar .ws-item label { color: rgba(255, 255, 255, 0.45); }
+.ws-item:hover { background: $hover; }
+.menubar .ws-item:hover label { color: #ffffff; }
+.menubar .ws-item.occupied label { color: #ffffff; }
+.ws-item.active { background: rgba(255, 255, 255, 0.2); }
+.menubar .ws-item.active label { color: #ffffff; }
+
+// Right side
+.tray image { -gtk-icon-transform: scale(1); }
+
+.glyph {
+  font-family: "JetBrainsMono Nerd Font Propo";
   font-size: 18px;
-  font-weight: bold;
-  color: $fg;
-  text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+  font-weight: 400;
 }
 
-.pill {
-  background: $bg;
-  border-radius: 24px;
-  border: 1px solid $border;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-  padding: 4px 16px;
-  margin: 0;
+.stat.active { background: rgba(255, 255, 255, 0.2); }
+.stat {
+  padding: 3px 8px;
+  border-radius: 5px;
+  &:hover { background: $hover; }
 }
 
-// Workspaces
-.workspaces {
-  padding: 2px 4px;
-}
-
-.ws-btn {
-  font-size: 13px;
-  min-width: 28px;
-  min-height: 28px;
-  border-radius: 50%;
-  color: $fg-dim;
-  margin: 0 3px;
-  transition: all 200ms ease;
-
-  &:hover {
-    color: $fg;
-    background: rgba($blue, 0.15);
-  }
-}
-
-.ws-btn.occupied {
-  color: $fg;
-}
-
-.ws-btn.active {
-  background: $blue;
-  font-weight: bold;
-  border-radius: 50%;
-}
-
-.ws-btn.active * {
-  // Knockout the number in the (dark) background color over the accent fill.
-  // With check_contrast the accent is lifted to a legible mid/light tone, so a
-  // dark $bg label reads cleanly and tracks the palette instead of a hardcode.
-  color: $bg;
-  text-shadow: none;
-}
-
-// Clock
-.clock-icon {
-  color: icon($magenta);
-  margin-left: 16px;
-}
-
+.clock-date,
 .clock-time {
-  font-weight: bold;
-}
-
-.separator {
-  color: $fg-dim;
-  margin: 0 16px;
-}
-
-.date-icon {
-  color: icon($magenta);
-}
-
-.clock-date {
-  color: $fg;
-  margin-right: 16px;
-}
-
-// System info
-.sysinfo {
   padding: 2px 4px;
 }
 
-.cpu-icon {
-  color: icon($green);
+// Power menu + GTK menus: shared glass card style
+$glass-fill: rgba(80, 86, 92, 0.68);
+$glass-outline: rgba(4, 5, 6, 0.65);
+$glass-sep: rgba(255, 255, 255, 0.12);
+@mixin glass($r) {
+  background: $glass-fill;
+  border: 1px solid $glass-outline;
+  border-radius: $r;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.30),
+    inset 1px 0 0 rgba(255, 255, 255, 0.10),
+    inset -1px 0 0 rgba(255, 255, 255, 0.10),
+    inset 0 3px 6px rgba(255, 255, 255, 0.05),
+    0 4px 24px rgba(0, 0, 0, 0.30);
 }
+// Transparent margin the outer shadow draws into: 8px left (aligns with the
+// logo), 24px right, 32px below.
+.pm-shadow { padding: 0; }
+.pm-glass { @include glass(15px); padding: 7px 0 6px 0; margin: 0 24px 32px 8px; min-width: 262px; }
+.pm-item { min-height: 30px; padding: 0 17px; margin: 0 6px; border-radius: 9px; transition: all 120ms ease;
+  &:hover { background: rgba($accent, 0.75); } }
+.pm-text { font-size: 16px; font-weight: 500; }
+.pm-sep { background: $glass-sep; min-height: 1px; margin: 5px 17px; }
+.logo.open { background: rgba(255, 255, 255, 0.13); }
 
-.mem-icon {
-  color: icon($cyan);
+// Menus, tooltips, OSD
+menu { @include glass(15px); padding: 7px 0 6px 0; }
+menu > menuitem { min-height: 30px; padding: 0 17px; margin: 0 6px; border-radius: 9px; transition: all 120ms ease; &:hover { background-color: rgba($accent, 0.75); } }
+menu > menuitem label { font-size: 16px; font-weight: 500; }
+menu separator { background-color: $glass-sep; min-height: 1px; margin: 5px 17px; }
+tooltip { @include glass(10px); padding: 5px 12px; }
+tooltip label { font-size: 14px; }
+
+// Audio OSD card (volume + mic). Margin leaves room for the shadow.
+.osd-shadow { padding: 0; }
+.osd-glass {
+  @include glass(16px);
+  padding: 10px 14px 10px 14px;
+  margin: 0 20px 28px 20px;
 }
-
-.vol {
-  transition: all 200ms ease;
-
-  &:hover {}
-}
-
-.vol-icon {
-  color: icon($yellow);
-}
-
-.notif-btn {
-  min-width: 32px;
-  min-height: 32px;
-  font-size: 14px;
-  border-radius: 50%;
-  transition: all 200ms ease;
-
-  &:hover {
-    background: rgba($blue, 0.2);
-  }
-}
-
-.notif-icon {
-  color: icon($blue);
-}
-
-.power-btn {
-  min-width: 32px;
-  min-height: 32px;
-  font-size: 14px;
-  border-radius: 50%;
-  transition: all 200ms ease;
-
-  &:hover {
-    background: rgba($red, 0.2);
-  }
-}
-
-.power-icon {
-  color: icon($red);
-}
-
-// Power menu
-.powermenu {
-  background: $bg;
-  border-radius: 8px;
-  border: 1px solid $border;
-  padding: 15px;
-}
-
-.pm-btn label {
-  font-size: 40px;
-}
-
-.pm-btn {
-  min-width: 85px;
-  min-height: 85px;
-  border-radius: 8px;
-  background: rgba($fg-dim, 0.3);
-  transition: all 200ms ease;
-
-  &:hover {
-    background: rgba($fg-dim, 0.45);
-  }
-}
-
-.pm-lock label {
-  color: icon($green);
-}
-
-.pm-suspend label {
-  color: icon($yellow);
-}
-
-.pm-logout label {
-  color: icon($magenta);
-}
-
-.pm-reboot label {
-  color: icon($cyan);
-}
-
-.pm-shutdown label {
-  color: icon($red);
-}
-
-.pm-lock:hover {
-  background: rgba($green, 0.25);
-}
-
-.pm-suspend:hover {
-  background: rgba($yellow, 0.25);
-}
-
-.pm-logout:hover {
-  background: rgba($magenta, 0.25);
-}
-
-.pm-reboot:hover {
-  background: rgba($cyan, 0.25);
-}
-
-.pm-shutdown:hover {
-  background: rgba($red, 0.25);
-}
-
-// System tray
-.tray {
-  padding: 2px 4px;
-
-  image {
-    margin: 0 4px;
-  }
-}
-
-menu {
-  background-color: $bg;
-  color: $fg;
-  border: 1px solid $border;
-  border-radius: 8px;
-  padding: 4px 0;
-  font-family: "JetBrainsMono Nerd Font", monospace;
-  font-size: 18px;
-  font-weight: normal;
-  text-shadow: none;
-}
-
-menu>menuitem {
-  padding: 6px 12px;
-  color: $fg;
-  background-color: transparent;
-  transition: all 200ms ease;
-}
-
-menu>menuitem:hover {
-  background-color: rgba($blue, 0.2);
-}
-
-menu>menuitem label {
-  color: $fg;
-  font-size: 18px;
-  font-weight: normal;
-  text-shadow: none;
-}
-
-menu separator {
-  background-color: $border;
-  min-height: 1px;
-  margin: 4px 8px;
-}
-
-tooltip {
-  background-color: $bg;
-  color: $fg;
-  border: 1px solid $border;
-  border-radius: 8px;
-  padding: 4px 8px;
-  font-family: "JetBrainsMono Nerd Font", monospace;
-  font-size: 18px;
-  font-weight: normal;
-  text-shadow: none;
-}
-
-tooltip label {
-  color: $fg;
-  font-family: "JetBrainsMono Nerd Font", monospace;
-  font-size: 18px;
-  font-weight: normal;
-  text-shadow: none;
-}
-
-.vol-osd {
-  background: $bg;
-  border-radius: 16px;
-  border: 1px solid $border;
-  padding: 16px 24px;
-
-  &.muted {}
-}
-
-.vol-osd-icon {
-  font-size: 32px;
-  color: icon($blue);
-}
-
-.vol-osd-bar {
+.osd-device { font-size: 13px; font-weight: 600; color: $fg; }
+.osd-icon { font-family: "JetBrainsMono Nerd Font Propo"; color: rgba(255, 255, 255, 0.75); }
+.osd-icon-low { font-size: 13px; min-width: 14px; }
+.osd-icon-high { font-size: 15px; min-width: 18px; }
+.osd-glass.muted .osd-icon { color: $fg-dim; }
+.osd-bar {
   min-height: 8px;
-  min-width: 150px;
-
-  trough {
-    background: rgba($fg-dim, 0.3);
-    border-radius: 4px;
-    min-height: 8px;
-  }
-
-  highlight {
-    background: $blue;
-    border-radius: 4px;
-    min-height: 8px;
-  }
-
-  slider {
-    all: unset;
-  }
+  min-width: 170px;
+  trough { background: rgba(255, 255, 255, 0.14); border-radius: 4px; min-height: 8px; }
+  highlight { background: $fg; border-radius: 4px; min-height: 8px; }
+  slider { all: unset; }
 }
+.osd-glass.muted .osd-bar highlight { background: transparent; }
+// Tick row sits under the slider only: inset by the glyph widths + spacing.
+.osd-ticks { margin: 0 28px 0 24px; }
+.osd-tick { min-width: 3px; min-height: 3px; border-radius: 50%; background: rgba(255, 255, 255, 0.35); }
 
-.vol-osd-pct {
-  font-size: 13px;
-  color: $fg-dim;
-}

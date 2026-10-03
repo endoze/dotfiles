@@ -2,8 +2,8 @@
 
 let
   # Post-apply hook, invoked by the picker as `wallpaper-picker-reload <wallpaper>`.
-  # Updates the symlink awww restores on login, then reuses the single wallust
-  # entry point (which reloads eww/shirase and restarts walker).
+  # Updates the symlink awww restores on login. (The wallust recolor that used to
+  # run here is gone: the bar, menus, shirase and walker use a fixed palette now.)
   wallpaper-picker-reload = pkgs.writeShellScriptBin "wallpaper-picker-reload" ''
     set -uo pipefail
     wallpaper="''${1:-}"
@@ -12,7 +12,6 @@ let
       exit 1
     fi
     ${pkgs.coreutils}/bin/ln -sf "$wallpaper" "$HOME/.config/hypr/current-wallpaper"
-    exec wallust-apply "$wallpaper"
   '';
 
   # Launcher: the picker only displays pre-generated thumbnails (it does not

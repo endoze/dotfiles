@@ -1,60 +1,51 @@
-; Component includes
+; Menu bar: Nix menu, active app, spaces on the left; tray, stats, clock on the right.
 (include "./widgets/workspaces.yuck")
 (include "./widgets/clock.yuck")
 (include "./widgets/sysinfo.yuck")
 (include "./widgets/volume-osd.yuck")
 (include "./widgets/powermenu.yuck")
 
-; System tray widget
+(deflisten activeapp :initial "Desktop"
+  "~/.config/eww/scripts/activeapp.sh"
+)
+
 (defwidget tray []
-  (box :class "tray" :orientation "h" :spacing 4
-    (systray :icon-size 22 :orientation "h" :spacing 8)
+  (box :class "tray" :orientation "h" :spacing 0
+    (systray :icon-size 20 :orientation "h" :spacing 16)
   )
 )
 
-; Left pill
 (defwidget left []
-  (box :class "pill left-pill" :orientation "h" :space-evenly false
+  (box :class "menubar-left" :orientation "h" :spacing 18 :space-evenly false
+    (button :class "logo ${pm_open ? 'open' : ''}" :onclick "eww open --toggle powermenu && eww update pm_open=$(eww active-windows | grep -q '^powermenu:' && echo true || echo false)" (label :text ""))
+    (label :class "appname" :text activeapp :xalign 0 :limit-width 18)
     (workspaces)
   )
 )
 
-; Center pill
-(defwidget center []
-  (box :class "pill center-pill" :orientation "h" :space-evenly false
+(defwidget right []
+  (box :class "menubar-right" :orientation "h" :spacing 18 :space-evenly false
+    (tray)
+    (sysinfo)
     (clock)
   )
 )
 
-; Right pill
-(defwidget right []
-  (box :orientation "h" :spacing 8 :space-evenly false
-    (box :class "pill tray-pill" :orientation "h" :space-evenly false
-      (tray)
-    )
-    (box :class "pill right-pill" :orientation "h" :space-evenly false
-      (sysinfo)
-    )
-  )
-)
-
-; Bar layout
 (defwidget bar []
-  (centerbox :orientation "h"
+  (centerbox :orientation "h" :class "menubar"
     (box :halign "start" (left))
-    (box :halign "center" :hexpand false (center))
+    (box :halign "center" :hexpand false)
     (box :halign "end" (right))
   )
 )
 
-; Bar window
 (defwindow bar
   :monitor 0
   :geometry (geometry
     :x "0%"
-    :y "8px"
-    :width "98%"
-    :height "34px"
+    :y "0px"
+    :width "100%"
+    :height "38px"
     :anchor "top center"
   )
   :stacking "fg"

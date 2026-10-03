@@ -1,66 +1,160 @@
-/* Shirase styling. Colors come from wallust via the import below, which is
- * seeded with a One Dark fallback on first run and regenerated per wallpaper.
- * Shirase reloads CSS when this file (its watched config dir) changes, so
- * wallust-apply nudges it after regenerating the palette. */
-@import url("file:///home/endoze/.cache/wallust/shirase-colors.css");
+/* Shirase styling: notifications as frosted glass cards.
+ * - The notification center has no panel: headers float over the desktop as
+ *   white text, and each notification is its own glass card.
+ * - Cards: smoky glass about +25 brightness over the backdrop, 20px radius,
+ *   1px near-black outline, bright 1px rim top and bottom (none on the
+ *   sides), no drop shadow.
+ * - Controls (pills, circles): the brighter menu glass, 1px dark outline,
+ *   strong top highlight, slightly lighter toward the bottom, dim gray text.
+ * - Hover only brightens the glass; nothing turns blue.
+ * Fixed palette (no wallust import). Hyprland supplies the blur via the
+ * gtk4-layer-shell layer rule in config/hypr/configs/window.lua; its
+ * ignore_alpha must stay below the card fill and above the text shadows. */
+
+@define-color card-fill rgba(80, 86, 92, 0.40);
+@define-color card-fill-hover rgba(92, 98, 104, 0.48);
+@define-color glass-fill rgba(80, 86, 92, 0.68);
+@define-color glass-fill-hover rgba(100, 106, 112, 0.74);
+@define-color glass-outline rgba(4, 5, 6, 0.65);
+@define-color fg #e5e6e7;
+@define-color fg-dim rgba(229, 230, 231, 0.6);
+@define-color control-fg rgba(229, 230, 231, 0.7);
+@define-color accent #0a84ff;
+@define-color red #ff453a;
 
 window {
   background: none;
   box-shadow: none;
 }
 
-/* Popup container */
+* {
+  font-family: "Inter", sans-serif;
+  color: @fg;
+}
+
+/* ---- Cards (popup bubbles and center rows) ---------------------------- */
+
+.notification-bubble,
+.notification-row {
+  background-color: @card-fill;
+  border: 1px solid @glass-outline;
+  border-radius: 20px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 3px 3px -1px rgba(255, 255, 255, 0.05),
+    inset 0 -3px 3px -1px rgba(255, 255, 255, 0.05);
+  padding: 12px 15px;
+  transition: background-color 150ms ease;
+}
+
+.notification-bubble:hover,
+.notification-row:hover {
+  background-color: @card-fill-hover;
+}
+
+.notification-bubble.notification-urgent,
+.notification-row.notification-urgent {
+  border-color: alpha(@red, 0.8);
+}
+
+/* Transparent room around the bubbles; cards cast no shadow. */
 .notification-popup-container {
-  padding: 8px;
+  padding: 4px 12px 12px 12px;
   background-color: transparent;
   border: none;
 }
 
-/* Individual notification bubble */
 .notification-bubble {
-  background-color: @background;
-  border: 1px solid alpha(@border, 0.5);
-  border-radius: 12px;
-  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.4);
-  padding: 12px;
-  margin: 4px;
+  margin: 3px 0;
   min-width: 300px;
-  font-family: "JetBrainsMono Nerd Font", monospace;
-  color: @foreground;
 }
 
-.notification-bubble.notification-urgent {
-  border-color: @red;
-  border-width: 2px;
-}
-
-.notification-app-name {
-  font-size: 0.8em;
-  font-weight: bold;
-  color: @fg-dim;
+.notification-row {
+  margin: 3px 0;
 }
 
 .notification-summary {
-  font-weight: bold;
-  font-size: 1em;
-  color: @foreground;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .notification-body {
-  font-size: 0.9em;
-  color: @foreground;
-  opacity: 0.9;
+  font-size: 14px;
+  color: alpha(@fg, 0.9);
 }
 
+.notification-timestamp {
+  font-size: 13px;
+  color: @fg-dim;
+}
+
+.notification-icon {
+  margin-right: 6px;
+}
+
+/* Collapsed groups: narrower strips of the same glass peek out under the
+   top card, rounded only at the bottom. The negative margin tucks the first
+   strip up against the card past the row's bottom margin. */
+.notification-stack-layer {
+  min-height: 7px;
+  background-color: @card-fill;
+  border: 1px solid @glass-outline;
+  border-top: none;
+  border-radius: 0 0 16px 16px;
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.notification-stack-layer.level-1 {
+  margin-top: -3px;
+}
+
+.notification-stack-layer.level-2 {
+  opacity: 0.7;
+}
+
+/* ---- Controls: glass pills and circles -------------------------------- */
+
+.notification-close-btn,
+.notification-dismiss-btn,
+.notification-morph-btn,
+.notification-action-btn,
+.notification-reply-btn {
+  border: 1px solid @glass-outline;
+  background-color: @glass-fill;
+  background-image: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.06));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.15);
+  color: @control-fg;
+  transition: background-color 150ms ease, opacity 150ms ease;
+}
+
+.notification-close-btn:hover,
+.notification-dismiss-btn:hover,
+.notification-morph-btn:hover,
+.notification-action-btn:hover,
+.notification-reply-btn:hover {
+  background-color: @glass-fill-hover;
+  color: @fg;
+}
+
+.notification-close-btn label,
+.notification-dismiss-btn label,
+.notification-morph-btn label,
+.notification-action-btn label,
+.notification-reply-btn label {
+  color: inherit;
+}
+
+/* Circles. A card's corner button is shown and hidden by shirase on hover. */
 .notification-close-btn,
 .notification-dismiss-btn {
-  min-width: 24px;
-  min-height: 24px;
+  min-width: 20px;
+  min-height: 20px;
   padding: 0;
-  border-radius: 6px;
-  background-color: transparent;
-  color: @fg-dim;
-  font-size: 20px;
+  border-radius: 999px;
+  font-size: 14px;
 }
 
 .notification-close-btn label,
@@ -69,137 +163,183 @@ window {
   margin: 0;
 }
 
-.notification-close-btn:hover,
-.notification-dismiss-btn:hover {
-  background-color: alpha(@blue, 0.15);
-  color: @foreground;
+/* Header buttons: a circle (× or ˄) that grows into a text pill ("Clear All",
+   "Clear", "Show less"); .expanded is set while the text shows. */
+.notification-morph-btn {
+  min-width: 24px;
+  min-height: 24px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.notification-morph-btn:not(.expanded) {
+  padding: 0;
+  font-size: 14px;
+}
+
+/* A card's corner ×, centered on the curve of its rounded top-left corner:
+   shirase leaves 10px around the card, the card adds a 3px top margin, and
+   the curve of a 20px radius sits about 6px in from the box corner. */
+.notification-card-frame > .notification-close-btn {
+  margin: 9px 0 0 6px;
+}
+
+/* The › that replaces the time on hover: a bare glyph, no glass. It turns to
+   point down while the card is open. */
+.notification-expand-btn label {
+  transition: transform 150ms ease;
+}
+
+.notification-expanded .notification-expand-btn label {
+  transform: rotate(90deg);
+}
+
+.notification-expand-btn {
+  min-width: 18px;
+  min-height: 18px;
+  padding: 0;
+  border: none;
+  background: none;
+  box-shadow: none;
+  color: @fg-dim;
+  font-size: 16px;
+}
+
+.notification-expand-btn:hover {
+  color: @fg;
+}
+
+/* Pills */
+.notification-action-btn,
+.notification-reply-btn {
+  min-height: 20px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
 }
 
 .notification-actions {
-  margin-top: 4px;
+  margin-top: 8px;
 }
 
-.notification-action-btn {
-  padding: 4px 12px;
-  border-radius: 6px;
-  font-size: 0.9em;
-  background-color: alpha(@fg-dim, 0.3);
-  color: @foreground;
-  border: 1px solid alpha(@border, 0.5);
+/* Open card: actions share the row width, and the inline reply field sits
+   over a nearly full-width Reply pill. */
+.notification-actions.expanded .notification-action-btn {
+  min-height: 26px;
 }
 
-.notification-action-btn:hover {
-  background-color: alpha(@blue, 0.2);
+.notification-reply-btn {
+  min-height: 28px;
+  margin: 0 2px;
 }
 
-/* Notification center panel */
+.notification-reply-entry {
+  min-height: 28px;
+  padding: 0 10px;
+  border: 1px solid @glass-outline;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.18);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25);
+  color: @fg;
+  caret-color: @fg;
+  font-size: 13px;
+}
+
+.notification-reply-entry:focus-within {
+  border-color: @accent;
+  outline: none;
+}
+
+.notification-reply-entry text placeholder {
+  color: @fg-dim;
+}
+
+/* ---- Notification center ---------------------------------------------- */
+
+/* No panel: headers and groups float over the desktop. */
 .notification-center {
-  background-color: @background;
-  border: 1px solid alpha(@border, 0.5);
-  padding: 12px;
-  font-family: "JetBrainsMono Nerd Font", monospace;
-  color: @foreground;
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 6px 12px 12px 12px;
 }
 
 .notification-center-header {
-  padding: 8px 4px;
-  border-bottom: 1px solid alpha(@border, 0.5);
-  margin-bottom: 8px;
+  padding: 4px 4px 6px 4px;
 }
 
-.notification-center-title {
-  font-size: 1.1em;
-  font-weight: bold;
-  color: @blue;
+/* Floating text gets the menu bar's faint shadow so it stays legible over
+   windows and light wallpapers. */
+.notification-center-header label,
+.notification-group-header label {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.28), 0 0 8px rgba(0, 0, 0, 0.25);
 }
 
-.notification-center-clear {
-  padding: 4px 12px;
-  border-radius: 6px;
-  /* @red is the darkest accent, so on the near-black center it can be illegible.
-     GTK CSS has no conditionals, so lift it toward @foreground (the palette's
-     guaranteed-readable color against the background). The lifted red is reused
-     as a faint fill + outline so the button is distinguishable from the center
-     background instead of reading as bare text. A bare @red tint here is dark
-     and near-invisible, so the fill is an alpha of the *lifted* color. */
-  color: color-mix(in srgb, @red 55%, @foreground 45%);
-  background-color: alpha(color-mix(in srgb, @red 55%, @foreground 45%), 0.12);
-  border: 1px solid color-mix(in srgb, @red 55%, @foreground 45%);
-  font-size: 0.85em;
+.notification-center-header label {
+  font-size: 13px;
+  font-weight: 500;
+  color: @control-fg;
 }
 
-.notification-center-clear:hover {
-  background-color: alpha(color-mix(in srgb, @red 55%, @foreground 45%), 0.28);
+.notification-center-header .notification-center-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: @fg;
 }
 
 .notification-center-content {
-  padding: 4px;
-  margin-right: 12px;
+  padding: 2px;
+  margin-right: 8px;
 }
 
-.notification-center-scroll scrollbar.vertical {
-  min-width: 6px;
-}
-
-.notification-center-scroll scrollbar.vertical range {
-  margin-left: 0;
-  margin-right: 0;
-}
-
-.notification-center-scroll scrollbar.vertical trough {
-  margin-left: 0;
-  margin-right: 0;
-}
-
+.notification-center-scroll scrollbar.vertical { min-width: 6px; background: none; border: none; }
+.notification-center-scroll scrollbar.vertical range,
+.notification-center-scroll scrollbar.vertical trough { margin-left: 0; margin-right: 0; background: none; }
 .notification-center-scroll scrollbar.vertical slider {
   min-width: 6px;
   border-radius: 3px;
+  background: rgba(255, 255, 255, 0.25);
 }
 
 .notification-center-empty {
   color: @fg-dim;
-  font-size: 1em;
+  font-size: 15px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.28), 0 0 8px rgba(0, 0, 0, 0.25);
 }
 
-/* Notification icon */
-.notification-icon {
-  margin-right: 4px;
-}
-
-/* Notification group */
 .notification-group {
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .notification-group-header {
-  padding: 6px 8px;
-  background-color: alpha(@fg-dim, 0.15);
-  border-radius: 8px;
-  font-weight: bold;
-  font-size: 0.85em;
-  color: @foreground;
+  padding: 4px 4px 4px 4px;
+  background: none;
 }
 
-.notification-group-toggle {
-  min-width: 24px;
-  min-height: 24px;
-  padding: 0;
-  background-color: transparent;
-  color: @fg-dim;
+.notification-group-header .notification-group-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: @fg;
 }
 
-/* Notification row in center */
-.notification-row {
-  padding: 8px;
-  border-bottom: 1px solid alpha(@border, 0.2);
+/* The center takes keyboard focus on open, so the theme draws its focus ring on
+   the first button. No ring on any glass control. */
+.notification-center button:focus,
+.notification-center button:focus-visible,
+.notification-bubble button:focus,
+.notification-bubble button:focus-visible {
+  outline: none;
 }
 
-.notification-row.notification-urgent {
-  border-left: 3px solid @red;
-  padding-left: 5px;
-}
-
-.notification-timestamp {
-  font-size: 0.8em;
-  color: @fg-dim;
+/* The header label rules above also match the header buttons' labels; keep
+   them sized and colored as controls, without the floating-text shadow. */
+.notification-center-header .notification-morph-btn label,
+.notification-group-header .notification-morph-btn label {
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  text-shadow: none;
 }

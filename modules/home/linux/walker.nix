@@ -39,12 +39,14 @@
     runAsService = true;
 
     config = {
-      theme = "onedark";
+      theme = "glass";
       keybinds = {
         next     = [ "Down" "ctrl j" ];
         previous = [ "Up"   "ctrl k" ];
       };
-      providers.default = [ "desktopapplications" "calc" "files" ];
+      # Apps and calc only. Files stay behind the explicit "find " prefix below so
+      # ordinary queries never surface random files.
+      providers.default = [ "desktopapplications" "calc" ];
       providers.prefixes = [
         { prefix = ";"; provider = "providerlist"; }
         { prefix = ">"; provider = "runner"; }
@@ -68,145 +70,307 @@
       ];
     };
 
-    themes = {
-      "onedark" = {
-        # Wallpaper layout retired with the hand-rolled walker picker;
-        # waypaper handles wallpaper selection now.
-        layouts = {
-          # "item_wallpaper" = ''
-          #   <?xml version="1.0" encoding="UTF-8"?>
-          #   <interface>
-          #     <requires lib="gtk" version="4.0"></requires>
-          #     <object class="GtkBox" id="ItemBox">
-          #       <style>
-          #         <class name="item-box"></class>
-          #       </style>
-          #       <property name="orientation">horizontal</property>
-          #       <property name="spacing">12</property>
-          #       <child>
-          #         <object class="GtkImage" id="ItemImage">
-          #           <style>
-          #             <class name="item-image"></class>
-          #           </style>
-          #           <property name="halign">start</property>
-          #           <property name="valign">center</property>
-          #         </object>
-          #       </child>
-          #       <child>
-          #         <object class="GtkLabel" id="ItemText">
-          #           <style>
-          #             <class name="item-text"></class>
-          #           </style>
-          #           <property name="ellipsize">end</property>
-          #           <property name="xalign">0</property>
-          #           <property name="valign">center</property>
-          #           <property name="hexpand">true</property>
-          #         </object>
-          #       </child>
-          #     </object>
-          #   </interface>
-          # '';
-        };
-        style = ''
-          /* Colors come from wallust via the import below, seeded with a One Dark
-             fallback on first run and regenerated per wallpaper. walker has no CSS
-             watcher, so wallust-apply restarts the service to pick up changes. */
-          @import url("file:///home/endoze/.cache/wallust/walker-colors.css");
-
-          * {
-            font-family: "JetBrainsMono Nerd Font", monospace;
-            font-size: 14px;
-            font-weight: bold;
-          }
-
-          .box-wrapper {
-            background-color: alpha(@background, 0.97);
-            border: 1px solid alpha(@border, 0.5);
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-            padding: 8px;
-          }
-
-          .search-container {
-            background-color: alpha(@background, 0.98);
-            border: 1px solid alpha(@border, 0.5);
-            border-radius: 24px;
-            padding: 4px 16px;
-            margin-bottom: 8px;
-          }
-
-          .input {
-            color: @foreground;
-            background: transparent;
-            caret-color: @accent;
-            border-radius: 24px;
-            outline: none;
-            box-shadow: none;
-          }
-
-          .input:focus,
-          .input:active {
-            outline: none;
-            box-shadow: none;
-          }
-
-          .search-container:focus-within {
-            border-color: @accent;
-          }
-
-          .list {
-            background: transparent;
-          }
-
-          .item-box {
-            border-radius: 8px;
-            padding: 6px 12px;
-            transition: all 200ms ease;
-            color: @foreground;
-          }
-
-          .item-box:hover {
-            background-color: alpha(@accent, 0.15);
-          }
-
-          .item-box.current {
-            background-color: alpha(@accent, 0.2);
-            border-left: 2px solid @accent;
-          }
-
-          .item-text {
-            color: @foreground;
-            font-size: 14px;
-          }
-
-          .item-subtext {
-            color: @fg-dim;
-            font-size: 12px;
-          }
-
-          .placeholder {
-            color: @fg-dim;
-          }
-
-          /* Wallpaper picker styles retired with the hand-rolled walker provider;
-             waypaper handles its own UI now.
-
-          .wallpaper .item-image {
-            -gtk-icon-size: 240px;
-            min-width: 240px;
-            min-height: 160px;
-          }
-
-          .wallpaper .item-box {
-            padding: 6px 8px;
-          }
-
-          .wallpaper .item-text {
-            font-size: 13px;
-          }
-          */
-        '';
-      };
+    # Glass launcher: one glass box high on the screen, magnifier +
+    # large query row, accent-pill selection. Fixed palette shared with the eww
+    # bar, power menu, shirase and monban (no wallust). Blur comes from the
+    # Hyprland layer rule for the "walker" namespace in config/hypr/configs/window.lua.
+    themes.glass = {
+      # layout.xml: default walker layout with the box anchored near the top,
+      # 680px wide, sized to content (at most ~7 rows), plus a magnifier icon before the entry.
+      layouts.layout = ''
+        <?xml version="1.0" encoding="UTF-8"?>
+        <interface>
+          <requires lib="gtk" version="4.0"></requires>
+          <object class="GtkWindow" id="Window">
+            <style>
+              <class name="window"></class>
+            </style>
+            <property name="resizable">true</property>
+            <property name="title">Walker</property>
+            <child>
+              <object class="GtkBox" id="BoxWrapper">
+                <style>
+                  <class name="box-wrapper"></class>
+                </style>
+                <property name="overflow">hidden</property>
+                <property name="orientation">horizontal</property>
+                <property name="valign">start</property>
+                <property name="margin-top">230</property>
+                <property name="halign">center</property>
+                <property name="width-request">680</property>
+                <child>
+                  <object class="GtkBox" id="Box">
+                    <style>
+                      <class name="box"></class>
+                    </style>
+                    <property name="orientation">vertical</property>
+                    <property name="hexpand-set">true</property>
+                    <property name="hexpand">true</property>
+                    <property name="spacing">10</property>
+                    <child>
+                      <object class="GtkBox" id="SearchContainer">
+                        <style>
+                          <class name="search-container"></class>
+                        </style>
+                        <property name="overflow">hidden</property>
+                        <property name="orientation">horizontal</property>
+                        <property name="halign">fill</property>
+                        <property name="hexpand-set">true</property>
+                        <property name="hexpand">true</property>
+                        <child>
+                          <object class="GtkImage">
+                            <style><class name="search-icon"></class></style>
+                            <property name="icon-name">system-search-symbolic</property>
+                            <property name="valign">center</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkEntry" id="Input">
+                            <style>
+                              <class name="input"></class>
+                            </style>
+                            <property name="halign">fill</property>
+                            <property name="hexpand-set">true</property>
+                            <property name="hexpand">true</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox" id="ContentContainer">
+                        <style>
+                          <class name="content-container"></class>
+                        </style>
+                        <property name="orientation">horizontal</property>
+                        <property name="spacing">10</property>
+                        <child>
+                          <object class="GtkLabel" id="ElephantHint">
+                            <style>
+                              <class name="elephant-hint"></class>
+                            </style>
+                            <property name="label">Waiting for elephant...</property>
+                            <property name="hexpand">true</property>
+                            <property name="vexpand">true</property>
+                            <property name="visible">false</property>
+                            <property name="valign">0.5</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="Placeholder">
+                            <style>
+                              <class name="placeholder"></class>
+                            </style>
+                            <property name="label">No Results</property>
+                            <property name="hexpand">true</property>
+                            <property name="vexpand">true</property>
+                            <property name="valign">0.5</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkScrolledWindow" id="Scroll">
+                            <style>
+                              <class name="scroll"></class>
+                            </style>
+                            <property name="can_focus">false</property>
+                            <property name="overlay-scrolling">true</property>
+                            <property name="hexpand">true</property>
+                            <property name="vexpand">true</property>
+                            <property name="max-content-width">656</property>
+                            <property name="min-content-width">656</property>
+                            <property name="max-content-height">360</property>
+                            <property name="propagate-natural-height">true</property>
+                            <property name="propagate-natural-width">true</property>
+                            <property name="hscrollbar-policy">automatic</property>
+                            <property name="vscrollbar-policy">automatic</property>
+                            <child>
+                              <object class="GtkGridView" id="List">
+                                <style>
+                                  <class name="list"></class>
+                                </style>
+                                <property name="max_columns">1</property>
+                                <property name="min_columns">1</property>
+                                <property name="can_focus">false</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkBox" id="Preview">
+                            <style>
+                              <class name="preview"></class>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox" id="Keybinds">
+                        <property name="hexpand">true</property>
+                        <property name="margin-top">10</property>
+                        <style>
+                          <class name="keybinds"></class>
+                        </style>
+                        <child>
+                          <object class="GtkBox" id="GlobalKeybinds">
+                            <property name="spacing">10</property>
+                            <style>
+                              <class name="global-keybinds"></class>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkBox" id="ItemKeybinds">
+                            <property name="hexpand">true</property>
+                            <property name="halign">end</property>
+                            <property name="spacing">10</property>
+                            <style>
+                              <class name="item-keybinds"></class>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="Error">
+                        <style>
+                          <class name="error"></class>
+                        </style>
+                        <property name="xalign">0</property>
+                        <property name="visible">false</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </interface>
+      '';
+      style = ''
+        /* walker: glass launcher. Fixed palette, matched to the eww bar,
+         * power menu, shirase and monban. Blur comes from the Hyprland layer rule for
+         * the "walker" namespace (ignore_alpha 0.5 keeps the box-shadow unblurred). */
+        @define-color fg #e5e6e7;
+        @define-color fg-dim rgba(229, 230, 231, 0.6);
+        @define-color glass-fill rgba(80, 86, 92, 0.68);
+        @define-color glass-outline rgba(4, 5, 6, 0.65);
+        @define-color glass-sep rgba(255, 255, 255, 0.12);
+        @define-color accent #0a84ff;
+        @define-color red #ff7b72;
+        
+        * {
+          all: unset;
+          font-family: "Inter", sans-serif;
+          color: @fg;
+        }
+        
+        scrollbar { opacity: 0; }
+        
+        .box-wrapper {
+          background: @glass-fill;
+          border: 1px solid @glass-outline;
+          border-radius: 20px;
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.25),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.30),
+            inset 1px 0 0 rgba(255, 255, 255, 0.10),
+            inset -1px 0 0 rgba(255, 255, 255, 0.10),
+            inset 0 3px 8px rgba(255, 255, 255, 0.05),
+            0 12px 40px rgba(0, 0, 0, 0.35);
+          padding: 8px 12px 10px 12px;
+        }
+        
+        /* Search row: magnifier + large query text, no inner box */
+        .search-container { padding: 6px 6px 8px 6px; }
+        .search-icon { -gtk-icon-size: 22px; color: @fg-dim; margin-right: 12px; }
+        .input {
+          font-size: 24px;
+          font-weight: 400;
+          padding: 6px 0;
+          caret-color: @fg;
+        }
+        .input placeholder { color: @fg-dim; }
+        .input selection { background: alpha(@accent, 0.45); }
+        
+        /* Results */
+        .content-container {
+          border-top: 1px solid @glass-sep;
+          padding-top: 8px;
+        }
+        .placeholder, .elephant-hint { color: @fg-dim; font-size: 15px; padding: 14px; }
+        .list { color: @fg; }
+        .normal-icons { -gtk-icon-size: 30px; }
+        .large-icons { -gtk-icon-size: 36px; }
+        .item-image-text { font-size: 26px; }
+        .item-box {
+          padding: 8px 12px;
+          border-radius: 11px;
+          transition: background 100ms ease;
+        }
+        child:hover .item-box { background: rgba(255, 255, 255, 0.08); }
+        child:selected .item-box,
+        row:selected .item-box { background: alpha(@accent, 0.78); }
+        .item-text { font-size: 15px; font-weight: 500; }
+        .item-subtext { font-size: 13px; color: @fg-dim; }
+        child:selected .item-subtext,
+        row:selected .item-subtext { color: rgba(255, 255, 255, 0.8); }
+        .providerlist .item-subtext { font-size: 13px; }
+        .item-quick-activation {
+          font-size: 12px;
+          font-weight: 600;
+          color: @fg-dim;
+          background: rgba(255, 255, 255, 0.10);
+          border-radius: 6px;
+          padding: 2px 7px;
+        }
+        child:selected .item-quick-activation,
+        row:selected .item-quick-activation { color: #ffffff; background: rgba(255, 255, 255, 0.22); }
+        
+        .calc .item-text { font-size: 22px; }
+        .symbols .item-image { font-size: 22px; }
+        .todo.done .item-text-box { opacity: 0.35; }
+        .todo.urgent { font-size: 18px; }
+        .todo.active { font-weight: 600; }
+        .bluetooth.disconnected { opacity: 0.5; }
+        
+        .preview {
+          border: 1px solid @glass-sep;
+          border-radius: 12px;
+          padding: 8px;
+        }
+        .preview .large-icons { -gtk-icon-size: 64px; }
+        
+        /* Keybind hints */
+        .keybinds {
+          margin-top: 6px;
+          padding-top: 8px;
+          border-top: 1px solid @glass-sep;
+          font-size: 12px;
+          color: @fg-dim;
+        }
+        .keybind-button { opacity: 0.7; }
+        .keybind-button:hover { opacity: 1; }
+        .keybind-bind { text-transform: lowercase; color: @fg-dim; }
+        .keybind-label {
+          padding: 1px 6px;
+          border-radius: 5px;
+          background: rgba(255, 255, 255, 0.12);
+          color: @fg;
+        }
+        
+        /* Action menu popover: same glass as the power menu */
+        popover {
+          background: rgba(80, 86, 92, 0.9);
+          border: 1px solid @glass-outline;
+          border-radius: 15px;
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 4px 24px rgba(0, 0, 0, 0.30);
+          padding: 6px;
+        }
+        popover row, popover .item-box { border-radius: 9px; padding: 7px 14px; }
+        popover row:selected, popover child:selected .item-box { background: alpha(@accent, 0.78); }
+        
+        .error { color: @red; font-size: 13px; }
+      '';
     };
   };
 }

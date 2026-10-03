@@ -1,17 +1,18 @@
-; Workspace tracking via Hyprland IPC
+; Workspaces styled as menu titles. The active
+; space gets the translucent "open menu" highlight, occupied spaces read as
+; normal titles, empty spaces are faint.
 (deflisten workspaces :initial "[]"
   "~/.config/eww/scripts/workspaces.sh"
 )
 
-; Workspace widget
 (defwidget workspaces []
-  (box :class "workspaces" :orientation "h" :spacing 6
+  (box :class "workspaces" :orientation "h" :spacing 2 :valign "center"
     (for ws in workspaces
       (button
-        :class {ws.active ? "ws-btn active" :
-                ws.occupied ? "ws-btn occupied" : "ws-btn"}
+        :class {ws.active ? "ws-item active" : ws.occupied ? "ws-item occupied" : "ws-item"}
+        :valign "center"
         :onclick "hyprctl dispatch 'hl.dsp.focus({ workspace = ${ws.id} })'"
-        "${ws.id}"
+        (label :text "${ws.id}")
       )
     )
   )

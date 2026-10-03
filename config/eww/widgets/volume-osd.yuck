@@ -1,30 +1,47 @@
-; Volume OSD variables
+; Audio OSD: a glass card under the
+; menu bar near the speaker glyph with the output device name, a slider flanked
+; by low/high glyphs, and sixteen tick dots (one per volume step).
+; Also used for mic mute. NB: eww puts the window name on the window as a style
+; class, so the inner boxes must not be called "volume-osd".
 (defvar vol_osd_icon "󰕾")
 (defvar vol_osd_value 50)
 (defvar vol_osd_muted false)
+(defvar vol_osd_kind "vol")
+(defvar vol_osd_device "")
+(defvar vol_osd_open false)
+(defvar vol_osd_ticks "[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]")
 
-; Volume OSD widget
 (defwidget volume-osd []
-  (box :class "vol-osd ${vol_osd_muted == 'true' ? 'muted' : ''}"
-       :orientation "v" :spacing 8 :space-evenly false
-    (label :class "vol-osd-icon" :text vol_osd_icon)
-    (scale :class "vol-osd-bar" :min 0 :max 100 :value vol_osd_value
-           :orientation "h"
-           :onchange "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ {}% && ~/.config/eww/scripts/volume-osd.sh noop"
+  (box :class "osd-shadow" :orientation "h" :space-evenly false
+    (box :class "osd-glass ${vol_osd_muted == 'true' ? 'muted' : ''} ${vol_osd_kind}"
+         :orientation "v" :spacing 6 :space-evenly false
+      (label :class "osd-device" :text vol_osd_device :xalign 0 :limit-width 32)
+      (box :orientation "h" :spacing 10 :space-evenly false
+        (label :class "osd-icon osd-icon-low" :text {vol_osd_kind == 'mic' ? "󰍭" : "󰕿"})
+        (scale :class "osd-bar" :min 0 :max 100 :value vol_osd_value
+               :orientation "h" :valign "center" :hexpand true
+               :onchange {vol_osd_kind == 'mic'
+                          ? "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SOURCE@ {}% && ~/.config/eww/scripts/volume-osd.sh noop"
+                          : "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ {}% && ~/.config/eww/scripts/volume-osd.sh noop"}
+        )
+        (label :class "osd-icon osd-icon-high" :text {vol_osd_kind == 'mic' ? "󰍬" : "󰕾"})
+      )
+      (box :class "osd-ticks" :orientation "h" :space-evenly true
+        (for t in vol_osd_ticks
+          (box :class "osd-tick" :halign "center" :valign "center")
+        )
+      )
     )
-    (label :class "vol-osd-pct" :text "${vol_osd_value}%")
   )
 )
 
-; Volume OSD window
 (defwindow volume-osd
   :monitor 0
   :geometry (geometry
-    :x "0%"
-    :y "40%"
-    :width "200px"
-    :height "120px"
-    :anchor "center"
+    :x "124px"
+    :y "4px"
+    :width "280px"
+    :anchor "top right"
   )
   :stacking "overlay"
   :namespace "eww-volume-osd"

@@ -18,7 +18,6 @@ QtObject {
     property int scrollThrottleMs: 150
 
     // Runs after the wallpaper is applied, with the wallpaper path as $1.
-    // Provided by wallpaper-picker.nix: updates the awww restore symlink and
-    // runs wallust-apply (eww/shirase/walker recolor).
+    // Provided by wallpaper-picker.nix: updates the awww restore symlink.
     property string extraReloadCommand: "wallpaper-picker-reload"
 }

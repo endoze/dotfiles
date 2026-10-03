@@ -7,7 +7,7 @@ import "config"
 // Minimal image-carousel wallpaper selector.
 // Browses pre-generated thumbnails from settings.thumbDir, applies the chosen
 // wallpaper via `awww`, then runs settings.extraReloadCommand "<wallpaper>"
-// (our wallust hook). All matugen/color-filter/search/video machinery from the
+// (updates the restore symlink). All matugen/color-filter/search/video machinery from the
 // upstream project has been stripped.
 Item {
     id: window

@@ -784,16 +784,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1788633215,
-        "narHash": "sha256-xDwMsUxjzK5oTi9jipew7C6N6GmqAGEzbps86QAmwy8=",
-        "ref": "target-endoze-gtk-layer-shell-fork-for-use-after-free-fix",
-        "rev": "d7dd9e5722449e2d351044e56724902b2656e558",
-        "revCount": 10,
+        "lastModified": 1791071632,
+        "narHash": "sha256-yP/1MKryY2xLfo+5SjzyhEIM5zKl8OcXB7oyJ8rCpow=",
+        "ref": "master",
+        "rev": "3e46c2a983ddcb7b8cb3830305ded07a38b62c86",
+        "revCount": 13,
         "type": "git",
         "url": "ssh://git@github.com/endoze/monban"
       },
       "original": {
-        "ref": "target-endoze-gtk-layer-shell-fork-for-use-after-free-fix",
+        "ref": "master",
         "type": "git",
         "url": "ssh://git@github.com/endoze/monban"
       }
@@ -1097,15 +1097,16 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1774847965,
-        "narHash": "sha256-WcfooI0pWvRlpBuJcMok7l9kbkoSHyNUbBZopKN9rbA=",
-        "ref": "refs/heads/master",
-        "rev": "7007505fde7fc279f8ef89de30388ce914872f7f",
-        "revCount": 1,
+        "lastModified": 1791136327,
+        "narHash": "sha256-DgkhQMt6REmZRFNbGu9qt5oAaokQCZLXkpx+0WU49+I=",
+        "ref": "master",
+        "rev": "e8567637482c68582c9381e90e5aa579e7f53715",
+        "revCount": 9,
         "type": "git",
         "url": "ssh://git@github.com/endoze/shirase"
       },
       "original": {
+        "ref": "master",
         "type": "git",
         "url": "ssh://git@github.com/endoze/shirase"
       }

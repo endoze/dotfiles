@@ -75,4 +75,13 @@ hl.window_rule({
 })
 
 -- Tweaks to work with blur -----------------------------------
-hl.layer_rule({ match = { namespace = "eww-bar" }, blur = true, ignore_alpha = 0.5 })
+-- ignore_alpha keeps blur off the transparent margins so CSS box-shadows stay
+-- shadows instead of blurred boxes; blur_popups frosts the bar's GTK menus.
+hl.layer_rule({ match = { namespace = "eww-bar" },       blur = true, blur_popups = true, ignore_alpha = 0.5 })
+hl.layer_rule({ match = { namespace = "eww-powermenu" }, blur = true, ignore_alpha = 0.5 })
+-- shirase (GTK4 layer-shell, default namespace): popups and the center panel.
+-- Lower threshold: its cards are 40% glass; text shadows stay under 0.3.
+hl.layer_rule({ match = { namespace = "gtk4-layer-shell" }, blur = true, ignore_alpha = 0.3 })
+-- walker launcher (GTK4 layer-shell, fullscreen layer; only the glass box is opaque).
+hl.layer_rule({ match = { namespace = "walker" }, blur = true, ignore_alpha = 0.5 })
+hl.layer_rule({ match = { namespace = "eww-volume-osd" }, blur = true, ignore_alpha = 0.5 })

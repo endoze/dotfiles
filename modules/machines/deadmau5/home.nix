@@ -55,7 +55,7 @@
     };
     Service = {
       Type = "oneshot";
-      ExecStart = "${pkgs.vmtouch}/bin/vmtouch -tf ${pkgs.discord}/opt/Discord";
+      ExecStart = "${pkgs.vmtouch}/bin/vmtouch -tf ${pkgs.discord.passthru.unwrappedDiscord}/opt/Discord";
       RemainAfterExit = true;
     };
     Install = {

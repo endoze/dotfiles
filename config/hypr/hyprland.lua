@@ -30,10 +30,10 @@ hl.config({
   },
 
   general = {
-    gaps_in = 5,
-    gaps_out = 10,
+    gaps_in = 6,
+    gaps_out = 12,
 
-    border_size = 2,
+    border_size = 0,
 
     resize_on_border = false,
 
@@ -56,24 +56,33 @@ hl.config({
   },
 
   decoration = {
-    rounding = 10,
+    rounding = 12,
 
     active_opacity = 1.0,
     inactive_opacity = 1.0,
 
     shadow = {
       enabled = true,
-      range = 4,
-      render_power = 3,
-      color = "rgba(1a1a1aee)",
+      range = 30,
+      render_power = 4,
+      color = "rgba(00000099)",
+      offset = { 0, 8 },
     },
 
     blur = {
       enabled = true,
-      size = 3,
-      passes = 1,
+      size = 8,
+      passes = 3,
 
-      vibrancy = 0.1696,
+      vibrancy = 0.3,
+      vibrancy_darkness = 0.3,
+      noise = 0.015,
+      brightness = 0.95,
+      contrast = 1.0,
+
+      -- GTK popup menus (eww tray menus) get the same frost as the layers.
+      popups = true,
+      popups_ignorealpha = 0.5,
     },
   },
 
@@ -99,9 +108,3 @@ require("configs/window")
 require("configs/inputs")
 require("configs/animations")
 
--- Wallust generated border colors; sets general.col.*, which nothing above
--- touches. pcall because the file may not exist yet, and dofile rather than
--- require so `hyprctl reload` re-reads it instead of replaying a cached module.
-local cacheHome = os.getenv("XDG_CACHE_HOME")
-  or (os.getenv("HOME") .. "/.cache")
-pcall(dofile, cacheHome .. "/wallust/hyprland.lua")

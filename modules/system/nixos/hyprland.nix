@@ -39,30 +39,36 @@
           clock = { poll = "date '+%H:%M'"; interval = 30; };
           date = { poll = "date '+%A, %B %-d'"; interval = 60; };
         };
+        # Minimal: date + big clock near the top, user line + password pill in
+        # the lower half, no card and no submit button. Enter submits; the arrow
+        # inside the field is an overlay button that shows while the field has focus.
         layout = {
           widget = "box";
           orientation = "vertical";
-          halign = "center";
-          valign = "center";
-          spacing = 24;
-          class = "login-container";
+          halign = "fill";
+          valign = "fill";
+          vexpand = true;
+          spacing = 10;
+          class = "login-screen";
           children = [
-            { widget = "label"; bind = "clock"; class = "clock"; }
-            { widget = "label"; bind = "date"; class = "date"; }
-            { widget = "label"; text = "Welcome back"; class = "greeting"; }
-            { widget = "entry"; id = "username"; placeholder = "Username"; on_submit = "focus_password"; class = "input"; }
-            { widget = "entry"; id = "password"; placeholder = "Password"; secret = true; on_submit = "attempt_login"; class = "input"; }
+            { widget = "box"; height = 90; }
+            { widget = "label"; bind = "date"; class = "date"; halign = "center"; }
+            { widget = "label"; bind = "clock"; class = "clock"; halign = "center"; }
+            { widget = "box"; vexpand = true; }
+            { widget = "label"; text = "Welcome back"; class = "greeting"; halign = "center"; }
+            { widget = "entry"; id = "username"; placeholder = "Username"; on_submit = "focus_password"; class = "input"; halign = "center"; }
             {
-              widget = "box";
-              orientation = "horizontal";
-              spacing = 12;
+              widget = "overlay";
+              class = "pw-overlay";
               halign = "center";
               children = [
-                { widget = "dropdown"; id = "session"; class = "session-dropdown"; }
-                { widget = "button"; text = "Login"; on_click = "attempt_login"; class = "login-button"; }
+                { widget = "entry"; id = "password"; placeholder = "Enter Password"; secret = true; on_submit = "attempt_login"; class = "input"; }
+                { widget = "button"; text = "→"; on_click = "attempt_login"; class = "pw-arrow"; halign = "end"; valign = "center"; }
               ];
             }
-            { widget = "label"; id = "error_label"; bind = "error_msg"; class = "error"; }
+            { widget = "dropdown"; id = "session"; class = "session-dropdown"; halign = "center"; }
+            { widget = "label"; id = "error_label"; bind = "error_msg"; class = "error"; halign = "center"; }
+            { widget = "box"; height = 110; }
           ];
         };
       };
@@ -78,17 +84,28 @@
         layout = {
           widget = "box";
           orientation = "vertical";
-          halign = "center";
-          valign = "center";
-          spacing = 24;
-          class = "login-container";
+          halign = "fill";
+          valign = "fill";
+          vexpand = true;
+          spacing = 10;
+          class = "login-screen";
           children = [
-            { widget = "label"; bind = "clock"; class = "clock"; }
-            { widget = "label"; bind = "date"; class = "date"; }
-            { widget = "label"; bind = "current_user"; class = "greeting"; }
-            { widget = "entry"; id = "password"; placeholder = "Password"; secret = true; on_submit = "attempt_unlock"; class = "input"; }
-            { widget = "button"; text = "Unlock"; on_click = "attempt_unlock"; class = "login-button"; }
-            { widget = "label"; bind = "error_msg"; class = "error"; }
+            { widget = "box"; height = 90; }
+            { widget = "label"; bind = "date"; class = "date"; halign = "center"; }
+            { widget = "label"; bind = "clock"; class = "clock"; halign = "center"; }
+            { widget = "box"; vexpand = true; }
+            { widget = "label"; bind = "current_user"; class = "greeting"; halign = "center"; }
+            {
+              widget = "overlay";
+              class = "pw-overlay";
+              halign = "center";
+              children = [
+                { widget = "entry"; id = "password"; placeholder = "Enter Password"; secret = true; on_submit = "attempt_unlock"; class = "input"; }
+                { widget = "button"; text = "→"; on_click = "attempt_unlock"; class = "pw-arrow"; halign = "end"; valign = "center"; }
+              ];
+            }
+            { widget = "label"; bind = "error_msg"; class = "error"; halign = "center"; }
+            { widget = "box"; height = 110; }
           ];
         };
       };
