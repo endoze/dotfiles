@@ -17,3 +17,6 @@ node_modules
 .beads
 .jira.yml
 docs/superpowers/
+docs/agents/
+.scratch/
+.out-of-scope/

@@ -1,0 +1,10 @@
+{"type":"user","sessionId":"s1","cwd":"/Users/me/Projects/alpha","timestamp":"2026-05-01T09:00:00.000Z","message":{"role":"user","content":"Address the feedback on 1400"}}
+{"type":"user","sessionId":"s1","cwd":"/Users/me/Projects/alpha","timestamp":"2026-06-02T09:00:00.000Z","message":{"role":"user","content":"Address the feedback on 1522"}}
+{"type":"user","sessionId":"s1","cwd":"/Users/me/Projects/alpha","timestamp":"2026-06-02T09:01:00.000Z","isMeta":true,"message":{"role":"user","content":"meta prompt should not count"}}
+{"type":"assistant","sessionId":"s1","cwd":"/Users/me/Projects/alpha","timestamp":"2026-06-02T09:02:00.000Z","message":{"role":"assistant","content":[{"type":"tool_use","name":"Bash","input":{"command":"jj bookmark create feat/one -r @-"}},{"type":"tool_use","name":"Bash","input":{"command":"cd /Users/me/Projects/alpha && jj bookmark create feat/two -r @-"}},{"type":"tool_use","name":"Bash","input":{"command":"jj bookmark create fix/three -r @-"}},{"type":"tool_use","name":"Skill","input":{"skill":"commit"}}]}}
+{"type":"user","sessionId":"s1","cwd":"/Users/me/Projects/alpha","timestamp":"2026-06-02T09:03:00.000Z","message":{"role":"user","content":[{"type":"text","text":"<command-name>/commit</command-name>\n<command-args></command-args>"}]}}
+{"type":"user","sessionId":"s1","cwd":"/Users/me/Projects/alpha","timestamp":"2026-06-02T09:04:00.000Z","message":{"role":"user","content":"No, don't use git here."}}
+{"type":"user","sessionId":"s1","cwd":"/Users/me/Projects/alpha","timestamp":"2026-06-02T09:05:00.000Z","message":{"role":"user","content":[{"type":"text","text":"[Request interrupted by user]"}]}}
+{"type":"user", "broken
+{"type":"user","sessionId":"s1","cwd":"/Users/me/Projects/alpha","timestamp":"2026-06-03T09:00:00.000Z","message":{"role":"user","content":"address the feedback on 1530."}}
+{"type":"user","sessionId":"s1","cwd":"/Users/me/Projects/alpha/frontend","timestamp":"2026-06-03T09:01:00.000Z","message":{"role":"user","content":[{"type":"tool_result","tool_use_id":"t1","content":"ok"}]}}

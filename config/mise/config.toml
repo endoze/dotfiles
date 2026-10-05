@@ -31,3 +31,6 @@ compile = false
 
 [settings.ruby]
 compile = false
+
+[settings.shims]
+exclude = ["vite"]

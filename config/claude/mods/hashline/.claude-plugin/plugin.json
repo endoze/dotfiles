@@ -1,0 +1,6 @@
+{
+  "name": "hashline",
+  "version": "0.1.0",
+  "description": "Hash-anchored read/replace/insert tools that replace line-number and fuzzy-string editing",
+  "types": "./types/index.d.ts"
+}

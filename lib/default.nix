@@ -13,9 +13,6 @@ let
     config.allowUnfree = true;
     overlays = [
       inputs.nur.overlays.default
-      (final: prev: {
-        direnv = prev.direnv.overrideAttrs { doCheck = false; };
-      })
       # eww PR #1441: build endoze's StatusNotifierWatcher-handoff fix until it
       # lands upstream. The PR touches only .rs files (no Cargo.lock/toml), so
       # the vendored cargoDeps/cargoHash from nixpkgs stay valid -- swap src

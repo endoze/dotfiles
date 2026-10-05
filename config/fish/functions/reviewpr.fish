@@ -1,9 +1,9 @@
-function reviewpr -d "Fetch a PR branch and start a Claude /review session for it"
+function reviewpr -d "Fetch a PR branch and start a Claude /code-review session for it"
   if test (count $argv) -ne 1
     echo "Usage: reviewpr <branch-name>"
     echo ""
     echo "Looks up the open PR for <branch-name> in the current repo,"
-    echo "fetches origin, checks out the branch, and starts 'claude /review <pr>'."
+    echo "fetches origin, checks out the branch, and starts 'claude /code-review <pr>'."
     return 1
   end
 
@@ -34,5 +34,5 @@ function reviewpr -d "Fetch a PR branch and start a Claude /review session for i
     return 1
   end
 
-  claude --permission-mode auto "/review $pr"
+  claude --permission-mode auto "/code-review $pr"
 end

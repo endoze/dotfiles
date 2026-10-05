@@ -1,0 +1,66 @@
+onboarding = false
+
+[update]
+# Herdr is installed via nix (see modules/home/common/herdr.nix), so the
+# in-app update notice can never be acted on from here.
+version_check = false
+
+[theme]
+name = "one-dark"
+auto_switch = false
+
+[ui]
+show_agent_labels_on_pane_borders = true
+
+agent_panel_sort = "spaces"
+
+# 0.8.0 dropped the animated spinner for working agents. The default "dots"
+# style draws blocked/working/done all as "●" and distinguishes them by color
+# alone; "symbols" gives working its own "◐" so shape alone reads as busy.
+status_indicators = "symbols"
+
+[keys]
+prefix = "ctrl+a"
+
+# Pane focus — mirrors tmux `prefix + Ctrl-h/j/k/l`
+focus_pane_left  = "prefix+ctrl+h"
+focus_pane_down  = "prefix+ctrl+j"
+focus_pane_up    = "prefix+ctrl+k"
+focus_pane_right = "prefix+ctrl+l"
+
+# Splits — herdr names by divider orientation (opposite of tmux):
+#   split_vertical   = side-by-side (tmux `|` / `\`)
+#   split_horizontal = stacked      (tmux `-`)
+split_vertical   = ["prefix+|", "prefix+\\"]
+split_horizontal = "prefix+minus"
+
+# Resize — herdr resize is a mode: prefix+r, then h/j/k/l (or arrows), Esc/Enter to exit.
+# (No directional resize bindings exist, so this is the closest to tmux `prefix h/j/k/l`.)
+resize_mode = "prefix+r"
+
+# Spaces — vim-style up/down with j/k (direct prefix bindings, no mode)
+previous_workspace = "prefix+k"
+next_workspace     = "prefix+j"
+
+next_tab = "prefix+u"
+
+# Spaces over tabs — disable new-tab, reclaim prefix+c for new workspace.
+# new_workspace is unbound because terminal.new_cwd would make it follow the
+# focused pane; the custom command below pins new spaces to ~/Projects instead.
+new_tab       = ""
+new_workspace = ""
+
+# Agents — reclaim the old tab-nav keys to cycle between agents
+previous_agent = "prefix+p"
+next_agent     = "prefix+n"
+
+# tmux-flavored extras
+detach    = "prefix+d"
+zoom      = "prefix+plus"
+copy_mode = "prefix+["
+
+[[keys.command]]
+key = "prefix+c"
+type = "shell"
+command = '"$HERDR_BIN_PATH" workspace create --cwd "$HOME/Projects" --focus'
+description = "new space in ~/Projects"
