@@ -17,6 +17,8 @@
 
     commandLineArgs = [
       "--extension-mime-request-handling=always-prompt-for-install"
+      # Hide the profile (avatar) button at the right of the toolbar
+      "--show-avatar-button=never"
     ];
   };
 

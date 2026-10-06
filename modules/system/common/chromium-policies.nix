@@ -18,6 +18,9 @@
   AutofillAddressEnabled = false;
   AutofillCreditCardEnabled = false;
 
+  # Never check for or prompt about becoming the default browser
+  DefaultBrowserSettingEnabled = false;
+
   # Allow chromium-web-store extension to be installed
   ExtensionInstallAllowlist = [
     "ocaahdebbfolfmndjeplogmgcagdmblk"

@@ -11,6 +11,7 @@
     ../../system/nixos/attic-cache.nix
     ../../system/nixos/plymouth.nix
     ../../system/nixos/waydroid-nvidia.nix
+    ../../system/nixos/openrgb.nix
   ];
 
   sops = {

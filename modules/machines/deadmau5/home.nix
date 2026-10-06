@@ -21,6 +21,11 @@
     # the dormant original and lacks PSN remote connection. Needs the UDP
     # 9303-9319 firewall rule in system.nix to discover consoles on the LAN.
     chiaki-ng
+    # RDP clients for reaching Windows machines (e.g. over Tailscale). remmina
+    # is the GUI with saved connections; freerdp provides sdl-freerdp for
+    # one-off CLI connections.
+    remmina
+    freerdp
     (retroarch.withCores (cores: with cores; [
       genesis-plus-gx
       snes9x

@@ -7,4 +7,6 @@ cursor-style-blink = false
 shell-integration-features = no-cursor
 quit-after-last-window-closed = true
 
+keybind = ctrl+enter=unbind
+
 background-opacity = 1.00
