@@ -1,42 +1,34 @@
-; Power menu widget
+; Dropdown menu under the Nix logo, styled as a glass card.
+; Commands are the originals from this menu.
+(defvar pm_open false)
+
+(defwidget pm-item [text cmd]
+  (button :class "pm-item" :onclick "eww close powermenu && eww update pm_open=false && ${cmd}"
+    (label :class "pm-text" :text text :xalign 0 :hexpand true)
+  )
+)
+
 (defwidget powermenu []
-  (box :class "powermenu" :orientation "v" :spacing 15 :space-evenly false
-    (button :class "pm-btn pm-lock"
-      :onclick "eww close powermenu && swaylock"
-      :tooltip "Lock"
-      (label :text "󰌾")
-    )
-    (button :class "pm-btn pm-suspend"
-      :onclick "eww close powermenu && systemctl suspend"
-      :tooltip "Suspend"
-      (label :text "󰒲")
-    )
-    (button :class "pm-btn pm-logout"
-      :onclick "eww close powermenu && uwsm stop"
-      :tooltip "Logout"
-      (label :text "󰍃")
-    )
-    (button :class "pm-btn pm-reboot"
-      :onclick "eww close powermenu && systemctl reboot"
-      :tooltip "Reboot"
-      (label :text "󰜉")
-    )
-    (button :class "pm-btn pm-shutdown"
-      :onclick "eww close powermenu && systemctl poweroff"
-      :tooltip "Shutdown"
-      (label :text "󰐥")
+  ; Outer box is the transparent shadow margin; inner box is the glass.
+  (box :class "pm-shadow" :orientation "v" :space-evenly false
+    (box :class "pm-glass" :orientation "v" :spacing 0 :space-evenly false
+      (pm-item :text "Sleep" :cmd "systemctl suspend")
+      (pm-item :text "Restart…" :cmd "systemctl reboot")
+      (pm-item :text "Shut Down…" :cmd "systemctl poweroff")
+      (box :class "pm-sep" :vexpand false)
+      (pm-item :text "Lock Screen" :cmd "loginctl lock-session")
+      (pm-item :text "Log Out Endoze…" :cmd "uwsm stop")
     )
   )
 )
 
-; Power menu window
 (defwindow powermenu
   :monitor 0
   :geometry (geometry
     :x "0px"
-    :y "0%"
-    :width "115px"
-    :anchor "center right"
+    :y "0px"
+    :width "310px"
+    :anchor "top left"
   )
   :stacking "overlay"
   :namespace "eww-powermenu"

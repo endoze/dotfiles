@@ -1,0 +1,1 @@
+If this is about resuming a superpowers plan: update the plan's `## Status` section first (done, in progress, next, left), then reply with one sentence naming only the plan file, for example "Resume `docs/superpowers/plans/<file>.md` from its Status section." Do not restate state, rules or the commit policy in the prompt; they belong in the plan.

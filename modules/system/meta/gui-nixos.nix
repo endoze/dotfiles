@@ -11,6 +11,11 @@
     ../nixos/nix-ld.nix
   ];
 
+  # Inter is the UI face for the eww bar, shirase and monban. The greeter runs
+  # as its own user before login, so it only sees system fonts; home-manager
+  # installing Inter for endoze is not enough for the login screen.
+  fonts.packages = [ pkgs.inter ];
+
   environment.systemPackages = with pkgs; [
     (pkgs.wrapFirefox (pkgs.firefox-unwrapped.override { withPipewire = true; }) { })
     cliphist

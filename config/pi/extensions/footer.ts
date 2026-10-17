@@ -74,6 +74,26 @@ const usageOf = (entry: SessionEntry) => {
   return undefined;
 };
 
+function formatTokens(count: number): string {
+  if (count < 1_000) {
+    return String(count);
+  }
+
+  if (count < 10_000) {
+    return `${(count / 1_000).toFixed(1)}k`;
+  }
+
+  if (count < 1_000_000) {
+    return `${Math.round(count / 1_000)}k`;
+  }
+
+  if (count < 10_000_000) {
+    return `${(count / 1_000_000).toFixed(1)}M`;
+  }
+
+  return `${Math.round(count / 1_000_000)}M`;
+}
+
 export default function (pi: ExtensionAPI) {
   let jj = "";
   let timer: ReturnType<typeof setInterval> | null = null;
@@ -226,6 +246,22 @@ export default function (pi: ExtensionAPI) {
       return applyColor("magenta", `${mins}m ${secs}s`);
     };
 
+    const sessionContextTokens = (): string => {
+      const usage = ctx.getContextUsage();
+      const contextWindow = usage?.contextWindow ?? ctx.model?.contextWindow;
+
+      if (!contextWindow) {
+        return "";
+      }
+
+      const current = usage?.tokens == null ? "?" : formatTokens(usage.tokens);
+
+      return applyColor(
+        "cyan",
+        `${current}/${formatTokens(contextWindow)}`,
+      );
+    };
+
     const line = (components: string[], width: number): string => {
       const body = components
         .filter((component) => component !== "")
@@ -242,7 +278,12 @@ export default function (pi: ExtensionAPI) {
           return [
             line([modelName(), jjStatus()], width),
             line(
-              [sessionContextBar(), sessionCost(), sessionDuration()],
+              [
+                sessionContextBar(),
+                sessionCost(),
+                sessionDuration(),
+                sessionContextTokens(),
+              ],
               width,
             ),
           ];

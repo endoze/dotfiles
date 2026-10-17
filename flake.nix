@@ -49,7 +49,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     monban = {
-      url = "git+ssh://git@github.com/endoze/monban?ref=target-endoze-gtk-layer-shell-fork-for-use-after-free-fix";
+      url = "git+ssh://git@github.com/endoze/monban?ref=master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-cachyos-kernel = {
@@ -65,7 +65,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     shirase = {
-      url = "git+ssh://git@github.com/endoze/shirase";
+      url = "git+ssh://git@github.com/endoze/shirase?ref=master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     sops-nix = {

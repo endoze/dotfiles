@@ -5,6 +5,7 @@
 
   imports = [
     ../common/bat.nix
+    ../common/claude.nix
     ../common/databases.nix
     ../common/fastfetch.nix
     ../common/fish.nix

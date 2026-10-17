@@ -11,6 +11,7 @@
     ../../system/nixos/attic-cache.nix
     ../../system/nixos/plymouth.nix
     ../../system/nixos/waydroid-nvidia.nix
+    ../../system/nixos/openrgb.nix
   ];
 
   sops = {
@@ -263,12 +264,14 @@
   nix.settings = {
     substituters = [
       "https://hyprland.cachix.org"
-      "https://attic.xuyh0120.win/lantian"
       "https://cache.nixos-cuda.org"
     ];
+    # The lantian cache (prebuilt CachyOS kernels) is dropped while its
+    # servers are down after a compromise, so the kernel builds locally.
+    # See https://github.com/xddxdd/nix-cachyos-kernel/issues/110 and only
+    # re-add it once a new signing key is published.
     trusted-public-keys = [
       "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-      "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
       "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="
     ];
     download-buffer-size = 524288000;

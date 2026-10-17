@@ -1,6 +1,44 @@
 { config, pkgs, lib, ... }:
 
+let
+  isLinux = pkgs.stdenv.hostPlatform.isLinux;
+
+  # WhiteSur Firefox theme, "darker" variant: compact chrome (toolbar on top,
+  # tab strip below, centered URL pill). Assembled the way the upstream install.sh
+  # does, into one chrome/ directory, so home-manager can link it into the profile.
+  # Only on Linux; the Darwin machines keep stock Firefox.
+  whitesurFirefox = pkgs.stdenvNoCC.mkDerivation {
+    pname = "whitesur-firefox-theme";
+    version = "0-unstable-2026-10-03";
+    src = pkgs.fetchFromGitHub {
+      owner = "vinceliuice";
+      repo = "WhiteSur-firefox-theme";
+      rev = "ecc6465e2d30278a0f76604e622e3df8ac08ae1c";
+      hash = "sha256-+zxD8eqnjykYQOZV739EqL5tvW6W/ZjswCjvqkTjO6Q=";
+    };
+    dontConfigure = true;
+    dontBuild = true;
+    installPhase = ''
+      runHook preInstall
+      mkdir -p $out/WhiteSur/parts
+      cp -r src/WhiteSur/. $out/WhiteSur/
+      cp -r src/common/icons src/common/titlebuttons src/common/pages $out/WhiteSur/
+      cp src/common/*.css $out/WhiteSur/
+      cp src/common/parts/*.css $out/WhiteSur/parts/
+      cp src/customChrome.css $out/
+      runHook postInstall
+    '';
+  };
+
+  firefoxProfileDir = "${config.programs.firefox.configPath}/default";
+in
+
 {
+  home.file = lib.mkIf isLinux {
+    "${firefoxProfileDir}/chrome/WhiteSur".source = "${whitesurFirefox}/WhiteSur";
+    "${firefoxProfileDir}/chrome/customChrome.css".source = "${whitesurFirefox}/customChrome.css";
+  };
+
   programs.firefox = {
     enable = true;
     package = pkgs.firefox;
@@ -77,7 +115,7 @@
           # UI customization
           "browser.tabs.inTitlebar" = 1;
           "browser.compactmode.show" = true;
-          "browser.uidensity" = 1; # 0=normal, 1=compact, 2=touch
+          "browser.uidensity" = if isLinux then 0 else 1; # 0=normal, 1=compact, 2=touch (WhiteSur needs normal)
 
           # Font settings
           "font.size.variable.x-western" = 18;
@@ -177,6 +215,14 @@
           "signon.generation.enabled" = false; # Disable password generation
           "signon.management.page.breach-alerts.enabled" = false; # Disable breach alerts
           "signon.management.page.breachAlertUrl" = "";
+        } // lib.optionalAttrs isLinux {
+          # Required by the WhiteSur Firefox theme (see whitesurFirefox above).
+          "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+          "browser.tabs.drawInTitlebar" = true;
+          "svg.context-properties.content.enabled" = true;
+          "widget.gtk.rounded-bottom-corners.enabled" = true;
+          "mozilla.widget.use-argb-visuals" = true;
+          "layers.acceleration.force-enabled" = true;
         };
 
         # Install extensions
@@ -188,11 +234,20 @@
           bitwarden
         ];
 
-        # User chrome CSS customization (optional)
-        userChrome = ''
+        # Chrome styling: WhiteSur "darker" on Linux (files linked into chrome/ via
+        # home.file below), nothing on Darwin.
+        userChrome = lib.optionalString isLinux ''
+          @import "WhiteSur/theme-darker.css";
+          @import "customChrome.css";
         '';
 
-        userContent = ''
+        userContent = lib.optionalString isLinux ''
+          @import "WhiteSur/colors/light.css";
+          @import "WhiteSur/colors/darker.css";
+          @import "WhiteSur/pages/common.css";
+          @import "WhiteSur/pages/newtab.css";
+          @import "WhiteSur/pages/reader.css";
+          @import "WhiteSur/pages/privatebrowsing.css";
         '';
       };
     };

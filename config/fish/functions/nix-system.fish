@@ -9,7 +9,7 @@ function nix-system
     switch $hostname_val
       case macbook
         set flake_config "macbook"
-      case workmac
+      case RVL-MBP-0103
         set flake_config "workmac"
       case '*'
         echo "Unknown macOS hostname: $hostname_val"

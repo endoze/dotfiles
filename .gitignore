@@ -3,6 +3,7 @@ config/fish/completions/docker.fish
 config/fish/completions/kubectl.fish
 config/fish/completions/orbctl.fish
 config/fish/completions/zellij.fish
+config/fish/conf.d/unity-cli.fish
 config/karabiner/karabiner.json.*.bak
 config/hypr/current-wallpaper
 

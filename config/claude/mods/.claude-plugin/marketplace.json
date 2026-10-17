@@ -1,0 +1,11 @@
+{
+  "name": "dotfiles-mods",
+  "owner": { "name": "endoze" },
+  "plugins": [
+    {
+      "name": "hashline",
+      "source": "./hashline",
+      "description": "Hash-anchored read/replace/insert tools that replace line-number and fuzzy-string editing"
+    }
+  ]
+}

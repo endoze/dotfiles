@@ -1,4 +1,4 @@
-{ config, pkgs, lib, userConfig ? { }, systemConfig ? { }, sourceRoot, ... }:
+{ config, pkgs, lib, userConfig ? { }, sourceRoot, ... }:
 
 {
   imports = [
@@ -14,11 +14,6 @@
   };
 
   services.dnsmasq-resolver.enable = true;
-
-  networking = {
-    hostName = systemConfig.hostName or "workmac";
-    computerName = systemConfig.computerName or "WorkMac";
-  };
 
   homebrew = {
     enable = true;
