@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Stub gh for test.sh. Answers from $STUB/<key>.<n> files, one per call to a
+# key, repeating the last one. A file holding "ERR:<msg>" fails with <msg>.
+set -euo pipefail
+
+serve() {
+  local key=$1 count n file
+  count="$STUB/.count-$key"
+  n=$(($(cat "$count" 2>/dev/null || echo 0) + 1))
+  echo "$n" >"$count"
+  file="$STUB/$key.$n"
+  [ -f "$file" ] || file=$(ls "$STUB/$key".* 2>/dev/null | sort -t. -k2 -n | tail -n1)
+  [ -n "$file" ] || {
+    echo "stub: no fixture for $key" >&2
+    exit 1
+  }
+  if grep -q '^ERR:' "$file"; then
+    sed 's/^ERR://' "$file" >&2
+    exit 1
+  fi
+  cat "$file"
+}
+
+args="$*"
+case "$args" in
+  "pr view "*"--json url"*)
+    [ -f "$STUB/missing-$3" ] && exit 1
+    echo "https://github.com/acme/app/pull/$3"
+    ;;
+  "pr view "*"--json headRefOid"*) serve "head-$3" ;;
+  "pr view "*"--json state,mergeCommit"*) serve "merge-$3" ;;
+  "pr checks "*) serve "checks-$3" ;;
+  "api repos/{owner}/{repo}/commits/"*) serve "branch" ;;
+  "run list "*) serve "runlist" ;;
+  "run view "*"--log-failed"*) serve "log-$3" ;;
+  "run view "*) serve "run-$3" ;;
+  *)
+    echo "stub gh: unhandled: $args" >&2
+    exit 1
+    ;;
+esac

@@ -25,6 +25,7 @@ Look at the current repo to understand its starting state. Read whatever exists;
 - `AGENTS.md`, `CLAUDE.md`, `.claude/CLAUDE.md`, and `CLAUDE.local.md`: which exist, which are tracked (`jj file list`), and is there already an `## Agent skills` section in any of them?
 - Whether `.claude/` and `docs/agents/` are ignored. The user's global excludes file ignores `.claude/`, `docs/agents/`, `.scratch/`, `.out-of-scope/`, and `.jira.yml`, so they stay local unless the repo's `.gitignore` re-includes them.
 - How to typecheck, run one test file, and run the full suite: is it already documented in `CLAUDE.md` or `AGENTS.md`?
+- `.github/workflows/*.yml`: which checks run on PRs, and which workflow deploys (on a push to trunk, on `workflow_run`, or by `workflow_dispatch`) and to which Kubernetes deployments. This decides whether Section F runs.
 - `GLOSSARY.md` and `GLOSSARY-MAP.md` at the repo root
 - `docs/adr/` and any `src/*/docs/adr/` directories
 - `docs/agents/`: does this skill's prior output already exist?
@@ -36,7 +37,7 @@ Look at the current repo to understand its starting state. Read whatever exists;
 
 Summarise what's present and what's missing. Then take the sections in order. One section, one answer, then the next.
 
-Lead each section with the recommended answer so the user can accept it in a word. Give a one-line explainer only when the choice genuinely branches; skip the section entirely when exploration already settled it (Section B when `triage` isn't installed, Section C when there's no monorepo, Section E when the commands are already documented).
+Lead each section with the recommended answer so the user can accept it in a word. Give a one-line explainer only when the choice genuinely branches; skip the section entirely when exploration already settled it (Section B when `triage` isn't installed, Section C when there's no monorepo, Section E when the commands are already documented, Section F when the repo has no GitHub Actions).
 
 **Section A: Issue tracker.**
 
@@ -73,6 +74,8 @@ Offer **multi-context** (a root `GLOSSARY-MAP.md` pointing to per-context `GLOSS
 - **Committed**: the block goes in the root `CLAUDE.md` or `AGENTS.md` (step 4). Add `!/.claude/`, `!/docs/agents/`, and `/.claude/settings.local.json` to the repo's `.gitignore` so the global excludes don't hide them.
 
 **Section E: Checks.** Skip it when `CLAUDE.md` or `AGENTS.md` already documents the commands. Otherwise propose the typecheck, single-test-file, and full-suite commands you found (`Makefile`, `package.json`, `Cargo.toml`, `bin/`) and record them in the block.
+
+**Section F: Watch.** Record the arguments the `watch-ci` skill passes on every call in this repo. Propose them from the workflows you read: `--ignore` for checks that never block a merge (SonarCloud is ignored by default; name the repo's own), and for deploys the `--workflow` file, plus `--rollout NAMESPACE/DEPLOYMENT` and `--context` when the workflow deploys to Kubernetes. Leave out what the repo doesn't have: no deploy workflow means no `Deploy:` line.
 
 ### 3. Confirm and edit
 
@@ -116,9 +119,13 @@ The block:
 ### Checks
 
 Typecheck: `<command>`. One test file: `<command> <path>`. Full suite: `<command>`.
+
+### Watch
+
+Checks: `<checks.sh arguments>`. Deploy: `<deploy.sh arguments>`.
 ```
 
-Include the `### Triage labels` sub-block, and write `docs/agents/triage-labels.md`, only when `triage` is installed and Section B ran. When it isn't, both are omitted. Include `### Checks` only when Section E ran.
+Include the `### Triage labels` sub-block, and write `docs/agents/triage-labels.md`, only when `triage` is installed and Section B ran. When it isn't, both are omitted. Include `### Checks` only when Section E ran, and `### Watch` only when Section F ran.
 
 When Section B ran on GitHub or GitLab, create each configured label the tracker lacks (`gh label create` / `glab label create`).
 

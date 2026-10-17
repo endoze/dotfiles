@@ -3,6 +3,7 @@
 {
   imports = [
     ./darwin/attic-cache.nix
+    ./darwin/nix-gc.nix
   ];
 
   nixpkgs.config = {

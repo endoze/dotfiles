@@ -6,6 +6,7 @@ in
 {
   imports = [
     ./dnsmasq.nix
+    ./nix-gc.nix
     ../common/github-keys.nix
   ];
 

@@ -74,4 +74,4 @@ Do not push. If the user asks to push, push only the stack's bookmarks by name:
 jj git push -b <bookmark-1> -b <bookmark-2> ...
 ```
 
-A push opens a second round: reviewers (Copilot always) re-review every pushed PR, and CI reruns. Wait for both to finish, judging each PR's newest CI run (a push can cancel an earlier run, which shows red). Then repeat step 2 on every PR in the stack and report what is new. The work is done when every PR's newest CI run passes and no thread is left unverified.
+A push opens a second round: reviewers (Copilot always) re-review every pushed PR, and CI reruns. Wait for both to finish: watch every PR in the stack with the `watch-ci` skill, which judges each PR on its newest head (a push can cancel an earlier run, which shows red). Then repeat step 2 on every PR in the stack and report what is new. The work is done when every PR's newest CI run passes and no thread is left unverified.
