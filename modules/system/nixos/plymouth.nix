@@ -9,8 +9,6 @@
     };
 
     consoleLogLevel = 0;
-    initrd.systemd.enable = true;
-    initrd.verbose = false;
 
     # Wait for kernel modules (specifically nvidia-drm) before showing the
     # splash. Without this ordering, plymouth-start races systemd-modules-load
