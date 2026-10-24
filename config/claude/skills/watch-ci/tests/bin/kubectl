@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Stub kubectl for test.sh. Logs every call to $STUB/kubectl.log. A rollout
+# fails when $STUB/rollout-fail-<deployment> exists.
+set -euo pipefail
+
+echo "$*" >>"$STUB/kubectl.log"
+case "$*" in
+  *"rollout status deploy/"*)
+    args="$*"
+    name=${args##*deploy/}
+    name=${name%% *}
+    [ ! -f "$STUB/rollout-fail-$name" ]
+    ;;
+  *"get deploy"*) echo -n "registry/app:deploy-production-abc1234 " ;;
+esac

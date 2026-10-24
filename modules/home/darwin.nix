@@ -3,6 +3,8 @@
 {
   imports = [
     ./darwin/attic-cache.nix
+    ./darwin/nix-gc.nix
+    ./darwin/swiftformat.nix
   ];
 
   nixpkgs.config = {

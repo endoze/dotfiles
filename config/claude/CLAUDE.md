@@ -140,6 +140,9 @@ new to this topic.
   (BSD `sed` joins a replacement's newline into one line). Shell loops
   over a list go in a `#!/bin/bash` script: the Bash tool's shell does
   not word-split `$var`.
+- `gh` uploads images to PRs and issues: `gh pr comment <n> --attach
+  ./shot.png` (`--edit-last` replaces your last comment). A body
+  reference like `![alt](./shot.png)` becomes the uploaded URL.
 
 # Version Control Rules
 
@@ -152,11 +155,11 @@ new to this topic.
   `jj squash`, `jj rebase`. The only exception is a repo I explicitly
   tell you is git-only.
 - I make heavy use of jujutsu workspaces. Do NOT do anything that disrupts
-  workspaces: don't run `jj workspace forget`, don't delete workspace
-  directories, don't assume a single working copy, and don't run commands
-  that would clobber another workspace's working-copy commit. When in
-  doubt about workspace state, inspect with `jj workspace list` and ask
-  before taking any action that could affect other workspaces.
+  workspaces: don't delete workspace directories, don't assume a single
+  working copy, and don't run commands that would clobber another
+  workspace's working-copy commit. When in doubt about workspace state,
+  inspect with `jj workspace list` and ask before taking any action that
+  could affect other workspaces.
 - Never commit unless explicitly asked to do so.
 
 # Stacked PR Rules
