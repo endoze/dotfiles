@@ -12,7 +12,7 @@ java = "24"
 lua = "5.1"
 node = "24.15.0"
 "github:ocaml/opam" = { version = "latest", version_prefix = "" }
-ruby = "4.0.0"
+ruby = "3.4.12"
 rust = { version = "stable", profile = "default" }  # includes rustc, cargo, rust-std, rust-docs, rustfmt, clippy
 yarn = "3.8.7"
 uv = "latest"

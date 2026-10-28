@@ -64,3 +64,6 @@ key = "prefix+c"
 type = "shell"
 command = '"$HERDR_BIN_PATH" workspace create --cwd "$HOME/Projects" --focus'
 description = "new space in ~/Projects"
+
+[ui.sidebar.spaces]
+row_gap = 0
