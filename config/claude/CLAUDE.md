@@ -161,6 +161,8 @@ new to this topic.
   inspect with `jj workspace list` and ask before taking any action that
   could affect other workspaces.
 - Never commit unless explicitly asked to do so.
+- NEVER pass `--allow-new` to `jj git push`. jj removed the flag, and a
+  new bookmark pushes without it: `jj git push -b <bookmark>`.
 
 # Stacked PR Rules
 
