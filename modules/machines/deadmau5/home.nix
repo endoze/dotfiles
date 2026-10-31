@@ -8,6 +8,7 @@
     ../../home/meta/cli.nix
     ../../home/meta/gui-linux.nix
     ../../home/linux/walker.nix
+    ../../home/linux/llm-lab.nix
     inputs.walker.homeManagerModules.default
   ];
 

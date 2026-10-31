@@ -43,6 +43,11 @@
       # Follows nixpkgs because SBCL < 2.6.6 cannot start on macOS 27
       # (fixed-address mmap at 0x300100000 is refused).
       inputs.nixpkgs.follows = "nixpkgs";
+      # Only cl-nix-lite's overlay is used, which ignores its nixpkgs, and
+      # treefmt-nix only backs upstream's own format checks.
+      inputs.cl-nix-lite.inputs.nixpkgs.follows = "nixpkgs";
+      inputs.cl-nix-lite.inputs.treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
+      inputs.treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
     };
     matcha = {
       url = "github:endoze/matcha/fix/scard-cgo-enabled";

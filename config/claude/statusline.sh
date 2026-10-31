@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # OneDark color palette
 BLACK="\033[38;2;40;44;52m"
