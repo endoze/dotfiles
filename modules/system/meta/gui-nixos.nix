@@ -14,7 +14,14 @@
   # Inter is the UI face for the eww bar, shirase and monban. The greeter runs
   # as its own user before login, so it only sees system fonts; home-manager
   # installing Inter for endoze is not enough for the login screen.
-  fonts.packages = [ pkgs.inter ];
+  #
+  # corefonts gives Steam a font literally named Arial. Steam's CEF can't
+  # resolve fontconfig aliases (Arial -> Liberation Sans, sans-serif), so when
+  # its Motiva Sans web font fails to load, every label renders blank.
+  fonts.packages = [
+    pkgs.inter
+    pkgs.corefonts
+  ];
 
   environment.systemPackages = with pkgs; [
     (pkgs.wrapFirefox (pkgs.firefox-unwrapped.override { withPipewire = true; }) { })

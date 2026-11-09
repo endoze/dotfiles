@@ -7,8 +7,8 @@
 ------------------
 
 hl.monitor({
-  output = "desc:Acer Technologies Acer X27 #ASOSpDuqCRrd",
-  mode = "3840x2160@144",
+  output = "desc:Microstep MPG272UX OLED 0x01010101",
+  mode = "3840x2160@120",
   position = "0x0",
   scale = 1.33,
 })
