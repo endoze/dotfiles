@@ -19,7 +19,7 @@
 # and outside the store, so it isn't declarative):
 #
 #   sudo waydroid init
-#   sudo waydroid-nvidia-setup --refresh 144
+#   sudo waydroid-nvidia-setup --refresh 120
 #
 # Verify the guest is actually accelerated rather than silently fallen back:
 #
@@ -53,8 +53,8 @@ in
     # system-wide just to get one package.
     package = waydroid-nvidia;
 
-    # DP-3 runs 3840x2160@144 (Acer X27). Feeds persist.waydroid.refresh_rate.
-    refreshRate = 144;
+    # DP-3 runs 3840x2160@120 (MSI MPG 272UX). Feeds persist.waydroid.refresh_rate.
+    refreshRate = 120;
   };
 
   # Both of the following are provided by the stock nixpkgs waydroid module but
