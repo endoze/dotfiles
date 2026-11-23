@@ -108,6 +108,7 @@
       443 # HTTPS
       6443 # k3s API (also in k3s.nix, but explicit here)
       6697 # Soju IRC
+      1984 # HomeKit bridge pairing (go2rtc HAP)
       7000 # FRP
       8554 # Frigate RTSP
       8555 # Frigate WebRTC
@@ -117,6 +118,8 @@
 
     allowedUDPPorts = [
       53 # Pi-hole DNS
+      5353 # mDNS (HomeKit bridge discovery)
+      8443 # HomeKit bridge video (SRTP)
       8555 # Frigate WebRTC
       15636 # Enshrouded game
       15637 # Enshrouded query
