@@ -12,6 +12,7 @@
     ../../system/nixos/plymouth.nix
     ../../system/nixos/waydroid-nvidia.nix
     ../../system/nixos/openrgb.nix
+    ../../system/nixos/console.nix
   ];
 
   sops = {

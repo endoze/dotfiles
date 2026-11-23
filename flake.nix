@@ -33,6 +33,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.rust-overlay.follows = "rust-overlay";
     };
+    # Our fork of Aleksanaa/ghostcon, a kmscon fork on libghostty-vt (deadmau5
+    # console). Does not follow nixpkgs: it builds against the pre-1.0
+    # libghostty-vt in its own pin, and a nixpkgs bump to libghostty-vt 1.0
+    # would likely break the build.
+    ghostcon = {
+      url = "github:endoze/ghostcon";
+    };
     hyprland = {
       url = "github:hyprwm/Hyprland";
       # Don't follow nixpkgs - let Hyprland use its own pinned version
